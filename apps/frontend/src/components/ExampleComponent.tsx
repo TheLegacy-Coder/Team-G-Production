@@ -1,30 +1,61 @@
-import { useState } from "react";
-// import axios from "axios";
+import React, { useState } from "react";
+//import axios from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginType, setLoginType] = useState(""); // Add state for login type
 
   const handleLogin = () => {
     // Implement your login logic here
     // Implementation of displaying either administrator or user login goes here (buttons)
-    console.log("Logging in with:", username, password);
+    console.log("Logging in with:", loginType, username, password);
   };
 
   return (
     <div className="login-container">
-      <input
-        type="text"
-        placeholder="Admin Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Admin Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <div>
+        <button onClick={() => setLoginType("admin")}>
+          Administrator Login
+        </button>
+        <button onClick={() => setLoginType("user")}>User Login</button>
+      </div>
+
+      {/* Conditional rendering based on login type */}
+      {loginType === "admin" && (
+        <>
+          <input
+            type="text"
+            placeholder="Admin Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Admin Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </>
+      )}
+
+      {loginType === "user" && (
+        <>
+          <input
+            type="text"
+            placeholder="User Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="User Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </>
+      )}
+
       <button onClick={handleLogin}>Login</button>
     </div>
   );
