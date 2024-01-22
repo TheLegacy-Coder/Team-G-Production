@@ -18,6 +18,7 @@ const Login = () => {
         <button onClick={() => setLoginType("admin")}>
           Administrator Login
         </button>
+        <button onClick={() => setLoginType("employee")}>Employee Login</button>
         <button onClick={() => setLoginType("user")}>User Login</button>
       </div>
 
@@ -50,6 +51,23 @@ const Login = () => {
           <input
             type="password"
             placeholder="User Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </>
+      )}
+
+      {loginType === "employee" && (
+        <>
+          <input
+            type="text"
+            placeholder="Employee Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Employee Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
