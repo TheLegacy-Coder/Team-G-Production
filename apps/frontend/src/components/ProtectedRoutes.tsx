@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoutes = () => {
   // TODO: Use authentication token
-  const auth = true; //TODO: add auth check
+  const auth = true;
 
   return auth ? <Outlet /> : <Navigate to="/login" replace />;
 };
