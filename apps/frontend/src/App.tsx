@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import ExampleRoute from "./routes/ExampleRoute.tsx";
 import { BreadthFirstSearch, mapNodes } from "./map/MapNode.ts";
+import { InteractableMap } from "./components/InteractableMap.tsx";
 function App() {
   const router = createBrowserRouter([
     {
@@ -25,6 +26,7 @@ function App() {
     return (
       <div className="w-100 h-100 d-flex flex-column overflow-auto">
         <h1>Welcome to your starter code.</h1>
+        <InteractableMap />
         <Outlet />
       </div>
     );
