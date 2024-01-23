@@ -5,6 +5,13 @@ import ExampleRoute from "./routes/ExampleRoute.tsx";
 import { ProtectedRoutes } from "./components/ProtectedRoutes.tsx";
 import { PageFrame } from "./components/PageFrame.tsx";
 import Login from "./components/ExampleComponent.tsx";
+
+const handleSearch = () => {
+  // Implement your login logic here
+  // Implementation of displaying either administrator or user login goes here (buttons)
+  console.log("Logging in with:");
+};
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -55,7 +62,10 @@ function App() {
           path: "/search",
           element: (
             <PageFrame>
-              <div>secret search</div>
+              <div className="topnav">
+                <input type="text" placeholder="Search.." />
+                <button onClick={handleSearch}>Enter</button>
+              </div>
             </PageFrame>
           ),
         },
@@ -64,6 +74,7 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
+
   function Root() {
     return (
       <div className="w-100 h-100 d-flex flex-column overflow-auto">
