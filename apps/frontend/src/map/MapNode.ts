@@ -7,9 +7,6 @@ export type MapNode = {
   floor: string;
   buidling: string;
   nodeType: string;
-  //floor : 'l1' | 'l2',
-  //building: '45 Francis' | 'Tower' | 'Shapiro',
-  // nodeType : 'CONF' | 'DEPT' | 'HALL' | 'LABS' | 'REST' | 'RETL' | 'SERV' | 'HALL' | 'STAI' | 'ELV'
   longName: string;
   shortName: string;
   edges: MapNode[];
@@ -65,4 +62,40 @@ fetch(rawEdges)
       }
     });
   });
+
+export function BreadthFirstSearch(
+  start: MapNode | undefined,
+  end: MapNode | undefined,
+) {
+  if (start == undefined || end == undefined) return [];
+  const seen: Map<MapNode, MapNode> = new Map([]);
+  seen.set(start, start);
+  const frontier: MapNode[] = [start];
+  let done = false;
+  while (!done || frontier.length != 0) {
+    //frontier [0] is dequed element
+    frontier[0].edges.forEach((node) => {
+      if (!seen.has(node)) {
+        seen.set(node, frontier[0]);
+        if (node == end) {
+          done = true;
+        }
+        frontier.push(node);
+      }
+    });
+    frontier.shift();
+  }
+  console.log(seen);
+  const path: MapNode[] = [];
+  let current = end;
+  while (seen.get(current) != current) {
+    console.log(current);
+    console.log(seen.get(current));
+    path.push(current);
+    const next = seen.get(current);
+    current = next == undefined ? current : next;
+  }
+  path.push(start);
+  return path;
+}
 console.log(mapNodes);

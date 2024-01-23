@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import ExampleRoute from "./routes/ExampleRoute.tsx";
-import { mapNodes } from "./map/MapNode.ts";
+import { BreadthFirstSearch, mapNodes } from "./map/MapNode.ts";
 function App() {
   const router = createBrowserRouter([
     {
@@ -17,6 +17,9 @@ function App() {
     },
   ]);
   console.log(mapNodes);
+  console.log(
+    BreadthFirstSearch(mapNodes.get("CCONF001L1"), mapNodes.get("CHALL009L1")),
+  );
   return <RouterProvider router={router} />;
   function Root() {
     return (
