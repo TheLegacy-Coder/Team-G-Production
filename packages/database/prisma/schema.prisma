@@ -18,3 +18,20 @@ model HighScore {
   time  DateTime
   score Int
 }
+
+model Nodes {
+  nodeID    String @id
+  xcoord    Int
+  ycoord    Int
+  floor     String
+  building  String
+  nodeType  String
+  longName  String
+  shortName String
+}
+
+model Edges {
+  edgeID    String @id
+  startNode String
+  endNode   String
+}
