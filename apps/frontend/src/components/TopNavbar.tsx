@@ -9,8 +9,8 @@ export const TopNavbar = () => {
         <Navbar.Brand href="/">Home</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/search">Search</Nav.Link>
-          <Nav.Link href="/login">Map</Nav.Link>
-          <Nav.Link href="/map">Login</Nav.Link>
+          <Nav.Link href="/login">Login</Nav.Link>
+          <Nav.Link href="/map">Map</Nav.Link>
         </Nav>
       </Container>
     </Navbar>
