@@ -18,7 +18,19 @@ export const InteractableMap = () => {
   setTimeout(forceUpdate, 100);
   image.onload = () => {
     if (ctx == null) return;
+
     ctx?.drawImage(image, 0, 0);
+    let last: MapNode | undefined = undefined;
+    ctx!.strokeStyle = "#0000FF";
+    path.forEach((p) => {
+      if (last != undefined) {
+        ctx!.beginPath(); // Start a new path
+        ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
+        ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
+        ctx!.stroke(); // Render the path
+      }
+      last = p;
+    });
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
@@ -34,17 +46,6 @@ export const InteractableMap = () => {
         ctx!.fillStyle = "#550000";
         ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 25);
       }
-      let last: MapNode | undefined = undefined;
-      ctx!.strokeStyle = "#0000FF";
-      path.forEach((p) => {
-        if (last != undefined) {
-          ctx!.beginPath(); // Start a new path
-          ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
-          ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
-          ctx!.stroke(); // Render the path
-        }
-        last = p;
-      });
     });
   };
 
@@ -54,11 +55,13 @@ export const InteractableMap = () => {
     const x = evt.pageX - xOffset;
     const y = evt.pageY - yOffset;
     ctx?.drawImage(image, 0, 0);
+    let emptyClick = true;
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
         Math.pow(x - node.xcoord, 2) + Math.pow(y - node.ycoord, 2),
       );
       if (dist < 10) {
+        emptyClick = false;
         if (sl != undefined && path.length == 0) {
           path = BreadthFirstSearch(sl, node);
         } else {
@@ -67,14 +70,32 @@ export const InteractableMap = () => {
         }
       }
     });
-
+    if (emptyClick) {
+      hl = undefined;
+      sl = undefined;
+      path = [];
+    }
     mouseMove(evt);
   }
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
+
     const x = evt.pageX - xOffset;
     const y = evt.pageY - yOffset;
     ctx?.drawImage(image, 0, 0);
+
+    let last: MapNode | undefined = undefined;
+    ctx!.strokeStyle = "#0000FF";
+    path.forEach((p) => {
+      if (last != undefined) {
+        ctx!.beginPath(); // Start a new path
+        ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
+        ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
+        ctx!.stroke(); // Render the path
+      }
+      last = p;
+    });
+
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
         Math.pow(x - node.xcoord, 2) + Math.pow(y - node.ycoord, 2),
@@ -96,17 +117,6 @@ export const InteractableMap = () => {
           ctx!.fillStyle = "#550000";
           ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 25);
         }
-        let last: MapNode | undefined = undefined;
-        ctx!.strokeStyle = "#0000FF";
-        path.forEach((p) => {
-          if (last != undefined) {
-            ctx!.beginPath(); // Start a new path
-            ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
-            ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
-            ctx!.stroke(); // Render the path
-          }
-          last = p;
-        });
       } else {
         if (hl == node && path.length == 0) hl = undefined;
         ctx!.beginPath();
@@ -124,17 +134,6 @@ export const InteractableMap = () => {
           ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 25);
         }
       }
-      let last: MapNode | undefined = undefined;
-      ctx!.strokeStyle = "#0000FF";
-      path.forEach((p) => {
-        if (last != undefined) {
-          ctx!.beginPath(); // Start a new path
-          ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
-          ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
-          ctx!.stroke(); // Render the path
-        }
-        last = p;
-      });
     });
   }
 
