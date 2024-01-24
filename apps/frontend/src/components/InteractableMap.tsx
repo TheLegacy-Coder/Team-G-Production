@@ -18,6 +18,10 @@ export const InteractableMap = () => {
   image.src = "00_thelowerlevel1.png";
   setTimeout(forceUpdate, 100);
 
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   function draw() {
     if (ctx == null) return;
     ctx?.drawImage(image, 0, 0);
@@ -25,10 +29,28 @@ export const InteractableMap = () => {
     ctx!.strokeStyle = "#0000FF";
     path.forEach((p) => {
       if (last != undefined) {
-        ctx!.beginPath(); // Start a new path
-        ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
-        ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
-        ctx!.stroke(); // Render the path
+        let xstart: number = p.xcoord;
+        let ystart: number = p.ycoord;
+
+        while (xstart != last.xcoord || ystart != last.ycoord) {
+          const xfinish: number = xstart;
+          const yfinish: number = ystart;
+          if (xstart < last.xcoord) {
+            xstart++;
+          } else if (xstart > last.xcoord) {
+            xstart--;
+          }
+          if (ystart < last.ycoord) {
+            ystart++;
+          } else if (ystart > last.ycoord) {
+            ystart--;
+          }
+          setTimeout(delay, 1000);
+          ctx!.beginPath(); // Start a new path
+          ctx!.moveTo(xfinish, yfinish); // Move the pen to (30, 50)
+          ctx!.lineTo(xstart, ystart); // Draw a line to (150, 100)
+          ctx!.stroke(); // Render the path
+        }
       }
       last = p;
     });
