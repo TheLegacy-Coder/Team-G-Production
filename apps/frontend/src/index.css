@@ -39,3 +39,8 @@ body {
 .example-component {
   background-color: cyan;
 }
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+}

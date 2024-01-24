@@ -1,13 +1,15 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
 
-const imageWidth = 5000;
-const imageHeight = 3400;
+let imageWidth = 5000;
+let imageHeight = 3400;
 let yOffset = 0;
 let xOffset = 0;
 let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
+
+const scalar = 0.2;
 export const InteractableMap = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -20,6 +22,8 @@ export const InteractableMap = () => {
 
   function draw() {
     if (ctx == null) return;
+
+    ctx!.scale(scalar, scalar);
     ctx?.drawImage(image, 0, 0);
     let last: MapNode | undefined = undefined;
     ctx!.strokeStyle = "#0000FF";
@@ -52,6 +56,19 @@ export const InteractableMap = () => {
         ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 28);
       }
     });
+
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight;
+    imageWidth = width;
+    imageHeight = height;
+
+    ctx!.scale(1 / scalar, 1 / scalar);
   }
 
   image.onload = () => {
@@ -59,8 +76,8 @@ export const InteractableMap = () => {
   };
 
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
-    const x = evt.pageX - xOffset;
-    const y = evt.pageY - yOffset;
+    const x = (evt.pageX - xOffset) / scalar;
+    const y = (evt.pageY - yOffset) / scalar;
 
     let emptyClick = true;
     mapNodes.forEach((node) => {
@@ -87,8 +104,8 @@ export const InteractableMap = () => {
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
 
-    const x = evt.pageX - xOffset;
-    const y = evt.pageY - yOffset;
+    const x = (evt.pageX - xOffset) / scalar;
+    const y = (evt.pageY - yOffset) / scalar;
 
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
