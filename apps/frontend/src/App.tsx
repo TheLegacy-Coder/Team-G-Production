@@ -8,6 +8,7 @@ import { InteractableMap } from "./components/InteractableMap.tsx";
 import { ProtectedRoutes } from "./components/ProtectedRoutes.tsx";
 import { PageFrame } from "./components/PageFrame.tsx";
 import Login from "./components/ExampleComponent.tsx";
+import { PageNotFound } from "./components/PageNotFound.tsx";
 
 const handleSearch = () => {
   // Implement your login logic here
@@ -37,6 +38,14 @@ function App() {
       element: (
         <PageFrame>
           <InteractableMap />
+        </PageFrame>
+      ),
+    },
+    {
+      path: "*",
+      element: (
+        <PageFrame>
+          <PageNotFound />
         </PageFrame>
       ),
     },
