@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
+import { loginStore } from "../stores/LoginStore.ts";
+import { Navigate } from "react-router-dom";
 //import axios from "axios";
 
 const Login = () => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = useState(""); // Add state for login type
-
   const handleLogin = () => {
     // Implement your login logic here
     // Implementation of displaying either administrator or user login goes here (buttons)
+    loginStore.loggedIn = true;
     console.log("Logging in with:", loginType, username, password);
+    forceUpdate();
   };
-
   return (
     <div className="login-container">
+      {loginStore.loggedIn ? (
+        <Navigate to={loginStore.from} replace />
+      ) : (
+        <div />
+      )}
       <div>
         <button onClick={() => setLoginType("admin")}>
           Administrator Login

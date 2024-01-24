@@ -2,17 +2,19 @@ import React from "react";
 import "./styles/TopNavbar.css";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import CloseProgram from "../components/CloseProgram.tsx";
+import { Link } from "react-router-dom";
 
 export const TopNavbar = () => {
   return (
     <Navbar bg="light" data-bs-theme="light">
       <CloseProgram /> {/* Add the CloseButton component */}
       <Container>
-        <Navbar.Brand href="/">Home</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link href="/search">Search</Nav.Link>
-          <Nav.Link href="/login">Login</Nav.Link>
-          <Nav.Link href="/map">Map</Nav.Link>
+          <Link to="/">Home</Link>
+          <Link to="/map">Map</Link>
+          <Link to="/search">Search</Link>
+          <Link to="/profile">Profile</Link>
+          <Link to="/login">Login</Link>
         </Nav>
       </Container>
     </Navbar>
