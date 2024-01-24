@@ -36,7 +36,7 @@ function App() {
       path: "/map",
       element: (
         <PageFrame>
-          <div>public map</div>
+          <InteractableMap />
         </PageFrame>
       ),
     },
@@ -84,7 +84,6 @@ function App() {
   function Root() {
     return (
       <div className="w-100 h-100 d-flex flex-column overflow-auto">
-
         <Outlet />
       </div>
     );
