@@ -13,6 +13,8 @@ let flip = false;
 let totalDistance = 0;
 let steps: number[] = [];
 let drawStep = 0;
+let frames: number[][][] = [[[]]];
+const spacing = 50;
 
 export const InteractableMap = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -22,45 +24,19 @@ export const InteractableMap = () => {
 
   const image = new Image();
   image.src = "00_thelowerlevel1.png";
-  setTimeout(forceUpdate, 100);
+  setTimeout(draw, 100);
 
   function draw() {
     drawStep = drawStep - 1 >= 0 ? drawStep - 1 : 50;
     if (ctx == null) return;
     ctx?.drawImage(image, 0, 0);
-
-    for (let i = 0; i < totalDistance / 50; i++) {
-      let prog = 50 * i + (drawStep % 50);
-      let s = 0;
-      while (s < path.length) {
-        if (prog < steps[s]) {
-          console.log("break");
-          break;
-        }
-        s++;
-      }
-      s--;
-      console.log("s");
-      console.log(prog);
-      console.log(steps);
-      console.log(s);
-      prog -= steps[s];
-      if (s + 1 < path.length) {
-        console.log(path);
-        console.log(s);
-        console.log(prog);
-        console.log(steps);
-        const angleRadians = Math.atan2(
-          path[s].ycoord - path[s + 1].ycoord,
-          path[s].xcoord - path[s + 1].xcoord,
-        );
-        const x = path[s].xcoord - Math.cos(angleRadians) * prog;
-        const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+    if (frames[drawStep] != undefined) {
+      frames[drawStep].forEach((frame) => {
         ctx!.beginPath();
-        ctx!.arc(x, y, 5, 0, 2 * Math.PI, false);
+        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
         ctx!.fillStyle = "#0000FF";
         ctx!.fill();
-      }
+      });
     }
 
     flip = !flip;
@@ -121,8 +97,37 @@ export const InteractableMap = () => {
             }
             last = node;
           });
+          //bake frames
+          for (let f = 0; f < spacing; f++) {
+            const temp = [];
+            for (let i = 0; i < totalDistance / spacing; i++) {
+              let prog = spacing * i + (f % spacing);
+              let s = 0;
+              while (s < path.length) {
+                if (prog < steps[s]) {
+                  break;
+                }
+                s++;
+              }
+              s--;
+              prog -= steps[s];
+              if (s + 1 < path.length) {
+                const angleRadians = Math.atan2(
+                  path[s].ycoord - path[s + 1].ycoord,
+                  path[s].xcoord - path[s + 1].xcoord,
+                );
+                const x = path[s].xcoord - Math.cos(angleRadians) * prog;
+                const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+                temp.push([x, y]);
+              }
+            }
+            frames.push(temp);
+          }
+          console.log("frames");
+          console.log(frames);
         } else {
           path = [];
+          frames = [[[]]];
           sl = node;
         }
       }
