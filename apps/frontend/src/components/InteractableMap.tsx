@@ -9,7 +9,14 @@ let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 
-const scalar = 0.2;
+let scalar = 1.0;
+let mapX = 0.0;
+let mapY = 0.0;
+let xDelta = 0;
+let yDelta = 0;
+let startX = 0;
+let startY = 0;
+let moveMap = false;
 export const InteractableMap = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -23,39 +30,7 @@ export const InteractableMap = () => {
   function draw() {
     if (ctx == null) return;
 
-    ctx!.scale(scalar, scalar);
-    ctx?.drawImage(image, 0, 0);
-    let last: MapNode | undefined = undefined;
-    ctx!.strokeStyle = "#0000FF";
-    path.forEach((p) => {
-      if (last != undefined) {
-        ctx!.beginPath(); // Start a new path
-        ctx!.moveTo(last.xcoord, last.ycoord); // Move the pen to (30, 50)
-        ctx!.lineTo(p.xcoord, p.ycoord); // Draw a line to (150, 100)
-        ctx!.stroke(); // Render the path
-      }
-      last = p;
-    });
-    mapNodes.forEach((node) => {
-      ctx!.beginPath();
-      ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-      ctx!.fillStyle =
-        sl == node ? "#00FF00" : hl == node ? "#0000FF" : "#FF0000";
-      ctx!.fill();
-      ctx!.lineWidth = 5;
-      ctx!.strokeStyle = "#330000";
-      ctx!.stroke();
-      if (node == hl || node == sl) {
-        ctx!.fillStyle = "#FFFFFF";
-        ctx!.strokeStyle = "#000000";
-        ctx!.fillRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
-        ctx!.strokeRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
-        ctx!.font = "bold 10pt Courier";
-        ctx!.textAlign = "center";
-        ctx!.fillStyle = "#550000";
-        ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 28);
-      }
-    });
+    const scaled = scalar;
 
     const width =
       window.innerWidth ||
@@ -65,10 +40,68 @@ export const InteractableMap = () => {
       window.innerHeight ||
       document.documentElement.clientHeight ||
       document.body.clientHeight;
+
+    ctx!.clearRect(0, 0, width, height);
+
+    ctx!.scale(scaled, scaled);
+    ctx?.drawImage(image, mapX + xDelta, mapY + yDelta);
+    let last: MapNode | undefined = undefined;
+    ctx!.strokeStyle = "#0000FF";
+    path.forEach((p) => {
+      if (last != undefined) {
+        ctx!.beginPath(); // Start a new path
+        ctx!.moveTo(last.xcoord + mapX + xDelta, last.ycoord + mapY + yDelta); // Move the pen to (30, 50)
+        ctx!.lineTo(p.xcoord + mapX + xDelta, p.ycoord + mapY + yDelta); // Draw a line to (150, 100)
+        ctx!.stroke(); // Render the path
+      }
+      last = p;
+    });
+    mapNodes.forEach((node) => {
+      ctx!.beginPath();
+      ctx!.arc(
+        node.xcoord + mapX + xDelta,
+        node.ycoord + mapY + yDelta,
+        10,
+        0,
+        2 * Math.PI,
+        false,
+      );
+      ctx!.fillStyle =
+        sl == node ? "#00FF00" : hl == node ? "#0000FF" : "#FF0000";
+      ctx!.fill();
+      ctx!.lineWidth = 5;
+      ctx!.strokeStyle = "#330000";
+      ctx!.stroke();
+      if (node == hl || node == sl) {
+        ctx!.fillStyle = "#FFFFFF";
+        ctx!.strokeStyle = "#000000";
+        ctx!.fillRect(
+          node.xcoord - 80 + mapX + xDelta,
+          node.ycoord + 15 + mapY + yDelta,
+          160,
+          20,
+        );
+        ctx!.strokeRect(
+          node.xcoord - 80 + mapX + xDelta,
+          node.ycoord + 15 + mapY + yDelta,
+          160,
+          20,
+        );
+        ctx!.font = "bold 10pt Courier";
+        ctx!.textAlign = "center";
+        ctx!.fillStyle = "#550000";
+        ctx!.fillText(
+          node.shortName,
+          node.xcoord + mapX + xDelta,
+          node.ycoord + 28 + mapY + yDelta,
+        );
+      }
+    });
+
     imageWidth = width;
     imageHeight = height;
 
-    ctx!.scale(1 / scalar, 1 / scalar);
+    ctx!.scale(1 / scaled, 1 / scaled);
   }
 
   image.onload = () => {
@@ -76,8 +109,10 @@ export const InteractableMap = () => {
   };
 
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
-    const x = (evt.pageX - xOffset) / scalar;
-    const y = (evt.pageY - yOffset) / scalar;
+    xDelta = (evt.pageX - startX) / scalar;
+    yDelta = (evt.pageY - startY) / scalar;
+    const x = (evt.pageX - xOffset) / scalar - mapX;
+    const y = (evt.pageY - yOffset) / scalar - mapY;
 
     let emptyClick = true;
     mapNodes.forEach((node) => {
@@ -100,12 +135,28 @@ export const InteractableMap = () => {
       path = [];
     }
     draw();
+    moveMap = false;
+    mapX += xDelta;
+    mapY += yDelta;
+    xDelta = 0;
+    yDelta = 0;
   }
+
+  function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
+    startX = evt.pageX;
+    startY = evt.pageY;
+    moveMap = true;
+  }
+
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
 
-    const x = (evt.pageX - xOffset) / scalar;
-    const y = (evt.pageY - yOffset) / scalar;
+    if (moveMap) {
+      xDelta = (evt.pageX - startX) / scalar;
+      yDelta = (evt.pageY - startY) / scalar;
+    }
+    const x = (evt.pageX - xOffset) / scalar - mapX;
+    const y = (evt.pageY - yOffset) / scalar - mapY;
 
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
@@ -119,6 +170,18 @@ export const InteractableMap = () => {
       }
     });
     draw();
+  }
+
+  function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
+    if (ctx == null) return;
+
+    const delta = evt.deltaY;
+
+    if (delta > 0) {
+      scalar *= 1.2;
+    } else if (delta < 0) {
+      scalar *= 1 / 1.2;
+    }
   }
 
   useEffect(() => {
@@ -136,6 +199,8 @@ export const InteractableMap = () => {
     <canvas
       onMouseMove={mouseMove}
       onMouseUp={mouseUp}
+      onMouseDown={mouseDown}
+      onWheel={mouseScroll}
       ref={canvasRef}
       width={imageWidth}
       height={imageHeight}
