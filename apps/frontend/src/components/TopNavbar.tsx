@@ -9,15 +9,26 @@ export const TopNavbar = () => {
     <Navbar bg="light" data-bs-theme="light">
       <Container>
         <Nav className="me-auto">
-          <Link to="/">Home</Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Home
+          </Link>
+
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/map">Map</Link>
+          <Link to="/map" style={{ textDecoration: "none" }}>
+            Map
+          </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/search">Search</Link>
+          <Link to="/search" style={{ textDecoration: "none" }}>
+            Search
+          </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/profile">Profile</Link>
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+            Profile
+          </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/login">Login</Link>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            Login
+          </Link>
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
       </Container>

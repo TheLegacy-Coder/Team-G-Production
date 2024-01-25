@@ -9,7 +9,7 @@ function ResourceButton(props: ResourceButtonProps) {
   const { value } = props;
 
   return (
-    <div style={{ width: "400px" }}>
+    <div style={{ width: "auto" }}>
       <Button variant="primary" size="sm">
         {value}
       </Button>{" "}

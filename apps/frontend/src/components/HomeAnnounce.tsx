@@ -4,7 +4,9 @@ export const HomeAnnounce = () => {
   return (
     <div className={"page-frame"}>
       <div>
-        <u>Home Announcements:</u>
+        <b>
+          <u>Home Announcements:</u>
+        </b>
       </div>
       <div>
         • Bob has been admitted after crashing his car into the hospital's front
