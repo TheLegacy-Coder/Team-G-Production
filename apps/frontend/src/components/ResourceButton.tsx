@@ -5,7 +5,7 @@ interface ResourceButtonProps {
   value: string;
 }
 
-function ResourceButton(props: ResourceButtonProps) {
+export const ResourceButton = (props: ResourceButtonProps) => {
   const { value } = props;
 
   return (
@@ -15,6 +15,4 @@ function ResourceButton(props: ResourceButtonProps) {
       </Button>{" "}
     </div>
   );
-}
-
-export default ResourceButton;
+};

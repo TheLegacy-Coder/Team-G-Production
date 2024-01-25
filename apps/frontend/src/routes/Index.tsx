@@ -1,13 +1,10 @@
 import React from "react";
-import ResourceButton from "../components/ResourceButton.tsx";
-import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
-const image = new Image();
-image.src = "bh_bwh_pms_293.png";
 import Stack from "react-bootstrap/Stack";
 
-// import ExampleComponent from "../components/Login.tsx";
+import { ResourceButton } from "../components/ResourceButton.tsx";
+import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 
-export default function ExampleRoute() {
+export const Index = () => {
   return (
     <div className="w-100 h-100 d-flex flex-row overflow-auto">
       <div>
@@ -44,26 +41,6 @@ export default function ExampleRoute() {
           height="550"
         />
       </div>
-
-      {/*{<ExampleComponent />}*/}
     </div>
   );
-}
-
-/*
-
-import React from "react";
-import {ExampleComponent} from "../components/Login.tsx";
-
-export default function ExampleRoute() {
-  return (
-    <div className="w-100 h-100 d-flex flex-column overflow-auto">
-
-
-      <h1>This is not an example page.</h1>
-        <ExampleComponent></ExampleComponent>
-    </div>
-  );
-}
-
- */
+};

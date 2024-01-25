@@ -1,6 +1,6 @@
 import React from "react";
 
-const CloseProgram = () => {
+export const CloseProgram = () => {
   const handleClose = () => {
     // Attempt to close the window
     window.close();
@@ -8,5 +8,3 @@ const CloseProgram = () => {
 
   return <button onClick={handleClose}>Close Program</button>;
 };
-
-export default CloseProgram;

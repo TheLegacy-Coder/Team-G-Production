@@ -5,9 +5,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // Routes
 import { Root } from "./routes/Root.tsx";
 import { PageNotFound } from "./routes/PageNotFound.tsx";
-import Index from "./routes/Index.tsx";
+import { Index } from "./routes/Index.tsx";
 import { InteractableMap } from "./routes/InteractableMap.tsx";
-import Login from "./routes/Login.tsx";
+import { Login } from "./routes/Login.tsx";
 
 // Protected Routes
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
