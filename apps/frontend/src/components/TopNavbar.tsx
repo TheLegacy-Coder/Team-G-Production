@@ -7,15 +7,19 @@ import { Link } from "react-router-dom";
 export const TopNavbar = () => {
   return (
     <Navbar bg="light" data-bs-theme="light">
-      <CloseProgram /> {/* Add the CloseButton component */}
       <Container>
         <Nav className="me-auto">
           <Link to="/">Home</Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
           <Link to="/map">Map</Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
           <Link to="/search">Search</Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
           <Link to="/profile">Profile</Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
           <Link to="/login">Login</Link>
         </Nav>
+        <CloseProgram /> {/* Add the CloseButton component */}
       </Container>
     </Navbar>
   );
