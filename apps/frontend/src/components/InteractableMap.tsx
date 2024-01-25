@@ -108,16 +108,27 @@ export const InteractableMap = () => {
     draw();
   };
 
-  function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
-    xDelta = (evt.pageX - startX) / scalar;
-    yDelta = (evt.pageY - startY) / scalar;
+  function getXY(evt: React.MouseEvent<Element, MouseEvent>): {
+    x: number;
+    y: number;
+  } {
+    if (moveMap) {
+      xDelta = (evt.pageX - startX) / scalar;
+      yDelta = (evt.pageY - startY) / scalar;
+    }
+
     const x = (evt.pageX - xOffset) / scalar - mapX;
     const y = (evt.pageY - yOffset) / scalar - mapY;
+    return { x, y };
+  }
+
+  function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    const cord = getXY(evt);
 
     let emptyClick = true;
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
-        Math.pow(x - node.xcoord, 2) + Math.pow(y - node.ycoord, 2),
+        Math.pow(cord.x - node.xcoord, 2) + Math.pow(cord.y - node.ycoord, 2),
       );
       if (dist < 10) {
         emptyClick = false;
@@ -151,16 +162,11 @@ export const InteractableMap = () => {
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
 
-    if (moveMap) {
-      xDelta = (evt.pageX - startX) / scalar;
-      yDelta = (evt.pageY - startY) / scalar;
-    }
-    const x = (evt.pageX - xOffset) / scalar - mapX;
-    const y = (evt.pageY - yOffset) / scalar - mapY;
+    const cord = getXY(evt);
 
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
-        Math.pow(x - node.xcoord, 2) + Math.pow(y - node.ycoord, 2),
+        Math.pow(cord.x - node.xcoord, 2) + Math.pow(cord.y - node.ycoord, 2),
       );
       if (dist < 10 && path.length == 0) {
         hl = node;
@@ -177,9 +183,9 @@ export const InteractableMap = () => {
 
     const delta = evt.deltaY;
 
-    if (delta > 0) {
+    if (delta > 0 && scalar < 1.5) {
       scalar *= 1.2;
-    } else if (delta < 0) {
+    } else if (delta < 0 && scalar > 0.1) {
       scalar *= 1 / 1.2;
     }
   }
