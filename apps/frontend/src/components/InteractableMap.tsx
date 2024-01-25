@@ -9,6 +9,11 @@ let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 let flip = false;
+
+let totalDistance = 0;
+let steps: number[] = [];
+let drawStep = 0;
+
 export const InteractableMap = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -20,55 +25,44 @@ export const InteractableMap = () => {
   setTimeout(forceUpdate, 100);
 
   function draw() {
-    let drawStep = 0;
+    drawStep = drawStep - 1 >= 0 ? drawStep - 1 : 50;
     if (ctx == null) return;
     ctx?.drawImage(image, 0, 0);
-    let last: MapNode | undefined = undefined;
-    let currentLight = flip;
 
-    path.forEach((p) => {
-      if (last != undefined) {
-        drawStep++;
-        const distance: number = Math.sqrt(
-          Math.pow(p.xcoord - last.xcoord, 2) +
-            Math.pow(p.ycoord - last.ycoord, 2),
-        );
-        let xfinish: number = p.xcoord;
-        let yfinish: number = p.ycoord;
-        const guideSpacer: number = Math.round(distance / 25);
-
-        while (xfinish != last.xcoord || yfinish != last.ycoord) {
-          const xstart: number = xfinish;
-          const ystart: number = yfinish;
-          //animation goes one pixel to the next, check which direction to draw next pixel
-          if (xfinish < last.xcoord) {
-            xfinish++;
-          } else if (xfinish > last.xcoord) {
-            xfinish--;
-          }
-          if (yfinish < last.ycoord) {
-            yfinish++;
-          } else if (yfinish > last.ycoord) {
-            yfinish--;
-          }
-          if (drawStep % guideSpacer == 0) {
-            ctx!.beginPath();
-            ctx!.arc(xfinish, yfinish, 20, 0, 2 * Math.PI, false);
-            ctx!.fillStyle = "#FF80ED";
-            ctx!.fill();
-            ctx!.stroke();
-          }
-          ctx!.strokeStyle = currentLight ? "#0000FF" : "#00FF00"; //choose color of pixel
-          ctx!.beginPath(); // Start a new path
-          ctx!.moveTo(xstart, ystart); // Move the pen to (30, 50)
-          ctx!.lineTo(xfinish, yfinish); // Draw a line to (150, 100)
-          ctx!.stroke(); // Render the path
-
-          currentLight = !currentLight;
+    for (let i = 0; i < totalDistance / 50; i++) {
+      let prog = 50 * i + (drawStep % 50);
+      let s = 0;
+      while (s < path.length) {
+        if (prog < steps[s]) {
+          console.log("break");
+          break;
         }
+        s++;
       }
-      last = p;
-    });
+      s--;
+      console.log("s");
+      console.log(prog);
+      console.log(steps);
+      console.log(s);
+      prog -= steps[s];
+      if (s + 1 < path.length) {
+        console.log(path);
+        console.log(s);
+        console.log(prog);
+        console.log(steps);
+        const angleRadians = Math.atan2(
+          path[s].ycoord - path[s + 1].ycoord,
+          path[s].xcoord - path[s + 1].xcoord,
+        );
+        const x = path[s].xcoord - Math.cos(angleRadians) * prog;
+        const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+        ctx!.beginPath();
+        ctx!.arc(x, y, 5, 0, 2 * Math.PI, false);
+        ctx!.fillStyle = "#0000FF";
+        ctx!.fill();
+      }
+    }
+
     flip = !flip;
     mapNodes.forEach((node) => {
       ctx!.beginPath();
@@ -92,7 +86,7 @@ export const InteractableMap = () => {
     });
 
     forceUpdate();
-    if (path.length > 0) setTimeout(draw, 100);
+    if (path.length > 0) setTimeout(draw, 10);
     console.log("drawStep:", drawStep);
   }
 
@@ -113,6 +107,20 @@ export const InteractableMap = () => {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
           path = BreadthFirstSearch(sl, node);
+          totalDistance = 0;
+          steps = [0];
+          let last: MapNode | undefined = undefined;
+          path.forEach((node) => {
+            if (last != undefined) {
+              const length = Math.sqrt(
+                Math.pow(last.ycoord - node.ycoord, 2) +
+                  Math.pow(last.xcoord - node.xcoord, 2),
+              );
+              totalDistance += length;
+              steps.push(totalDistance);
+            }
+            last = node;
+          });
         } else {
           path = [];
           sl = node;
