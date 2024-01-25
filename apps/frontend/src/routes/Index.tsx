@@ -5,7 +5,7 @@ const image = new Image();
 image.src = "bh_bwh_pms_293.png";
 import Stack from "react-bootstrap/Stack";
 
-// import ExampleComponent from "../components/ExampleComponent.tsx";
+// import ExampleComponent from "../components/Login.tsx";
 
 export default function ExampleRoute() {
   return (
@@ -53,7 +53,7 @@ export default function ExampleRoute() {
 /*
 
 import React from "react";
-import {ExampleComponent} from "../components/ExampleComponent.tsx";
+import {ExampleComponent} from "../components/Login.tsx";
 
 export default function ExampleRoute() {
   return (

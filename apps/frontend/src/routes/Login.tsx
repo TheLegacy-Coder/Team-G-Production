@@ -16,6 +16,14 @@ const Login = () => {
   };
   return (
     <div className="login-container">
+      <div>
+        <br />
+        Welcome to the Login Page
+        <br />
+        <br />
+        Please select a login type below:
+      </div>
+
       {loginStore.loggedIn ? (
         <Navigate to={loginStore.from} replace />
       ) : (
