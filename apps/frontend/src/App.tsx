@@ -1,14 +1,16 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import ExampleRoute from "./routes/ExampleRoute.tsx";
-import { BreadthFirstSearch, mapNodes } from "./map/MapNode.ts";
-import { InteractableMap } from "./components/InteractableMap.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { ProtectedRoutes } from "./components/ProtectedRoutes.tsx";
-import { PageFrame } from "./components/PageFrame.tsx";
-import Login from "./components/ExampleComponent.tsx";
-import { PageNotFound } from "./components/PageNotFound.tsx";
+// Routes
+import { Root } from "./routes/Root.tsx";
+import { PageNotFound } from "./routes/PageNotFound.tsx";
+import { Index } from "./routes/Index.tsx";
+import { InteractableMap } from "./routes/InteractableMap.tsx";
+import { Login } from "./routes/Login.tsx";
+
+// Protected Routes
+import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
 
 const handleSearch = () => {
   // Implement your login logic here
@@ -20,90 +22,45 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      errorElement: <div />,
       element: <Root />,
+      errorElement: <PageNotFound />,
       children: [
         {
-          path: "",
-          element: (
-            <PageFrame>
-              <ExampleRoute />
-            </PageFrame>
-          ),
-        },
-      ],
-    },
-    {
-      path: "/map",
-      element: (
-        <PageFrame>
-          <InteractableMap />
-        </PageFrame>
-      ),
-    },
-    {
-      path: "*",
-      element: (
-        <PageFrame>
-          <PageNotFound />
-        </PageFrame>
-      ),
-    },
-    {
-      path: "/login",
-      element: (
-        <PageFrame>
-          <div>
-            <div>
-              <br />
-              Welcome to the Login Page
-              <br />
-              <br />
-              Please select a login type below:
-            </div>
-            <Login /> {/* Add the login component */}
-          </div>
-        </PageFrame>
-      ),
-    },
-    {
-      element: <ProtectedRoutes />,
-      children: [
-        {
-          path: "/profile",
-          element: (
-            <PageFrame>
-              <div>secret profile</div>
-            </PageFrame>
-          ),
-        },
-        {
-          path: "/search",
-          element: (
-            <PageFrame>
-              <div className="topnav">
-                <input type="text" placeholder="Search.." />
-                <button onClick={handleSearch}>Enter</button>
-              </div>
-            </PageFrame>
-          ),
+          children: [
+            { index: true, element: <Index /> },
+            {
+              path: "/map",
+              element: <InteractableMap />,
+            },
+            {
+              path: "/login",
+              element: <Login />,
+            },
+            {
+              element: <ProtectedRoutes />,
+              children: [
+                {
+                  path: "/profile",
+                  element: <div>secret profile</div>,
+                },
+                {
+                  path: "/search",
+                  element: (
+                    <div className="topnav">
+                      <input type="text" placeholder="Search.." />
+                      <button onClick={handleSearch}>Enter</button>
+                    </div>
+                  ),
+                },
+              ],
+            },
+          ],
         },
       ],
     },
   ]);
-  console.log(mapNodes);
-  console.log(
-    BreadthFirstSearch(mapNodes.get("CCONF001L1"), mapNodes.get("CHALL009L1")),
-  );
-  return <RouterProvider router={router} />;
 
-  function Root() {
-    return (
-      <div className="w-100 h-100 d-flex flex-column overflow-auto">
-        <Outlet />
-      </div>
-    );
-  }
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles/TopNavbar.css";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import CloseProgram from "../components/CloseProgram.tsx";
+import { CloseProgram } from "../components/CloseProgram.tsx";
 import { Link } from "react-router-dom";
 
 export const TopNavbar = () => {
