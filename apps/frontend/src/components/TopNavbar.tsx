@@ -7,15 +7,30 @@ import { Link } from "react-router-dom";
 export const TopNavbar = () => {
   return (
     <Navbar bg="light" data-bs-theme="light">
-      <CloseProgram /> {/* Add the CloseButton component */}
       <Container>
         <Nav className="me-auto">
-          <Link to="/">Home</Link>
-          <Link to="/map">Map</Link>
-          <Link to="/search">Search</Link>
-          <Link to="/profile">Profile</Link>
-          <Link to="/login">Login</Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Home
+          </Link>
+
+          <div>&nbsp;&nbsp;&nbsp;</div>
+          <Link to="/map" style={{ textDecoration: "none" }}>
+            Map
+          </Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
+          <Link to="/search" style={{ textDecoration: "none" }}>
+            Search
+          </Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+            Profile
+          </Link>
+          <div>&nbsp;&nbsp;&nbsp;</div>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            Login
+          </Link>
         </Nav>
+        <CloseProgram /> {/* Add the CloseButton component */}
       </Container>
     </Navbar>
   );

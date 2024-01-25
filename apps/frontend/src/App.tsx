@@ -54,6 +54,13 @@ function App() {
       element: (
         <PageFrame>
           <div>
+            <div>
+              <br />
+              Welcome to the Login Page
+              <br />
+              <br />
+              Please select a login type below:
+            </div>
             <Login /> {/* Add the login component */}
           </div>
         </PageFrame>
