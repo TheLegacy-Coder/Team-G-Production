@@ -1,20 +1,13 @@
 import React from "react";
 
-const image = new Image();
-image.src = "Snapchat-449567957.jpg";
-
 export const PageNotFound = () => {
   return (
-    <div className={"page-frame"}>
-      <div>
-        <br />
-        <div>Error 404: Page Not Found</div>
-      </div>
-      <br />
-      <div>
+    <div>
+      <h1>Error 404: Page Not Found</h1>
+      <p>
         This isn't supposed to happen... But don't worry. Take a look at this
         awesome picture.{" "}
-      </div>
+      </p>
       <img
         src="Snapchat-449567957.jpg"
         alt="us having fun :)"

@@ -23,9 +23,9 @@ function App() {
     {
       path: "/",
       element: <Root />,
+      errorElement: <PageNotFound />,
       children: [
         {
-          errorElement: <PageNotFound />,
           children: [
             { index: true, element: <Index /> },
             {
