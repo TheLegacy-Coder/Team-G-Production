@@ -129,7 +129,7 @@ export const InteractableMap = () => {
         }
       }
     });
-    if (emptyClick) {
+    if (emptyClick && xDelta == 0 && yDelta == 0) {
       hl = undefined;
       sl = undefined;
       path = [];
