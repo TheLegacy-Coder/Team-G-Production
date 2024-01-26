@@ -31,3 +31,19 @@ model Nodes {
   longName  String
   shortName String
 }
+
+model Employee {
+  employeeID  String @id
+  username    String
+  password    String
+  job         String
+  accessLevel String
+}
+
+model ServiceRequest {
+  requestID        String @id
+  requestType      String
+  location         String
+  isHandled        String
+  assignedEmployee String
+}
