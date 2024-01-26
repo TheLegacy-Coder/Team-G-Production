@@ -86,7 +86,7 @@ ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 CREATE TABLE public."Edges" (
-    "edgeID" text NOT NULL Primary Key,
+    "edgeID" text NOT NULL --Primary Key,
     "startNode" text NOT NULL, --references public."Nodes"("nodeID")
     "endNode" text NOT NULL --references public."Nodes"("nodeID")
 );
