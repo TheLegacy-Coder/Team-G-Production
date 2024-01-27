@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
 
 const imageWidth = 5000;
@@ -17,18 +17,23 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 export const InteractableMap = () => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  //const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  const ctx = canvasCtxRef.current;
+  let ctx = canvasCtxRef.current;
 
   const image = new Image();
   image.src = "00_thelowerlevel1.png";
   setTimeout(draw, 100);
 
   function draw() {
-    drawStep = drawStep - 1 >= 0 ? drawStep - 1 : 50;
-    if (ctx == null) return;
+    //console.log(drawStep);
+    ctx = canvasCtxRef.current;
+
+    if (ctx == null) {
+      return;
+    }
+    drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     ctx?.drawImage(image, 0, 0);
     if (frames[drawStep] != undefined) {
       frames[drawStep].forEach((frame) => {
@@ -36,6 +41,7 @@ export const InteractableMap = () => {
         ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
         ctx!.fillStyle = "#0000FF";
         ctx!.fill();
+        console.log("draw");
       });
     }
 
@@ -61,13 +67,12 @@ export const InteractableMap = () => {
       }
     });
 
-    forceUpdate();
-    if (path.length > 0) setTimeout(draw, 10);
-    console.log("drawStep:", drawStep);
+    //forceUpdate();
+    if (path.length > 0) setTimeout(draw, 50);
   }
 
   image.onload = () => {
-    //draw();
+    draw();
   };
 
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
@@ -136,6 +141,7 @@ export const InteractableMap = () => {
       hl = undefined;
       sl = undefined;
       path = [];
+      frames = [[[]]];
     }
     draw();
   }
