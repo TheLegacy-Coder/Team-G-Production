@@ -9,13 +9,18 @@ let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 
+//Stores scaled map amount
 let scalar = 1.0;
+//Stores map xy coordinates for translation
 let mapX = 0;
 let mapY = 0;
+//Stores map delta xy coordinates while panning
 let xDelta = 0;
 let yDelta = 0;
+//Stores the start xy of mouse when pressed
 let startX = 0;
 let startY = 0;
+//Stores whether to update map position if moving
 let moveMap = false;
 export const InteractableMap = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -30,8 +35,9 @@ export const InteractableMap = () => {
   function draw() {
     if (ctx == null) return;
 
+    //Stores local scaled variable to avoid getting/setting conflicts
     const scaled = scalar;
-
+    //Stores the width and height of window
     const width =
       window.innerWidth ||
       document.documentElement.clientWidth ||
@@ -40,18 +46,21 @@ export const InteractableMap = () => {
       window.innerHeight ||
       document.documentElement.clientHeight ||
       document.body.clientHeight;
-
+    //Stores amount to translate drawn canvas items
+    const transX = mapX + xDelta;
+    const transY = mapY + yDelta;
+    //Clears canvas
     ctx!.clearRect(0, 0, width, height);
-
+    //Scales canvas for zoom
     ctx!.scale(scaled, scaled);
-    ctx?.drawImage(image, mapX + xDelta, mapY + yDelta);
+    ctx?.drawImage(image, transX, transY);
     let last: MapNode | undefined = undefined;
     ctx!.strokeStyle = "#0000FF";
     path.forEach((p) => {
       if (last != undefined) {
         ctx!.beginPath(); // Start a new path
-        ctx!.moveTo(last.xcoord + mapX + xDelta, last.ycoord + mapY + yDelta); // Move the pen to (30, 50)
-        ctx!.lineTo(p.xcoord + mapX + xDelta, p.ycoord + mapY + yDelta); // Draw a line to (150, 100)
+        ctx!.moveTo(last.xcoord + transX, last.ycoord + transY); // Move the pen to (30, 50)
+        ctx!.lineTo(p.xcoord + transX, p.ycoord + transY); // Draw a line to (150, 100)
         ctx!.stroke(); // Render the path
       }
       last = p;
@@ -59,8 +68,8 @@ export const InteractableMap = () => {
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(
-        node.xcoord + mapX + xDelta,
-        node.ycoord + mapY + yDelta,
+        node.xcoord + transX,
+        node.ycoord + transY,
         10,
         0,
         2 * Math.PI,
@@ -76,14 +85,14 @@ export const InteractableMap = () => {
         ctx!.fillStyle = "#FFFFFF";
         ctx!.strokeStyle = "#000000";
         ctx!.fillRect(
-          node.xcoord - 80 + mapX + xDelta,
-          node.ycoord + 15 + mapY + yDelta,
+          node.xcoord - 80 + transX,
+          node.ycoord + 15 + transY,
           160,
           20,
         );
         ctx!.strokeRect(
-          node.xcoord - 80 + mapX + xDelta,
-          node.ycoord + 15 + mapY + yDelta,
+          node.xcoord - 80 + transX,
+          node.ycoord + 15 + transY,
           160,
           20,
         );
@@ -92,46 +101,71 @@ export const InteractableMap = () => {
         ctx!.fillStyle = "#550000";
         ctx!.fillText(
           node.shortName,
-          node.xcoord + mapX + xDelta,
-          node.ycoord + 28 + mapY + yDelta,
+          node.xcoord + transX,
+          node.ycoord + 28 + transY,
         );
       }
     });
-
+    //Sets image width for display
     imageWidth = width;
     imageHeight = height;
-
+    //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
   }
 
+  //Draws on canvas when map image loaded
   image.onload = () => {
     draw();
   };
 
+  //Updates map location to be within the bounds of the page
+  function updateXY() {
+    if (image.width * scalar < imageWidth) {
+      //Centers image along x axis
+      mapX = (imageWidth - image.width * scalar) / 2 / scalar;
+      xDelta = 0;
+    } else {
+      if (mapX + xDelta >= 0) {
+        //Aligns image along left side
+        mapX -= mapX + xDelta;
+      }
+      if (mapX <= imageWidth / scalar - image.width - xDelta - xOffset) {
+        //Aligns image along right side
+        mapX = imageWidth / scalar - image.width - xDelta - xOffset;
+      }
+    }
+    if (image.height * scalar < imageHeight) {
+      //Centers image along y axis
+      mapY = (imageHeight - image.height * scalar) / 2 / scalar;
+      yDelta = 0;
+    } else {
+      if (mapY + yDelta >= 0) {
+        //Aligns image along top side
+        mapY -= mapY + yDelta;
+      }
+      if (mapY <= (imageHeight - yOffset) / scalar - image.height - yDelta) {
+        //Aligns image along bottom side
+        mapY = (imageHeight - yOffset) / scalar - image.height - yDelta;
+      }
+    }
+  }
+
+  //Gets the x and y coordinates for mouse hovering and adjusts xy for corner bounds
   function getXY(evt: React.MouseEvent<Element, MouseEvent>): {
     x: number;
     y: number;
   } {
+    //Adjust delta values if moving map
     if (moveMap) {
       xDelta = (evt.pageX - startX) / scalar;
       yDelta = (evt.pageY - startY) / scalar;
     }
 
+    updateXY();
+
+    //Returned xy values
     const x = (evt.pageX - xOffset) / scalar - mapX;
     const y = (evt.pageY - yOffset) / scalar - mapY;
-
-    if (mapX + xDelta > 0) {
-      mapX -= mapX + xDelta;
-    }
-    if (mapY + yDelta > 0) {
-      mapY -= mapY + yDelta;
-    }
-    if ((image.width + mapX + xDelta) * scalar + xOffset <= imageWidth) {
-      mapX += imageWidth - ((image.width + mapX + xDelta) * scalar + xOffset);
-    }
-    if ((image.height + mapY + yDelta) * scalar + yOffset <= imageHeight) {
-      mapY += imageHeight - ((image.height + mapY + yDelta) * scalar + yOffset);
-    }
 
     return { x, y };
   }
@@ -159,14 +193,15 @@ export const InteractableMap = () => {
       sl = undefined;
       path = [];
     }
-    draw();
-    moveMap = false;
     mapX += xDelta;
     mapY += yDelta;
     xDelta = 0;
     yDelta = 0;
+    draw();
+    moveMap = false;
   }
 
+  //Starts moving map according to mouse drag
   function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
     startX = evt.pageX;
     startY = evt.pageY;
@@ -175,7 +210,6 @@ export const InteractableMap = () => {
 
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
-
     const cord = getXY(evt);
 
     mapNodes.forEach((node) => {
@@ -192,16 +226,20 @@ export const InteractableMap = () => {
     draw();
   }
 
+  //Adjusts zoom according to scroll
   function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
     if (ctx == null) return;
-
     const delta = evt.deltaY;
 
     if (delta < 0 && scalar < 1.3) {
+      //Zooms in
       scalar *= 1.2;
     } else if (delta > 0 && scalar > 0.4) {
+      //Zooms out
       scalar *= 1 / 1.2;
     }
+    updateXY();
+    draw();
   }
 
   useEffect(() => {
