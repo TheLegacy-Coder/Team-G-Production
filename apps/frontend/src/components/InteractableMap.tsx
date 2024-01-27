@@ -10,8 +10,8 @@ let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 
 let scalar = 1.0;
-let mapX = 0.0;
-let mapY = 0.0;
+let mapX = 0;
+let mapY = 0;
 let xDelta = 0;
 let yDelta = 0;
 let startX = 0;
@@ -119,6 +119,20 @@ export const InteractableMap = () => {
 
     const x = (evt.pageX - xOffset) / scalar - mapX;
     const y = (evt.pageY - yOffset) / scalar - mapY;
+
+    if (mapX + xDelta > 0) {
+      mapX -= mapX + xDelta;
+    }
+    if (mapY + yDelta > 0) {
+      mapY -= mapY + yDelta;
+    }
+    if ((image.width + mapX + xDelta) * scalar + xOffset <= imageWidth) {
+      mapX += imageWidth - ((image.width + mapX + xDelta) * scalar + xOffset);
+    }
+    if ((image.height + mapY + yDelta) * scalar + yOffset <= imageHeight) {
+      mapY += imageHeight - ((image.height + mapY + yDelta) * scalar + yOffset);
+    }
+
     return { x, y };
   }
 
