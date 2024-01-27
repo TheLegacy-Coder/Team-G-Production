@@ -183,9 +183,9 @@ export const InteractableMap = () => {
 
     const delta = evt.deltaY;
 
-    if (delta > 0 && scalar < 1.5) {
+    if (delta < 0 && scalar < 1.3) {
       scalar *= 1.2;
-    } else if (delta < 0 && scalar > 0.1) {
+    } else if (delta > 0 && scalar > 0.4) {
       scalar *= 1 / 1.2;
     }
   }
@@ -202,14 +202,24 @@ export const InteractableMap = () => {
   }, [ctx]);
 
   return (
-    <canvas
-      onMouseMove={mouseMove}
-      onMouseUp={mouseUp}
-      onMouseDown={mouseDown}
-      onWheel={mouseScroll}
-      ref={canvasRef}
-      width={imageWidth}
-      height={imageHeight}
-    ></canvas>
+    <div
+      style={
+        {
+          width: imageWidth - xOffset,
+          height: imageHeight - yOffset,
+          overflow: "hidden",
+        } as React.CSSProperties
+      }
+    >
+      <canvas
+        onMouseMove={mouseMove}
+        onMouseUp={mouseUp}
+        onMouseDown={mouseDown}
+        onWheel={mouseScroll}
+        ref={canvasRef}
+        width={imageWidth - xOffset}
+        height={imageHeight - yOffset}
+      ></canvas>
+    </div>
   );
 };
