@@ -211,7 +211,6 @@ export const InteractableMap = () => {
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
     const cord = getXY(evt);
-
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
         Math.pow(cord.x - node.xcoord, 2) + Math.pow(cord.y - node.ycoord, 2),
@@ -253,10 +252,10 @@ export const InteractableMap = () => {
   useEffect(() => {
     // Initialize
     if (canvasRef.current) {
-      const { offsetTop } = canvasRef.current;
-      const { offsetLeft } = canvasRef.current;
-      yOffset = offsetTop;
-      xOffset = offsetLeft;
+      const rect = canvasRef.current?.getBoundingClientRect();
+      yOffset = rect.top;
+
+      xOffset = rect.left;
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
   }, [ctx]);
