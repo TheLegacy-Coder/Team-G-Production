@@ -218,6 +218,7 @@ export const InteractableMap = () => {
       );
       if (dist < 10 && path.length == 0) {
         hl = node;
+        console.log("hover");
         forceUpdate();
       } else {
         if (hl == node && path.length == 0) hl = undefined;
@@ -226,20 +227,28 @@ export const InteractableMap = () => {
     draw();
   }
 
-  //Adjusts zoom according to scroll
-  function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
-    if (ctx == null) return;
-    const delta = evt.deltaY;
-
-    if (delta < 0 && scalar < 1.3) {
+  function zoom(zoomIn: boolean) {
+    if (zoomIn && scalar < 1.3) {
       //Zooms in
       scalar *= 1.2;
-    } else if (delta > 0 && scalar > 0.4) {
+    } else if (!zoomIn && scalar > 0.4) {
       //Zooms out
       scalar *= 1 / 1.2;
     }
     updateXY();
     draw();
+  }
+
+  //Adjusts zoom according to scroll
+  function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
+    if (ctx == null) return;
+    const delta = evt.deltaY;
+
+    if (delta < 0) {
+      zoom(true);
+    } else {
+      zoom(false);
+    }
   }
 
   useEffect(() => {
