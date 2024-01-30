@@ -1,5 +1,4 @@
-import rawNodes from "../../../Temporary/L1Nodes.txt";
-import rawEdges from "../../../Temporary/L1Edges.txt";
+import axios, { AxiosResponse } from "axios";
 export type MapNode = {
   nodeID: string;
   xcoord: number;
@@ -12,56 +11,96 @@ export type MapNode = {
   edges: MapNode[];
 };
 
-//TODO: remove this and replace with an actual backend
-export const mapNodes: Map<string, MapNode> = new Map([]);
-fetch(rawNodes)
-  .then((r) => r.text())
-  .then((text) => {
-    let headers = true;
-    text.split("\n").forEach((line) => {
-      if (headers) {
-        headers = false;
-      } else {
-        const fields: string[] = line.split(",");
-        const newNode: MapNode = {
-          nodeID: fields[0],
-          xcoord: parseInt(fields[1]),
-          ycoord: parseInt(fields[2]),
-          floor: fields[3],
-          buidling: fields[4],
-          nodeType: fields[5],
-          longName: fields[6],
-          shortName: fields[7],
-          edges: [],
-        };
-        mapNodes.set(fields[0], newNode);
-      }
-    });
-  });
+export type Edge = {
+  edgeID: string;
+  startNode: string;
+  endNode: string;
+};
 
-fetch(rawEdges)
-  .then((r) => r.text())
-  .then((text) => {
-    let headers = true;
-    text.split("\n").forEach((line) => {
-      if (headers) {
-        headers = false;
-      } else {
-        const fields: string[] = line.split(",");
-        if (fields[2] != undefined) {
-          fields[2] = fields[2].replace("\r", "");
-          const n1 = mapNodes.get(fields[1]);
-          const n2 = mapNodes.get(fields[2]);
+export const mapNodes: Map<string, MapNode> = new Map([]);
+
+axios
+  .get("http://localhost:3000/api/map/nodes")
+  .then((response: AxiosResponse<MapNode[]>) => {
+    console.log(response.data);
+    response.data.forEach((node) => {
+      node.edges = [];
+      mapNodes.set(node.nodeID, node);
+    });
+
+    axios
+      .get("http://localhost:3000/api/map/edges")
+      .then((response: AxiosResponse<Edge[]>) => {
+        console.log(response.data);
+        response.data.forEach((edge) => {
+          const n1 = mapNodes.get(edge.startNode);
+          const n2 = mapNodes.get(edge.endNode);
           if (n1 == undefined || n2 == undefined) {
             console.log("bad edge");
           } else {
             n1.edges.push(n2);
             n2.edges.push(n1);
           }
-        }
-      }
-    });
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
   });
+
+//TODO: remove this and replace with an actual backend
+//
+// fetch(rawNodes)
+//   .then((r) => r.text())
+//   .then((text) => {
+//     let headers = true;
+//     text.split("\n").forEach((line) => {
+//       if (headers) {
+//         headers = false;
+//       } else {
+//         const fields: string[] = line.split(",");
+//         const newNode: MapNode = {
+//           nodeID: fields[0],
+//           xcoord: parseInt(fields[1]),
+//           ycoord: parseInt(fields[2]),
+//           floor: fields[3],
+//           buidling: fields[4],
+//           nodeType: fields[5],
+//           longName: fields[6],
+//           shortName: fields[7],
+//           edges: [],
+//         };
+//         mapNodes.set(fields[0], newNode);
+//       }
+//     });
+//   });
+
+// fetch(rawEdges)
+//   .then((r) => r.text())
+//   .then((text) => {
+//     let headers = true;
+//     text.split("\n").forEach((line) => {
+//       if (headers) {
+//         headers = false;
+//       } else {
+//         const fields: string[] = line.split(",");
+//         if (fields[2] != undefined) {
+//           fields[2] = fields[2].replace("\r", "");
+//           const n1 = mapNodes.get(fields[1]);
+//           const n2 = mapNodes.get(fields[2]);
+//           if (n1 == undefined || n2 == undefined) {
+//             console.log("bad edge");
+//           } else {
+//             n1.edges.push(n2);
+//             n2.edges.push(n1);
+//           }
+//         }
+//       }
+//     });
+//   });
 
 export function BreadthFirstSearch(
   start: MapNode | undefined,
