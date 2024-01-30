@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
 
 let imageWidth = 5000;
@@ -8,6 +8,14 @@ let xOffset = 0;
 let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
 let path: MapNode[] = [];
+
+let flip = false;
+
+let totalDistance = 0;
+let steps: number[] = [];
+let drawStep = 0;
+let frames: number[][][] = [[[]]];
+const spacing = 50;
 
 //Stores scaled map amount
 let scalar = 1.0;
@@ -23,17 +31,20 @@ let startY = 0;
 //Stores whether to update map position if moving
 let moveMap = false;
 export const InteractableMap = () => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  const ctx = canvasCtxRef.current;
+  let ctx = canvasCtxRef.current;
 
   const image = new Image();
   image.src = "00_thelowerlevel1.png";
-  setTimeout(forceUpdate, 100);
+  setTimeout(draw, 100);
 
   function draw() {
-    if (ctx == null) return;
+    ctx = canvasCtxRef.current;
+
+    if (ctx == null) {
+      return;
+    }
 
     //Stores local scaled variable to avoid getting/setting conflicts
     const scaled = scalar;
@@ -53,18 +64,25 @@ export const InteractableMap = () => {
     ctx!.clearRect(0, 0, width, height);
     //Scales canvas for zoom
     ctx!.scale(scaled, scaled);
+    drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     ctx?.drawImage(image, transX, transY);
-    let last: MapNode | undefined = undefined;
-    ctx!.strokeStyle = "#0000FF";
-    path.forEach((p) => {
-      if (last != undefined) {
-        ctx!.beginPath(); // Start a new path
-        ctx!.moveTo(last.xcoord + transX, last.ycoord + transY); // Move the pen to (30, 50)
-        ctx!.lineTo(p.xcoord + transX, p.ycoord + transY); // Draw a line to (150, 100)
-        ctx!.stroke(); // Render the path
-      }
-      last = p;
-    });
+    if (frames[drawStep] != undefined) {
+      frames[drawStep].forEach((frame) => {
+        ctx!.beginPath();
+        ctx!.arc(
+          frame[0] + transX,
+          frame[1] + transY,
+          5,
+          0,
+          2 * Math.PI,
+          false,
+        );
+        ctx!.fillStyle = "#0000FF";
+        ctx!.fill();
+      });
+    }
+
+    flip = !flip;
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(
@@ -106,11 +124,16 @@ export const InteractableMap = () => {
         );
       }
     });
+
+    //forceUpdate();
+
     //Sets image width for display
     imageWidth = width;
     imageHeight = height;
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
+    console.log(drawStep);
+    if (path.length > 0 && !moveMap) setTimeout(draw, 50);
   }
 
   //Draws on canvas when map image loaded
@@ -182,9 +205,53 @@ export const InteractableMap = () => {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
           path = BreadthFirstSearch(sl, node);
+          totalDistance = 0;
+          steps = [0];
+          let last: MapNode | undefined = undefined;
+          path.forEach((node) => {
+            if (last != undefined) {
+              const length = Math.sqrt(
+                Math.pow(last.ycoord - node.ycoord, 2) +
+                  Math.pow(last.xcoord - node.xcoord, 2),
+              );
+              totalDistance += length;
+              steps.push(totalDistance);
+            }
+            last = node;
+          });
+          //bake frames
+          for (let f = 0; f < spacing; f++) {
+            const temp = [];
+            for (let i = 0; i < totalDistance / spacing; i++) {
+              let prog = spacing * i + (f % spacing);
+              let s = 0;
+              while (s < path.length) {
+                if (prog < steps[s]) {
+                  break;
+                }
+                s++;
+              }
+              s--;
+              prog -= steps[s];
+              if (s + 1 < path.length) {
+                const angleRadians = Math.atan2(
+                  path[s].ycoord - path[s + 1].ycoord,
+                  path[s].xcoord - path[s + 1].xcoord,
+                );
+                const x = path[s].xcoord - Math.cos(angleRadians) * prog;
+                const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+                temp.push([x, y]);
+              }
+            }
+            frames.push(temp);
+          }
+          console.log("frames");
+          console.log(frames);
         } else {
           path = [];
+          frames = [[[]]];
           sl = node;
+          console.log("CLEAR");
         }
       }
     });
@@ -192,13 +259,14 @@ export const InteractableMap = () => {
       hl = undefined;
       sl = undefined;
       path = [];
+      frames = [[[]]];
     }
     mapX += xDelta;
     mapY += yDelta;
     xDelta = 0;
     yDelta = 0;
-    draw();
     moveMap = false;
+    draw();
   }
 
   //Starts moving map according to mouse drag
@@ -210,6 +278,7 @@ export const InteractableMap = () => {
 
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
+    let changed = moveMap;
     const cord = getXY(evt);
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
@@ -217,12 +286,15 @@ export const InteractableMap = () => {
       );
       if (dist < 10 && path.length == 0) {
         hl = node;
-        forceUpdate();
+        changed = true;
       } else {
-        if (hl == node && path.length == 0) hl = undefined;
+        if (hl == node && path.length == 0) {
+          changed = true;
+          hl = undefined;
+        }
       }
     });
-    draw();
+    if (changed) draw();
   }
 
   function zoom(zoomIn: boolean) {
