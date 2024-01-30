@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from "react";
 import { loginStore } from "../stores/LoginStore.ts";
 import { Navigate } from "react-router-dom";
+import { contextMenuState } from "../stores/ContextMenuState.ts";
 
 export const Login = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -11,6 +12,7 @@ export const Login = () => {
     // Implement your login logic here
     // Implementation of displaying either administrator or user login goes here (buttons)
     loginStore.loggedIn = true;
+    contextMenuState.loadIntendedPage();
     console.log("Logging in with:", loginType, username, password);
     forceUpdate();
   };

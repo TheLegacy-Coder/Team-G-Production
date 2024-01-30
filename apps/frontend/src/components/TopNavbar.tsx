@@ -28,6 +28,14 @@ export const TopNavbar = () => {
             Profile
           </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
+
+          <ContextMenuRouterButton
+            content={<div>placeholder</div>}
+            lable={"Help"}
+            protected={true}
+          />
+          <div>&nbsp;&nbsp;&nbsp;</div>
+
           <ContextMenuRouterButton content={<Login />} lable={"Login"} />
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
