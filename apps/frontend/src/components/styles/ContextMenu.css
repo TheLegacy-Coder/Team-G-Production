@@ -1,0 +1,41 @@
+.context-menu-in {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  width: 33%;
+  height: 80%;
+  animation: slide-in 1s;
+}
+
+.context-menu-out {
+  position: absolute;
+  top: 10%;
+  right: -28%;
+  width: 33%;
+  height: 80%;
+  animation: slide-out 1s;
+}
+
+.context-menu-divider-content {
+  border: 2px solid black;
+  border-radius: 16px;
+  background: lightblue;
+}
+
+@keyframes slide-in {
+  0% {
+    right: -28%;
+  }
+  100% {
+    right: 5%;
+  }
+}
+
+@keyframes slide-out {
+  0% {
+    right: 5%;
+  }
+  100% {
+    right: -28%;
+  }
+}

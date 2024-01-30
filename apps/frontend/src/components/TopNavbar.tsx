@@ -3,6 +3,8 @@ import "./styles/TopNavbar.css";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import { CloseProgram } from "../components/CloseProgram.tsx";
 import { Link } from "react-router-dom";
+import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
+import { Login } from "../routes/Login.tsx";
 
 export const TopNavbar = () => {
   return (
@@ -26,9 +28,7 @@ export const TopNavbar = () => {
             Profile
           </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            Login
-          </Link>
+          <ContextMenuRouterButton content={<Login />} lable={"Login"} />
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
       </Container>

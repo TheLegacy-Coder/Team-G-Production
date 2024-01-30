@@ -3,10 +3,15 @@ import Stack from "react-bootstrap/Stack";
 
 import { ResourceButton } from "../components/ResourceButton.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
+import { ContextMenu } from "../components/ContextMenu.tsx";
 
 export const Index = () => {
   return (
-    <div className="w-100 h-100 d-flex flex-row overflow-auto">
+    <div
+      className="w-100 h-100 d-flex flex-row overflow-auto"
+      style={{ position: "relative", height: "100%" }}
+    >
+      <ContextMenu />
       <div>
         <br />
         <img
