@@ -1,0 +1,7 @@
+.nav-button {
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -6,27 +6,31 @@ export function ContextMenu() {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   contextMenuState.render = forceUpdate;
   return (
-    <div
-      className={
-        !contextMenuState.showing ? "context-menu-out" : "context-menu-in"
-      }
-      style={{ display: "flex" }}
-    >
+    <div className={contextMenuState.showingClass} style={{ display: "flex" }}>
       <div className={"context-menu-divider-button"} style={{ flex: "10px" }}>
         <button
-          style={{
-            width: "100%",
-            height: "80%",
-            top: "10%",
-            position: "relative",
-          }}
+          className={"context-menu-button"}
           onClick={() => {
             contextMenuState.toggle();
           }}
-        ></button>
+        >
+          {contextMenuState.showing ? ">" : "<"}
+        </button>
       </div>
       <div className={"context-menu-divider-pad"} style={{ flex: "5%" }} />
-      <div className={"context-menu-divider-content"} style={{ flex: "80%" }}>
+      <div
+        className={
+          contextMenuState.reSelect == 0
+            ? "context-menu-divider-content"
+            : contextMenuState.reSelect == 1
+              ? "context-menu-divider-content-reselect"
+              : "context-menu-divider-content-reselect-alt"
+        }
+        style={{ flex: "80%" }}
+      >
+        <div className={"context-menu-title-box"}>
+          <h1 className={"context-menu-title"}>{contextMenuState.title}</h1>
+        </div>
         {contextMenuState.window}
       </div>
     </div>
