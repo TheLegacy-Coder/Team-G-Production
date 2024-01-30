@@ -26,6 +26,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public."Employee"(
     "employeeID" text NOT NULL, --Primary Key
+    "firstName" text NOT NULL,
+    "lastName" text NOT NULL,
     "username" text NOT NULL,
     "password" text NOT NULL,
     "job" text NOT NULL,
@@ -42,8 +44,11 @@ CREATE TABLE public."ServiceRequest"(
     "requestID" text NOT NULL, --Primary Key
     "requestType" text NOT NULL,
     "location" text NOT NULL,
-    "isHandled" text NOT NULL,
-    "assignedEmployee" text NOT NULL
+    "handled" bool NOT NULL,
+    "requester" text NOT NULL,
+    "helpingEmployee" text,
+    "desc" text NOT NULL,
+    "date" timestamp NOT NULL
 );
 
 ALTER TABLE public."ServiceRequest" OWNER to dev;
@@ -74,7 +79,15 @@ ALTER TABLE ONLY public."ServiceRequest"
 --
 
 ALTER TABLE ONLY public."ServiceRequest"
-    ADD CONSTRAINT "ServiceRequest_fk2" FOREIGN KEY ("assignedEmployee") REFERENCES public."Employee" ("employeeID");
+    ADD CONSTRAINT "ServiceRequest_fk2" FOREIGN KEY ("helpingEmployee") REFERENCES public."Employee" ("employeeID");
+
+--
+-- Name: ServiceRequest ServiceRequest_fk3; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."ServiceRequest"
+    ADD CONSTRAINT "ServiceRequest_fk3" FOREIGN KEY ("requester") REFERENCES public."Employee"("employeeID");
+
 
 --
 -- PostgreSQL database dump complete
