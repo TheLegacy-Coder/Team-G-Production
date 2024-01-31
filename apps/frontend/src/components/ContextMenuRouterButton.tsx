@@ -8,6 +8,7 @@ export interface ContextMenuRouterButtonProps {
   content: ReactNode;
   lable: string;
   protected?: boolean;
+  style: string;
 }
 
 export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
@@ -24,7 +25,7 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
   }
 
   return (
-    <Nav className={"nav-button"} onClick={route}>
+    <Nav className={props.style} onClick={route}>
       {props.lable}
     </Nav>
   );

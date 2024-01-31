@@ -5,6 +5,7 @@ import { CloseProgram } from "../components/CloseProgram.tsx";
 import { Link } from "react-router-dom";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { Login } from "../routes/Login.tsx";
+import { ServiceRequests } from "./ServiceRequests.tsx";
 
 export const TopNavbar = () => {
   return (
@@ -16,13 +17,17 @@ export const TopNavbar = () => {
           </Link>
 
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/map" style={{ textDecoration: "none" }}>
-            Map
-          </Link>
+
           <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/search" style={{ textDecoration: "none" }}>
-            Search
-          </Link>
+
+          <ContextMenuRouterButton
+            content={<div>search placeholder</div>}
+            lable={"Search"}
+            protected={true}
+            style={"nav-button"}
+          />
+          <div>&nbsp;&nbsp;&nbsp;</div>
+
           <div>&nbsp;&nbsp;&nbsp;</div>
           <Link to="/profile" style={{ textDecoration: "none" }}>
             Profile
@@ -33,10 +38,23 @@ export const TopNavbar = () => {
             content={<div>placeholder</div>}
             lable={"Help"}
             protected={true}
+            style={"nav-button"}
           />
           <div>&nbsp;&nbsp;&nbsp;</div>
 
-          <ContextMenuRouterButton content={<Login />} lable={"Login"} />
+          <ContextMenuRouterButton
+            content={<ServiceRequests />}
+            lable={"Service Request"}
+            protected={true}
+            style={"nav-button"}
+          />
+          <div>&nbsp;&nbsp;&nbsp;</div>
+
+          <ContextMenuRouterButton
+            content={<Login />}
+            lable={"Login"}
+            style={"nav-button"}
+          />
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
       </Container>
