@@ -5,10 +5,7 @@ import { InteractableMap } from "./InteractableMap.tsx";
 
 export const Index = () => {
   return (
-    <div
-      className="w-100 h-100 d-flex flex-row overflow-auto"
-      style={{ position: "relative", height: "100%" }}
-    >
+    <div style={{ position: "relative", height: "100%" }}>
       <ContextMenu />
       <InteractableMap />
     </div>

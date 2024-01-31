@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
-let imageWidth = 5000;
-let imageHeight = 3400;
+let imageWidth = 100;
+let imageHeight = 100;
 let yOffset = 0;
 let xOffset = 0;
 let hl: MapNode | undefined = undefined;
@@ -38,7 +38,24 @@ export const InteractableMap = () => {
 
   const image = new Image();
   image.src = "00_thelowerlevel1.png";
-  setTimeout(draw, 100);
+
+  function getWidth(): number {
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    imageWidth = width;
+    return width;
+  }
+
+  function getHeight(): number {
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight;
+    imageHeight = height;
+    return height;
+  }
 
   function draw() {
     ctx = canvasCtxRef.current;
@@ -134,7 +151,7 @@ export const InteractableMap = () => {
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
     console.log(drawStep);
-    if (path.length > 0 && !moveMap) setTimeout(draw, 50);
+    setTimeout(draw, 15);
   }
 
   //Draws on canvas when map image loaded
@@ -267,7 +284,6 @@ export const InteractableMap = () => {
     xDelta = 0;
     yDelta = 0;
     moveMap = false;
-    draw();
   }
 
   //Starts moving map according to mouse drag
@@ -279,7 +295,7 @@ export const InteractableMap = () => {
 
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     if (ctx == null) return;
-    let changed = moveMap;
+    //let changed = moveMap;
     const cord = getXY(evt);
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
@@ -287,15 +303,14 @@ export const InteractableMap = () => {
       );
       if (dist < 10 && path.length == 0) {
         hl = node;
-        changed = true;
+        //changed = true;
       } else {
         if (hl == node && path.length == 0) {
-          changed = true;
+          //changed = true;
           hl = undefined;
         }
       }
     });
-    if (changed) draw();
   }
 
   function zoom(zoomIn: boolean) {
@@ -373,8 +388,8 @@ export const InteractableMap = () => {
         onMouseDown={mouseDown}
         onWheel={mouseScroll}
         ref={canvasRef}
-        width={imageWidth - xOffset}
-        height={imageHeight - yOffset}
+        width={getWidth()}
+        height={getHeight()}
       ></canvas>
     </div>
   );
