@@ -6,6 +6,7 @@ export const Root = () => {
   return (
     <div id="root">
       <TopNavbar />
+
       <Outlet />
     </div>
   );
