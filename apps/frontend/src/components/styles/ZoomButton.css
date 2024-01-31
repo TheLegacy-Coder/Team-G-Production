@@ -1,0 +1,29 @@
+.zoom-button {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+  color: black;
+  background-color: white;
+  border: 2px solid black;
+}
+
+.zoom-button:hover {
+  background-color: lightgray;
+}
+
+.zoom-button:active {
+  background-color: gray;
+}
+
+.plus-button {
+  transform: translate(10px, 10px);
+}
+
+.minus-button {
+  transform: translate(50px, 10px);
+}
+
+.home-button {
+  transform: translate(90px, 10px);
+}

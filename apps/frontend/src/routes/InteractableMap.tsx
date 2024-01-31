@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
+import "../components/styles/ZoomButton.css";
 
 let imageWidth = 5000;
 let imageHeight = 3400;
@@ -342,6 +343,23 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
+      <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
+        +
+      </button>
+      <button
+        className={"zoom-button minus-button"}
+        onClick={() => zoom(false)}
+      >
+        -
+      </button>
+      <button
+        className={"zoom-button home-button"}
+        onClick={() => {
+          scalar = 1;
+        }}
+      >
+        ↺
+      </button>
       <canvas
         onMouseMove={mouseMove}
         onMouseUp={mouseUp}
