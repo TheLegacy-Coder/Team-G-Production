@@ -308,6 +308,8 @@ export const InteractableMap = () => {
     }
     updateXY();
     draw();
+    const scaleID = document.querySelector("#scalar");
+    scaleID!.textContent = scalar.toFixed(2).toString();
   }
 
   //Adjusts zoom according to scroll
@@ -346,6 +348,9 @@ export const InteractableMap = () => {
       <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
         +
       </button>
+      <button className={"zoom-button zoom-amount"}>
+        <div id={"scalar"}>{scalar.toFixed(2)}</div>
+      </button>
       <button
         className={"zoom-button minus-button"}
         onClick={() => zoom(false)}
@@ -356,6 +361,8 @@ export const InteractableMap = () => {
         className={"zoom-button home-button"}
         onClick={() => {
           scalar = 1;
+          const scaleID = document.querySelector("#scalar");
+          scaleID!.textContent = scalar.toFixed(2).toString();
         }}
       >
         ↺

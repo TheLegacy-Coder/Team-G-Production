@@ -20,10 +20,15 @@
   transform: translate(10px, 10px);
 }
 
-.minus-button {
+.zoom-amount {
   transform: translate(50px, 10px);
+  width: 50px;
+}
+
+.minus-button {
+  transform: translate(110px, 10px);
 }
 
 .home-button {
-  transform: translate(90px, 10px);
+  transform: translate(150px, 10px);
 }
