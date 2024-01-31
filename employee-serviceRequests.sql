@@ -48,7 +48,7 @@ CREATE TABLE public."ServiceRequest"(
     "requester" text NOT NULL,
     "helpingEmployee" text,
     "desc" text NOT NULL,
-    "date" timestamp NOT NULL
+    "time" timestamp NOT NULL
 );
 
 ALTER TABLE public."ServiceRequest" OWNER to dev;
