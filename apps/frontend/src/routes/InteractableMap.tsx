@@ -30,6 +30,8 @@ let startX = 0;
 let startY = 0;
 //Stores whether to update map position if moving
 let moveMap = false;
+//Stores whether drawing after scrolling to prevent path speed up
+let activeScroll = false;
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -133,7 +135,8 @@ export const InteractableMap = () => {
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
     console.log(drawStep);
-    if (path.length > 0 && !moveMap) setTimeout(draw, 50);
+    if (path.length > 0 && !moveMap && !activeScroll) setTimeout(draw, 50);
+    activeScroll = false;
   }
 
   //Draws on canvas when map image loaded
@@ -306,6 +309,7 @@ export const InteractableMap = () => {
       scalar *= 1 / 1.2;
     }
     updateXY();
+    activeScroll = true;
     draw();
   }
 
@@ -337,7 +341,7 @@ export const InteractableMap = () => {
       style={
         {
           width: imageWidth - xOffset,
-          height: imageHeight - yOffset,
+          height: imageHeight - 50,
           overflow: "hidden",
         } as React.CSSProperties
       }
@@ -349,7 +353,7 @@ export const InteractableMap = () => {
         onWheel={mouseScroll}
         ref={canvasRef}
         width={imageWidth - xOffset}
-        height={imageHeight - yOffset}
+        height={imageHeight - 50}
       ></canvas>
     </div>
   );
