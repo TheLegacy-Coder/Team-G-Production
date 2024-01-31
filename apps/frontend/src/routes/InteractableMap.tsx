@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
+import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
 let imageHeight = 100;
@@ -321,6 +322,9 @@ export const InteractableMap = () => {
       scalar *= 1 / 1.2;
     }
     updateXY();
+    draw();
+    const scaleID = document.querySelector("#scalar");
+    scaleID!.textContent = scalar.toFixed(2).toString();
   }
 
   //Adjusts zoom according to scroll
@@ -356,6 +360,28 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
+      <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
+        +
+      </button>
+      <button className={"zoom-button zoom-amount"}>
+        <div id={"scalar"}>{scalar.toFixed(2)}</div>
+      </button>
+      <button
+        className={"zoom-button minus-button"}
+        onClick={() => zoom(false)}
+      >
+        -
+      </button>
+      <button
+        className={"zoom-button home-button"}
+        onClick={() => {
+          scalar = 1;
+          const scaleID = document.querySelector("#scalar");
+          scaleID!.textContent = scalar.toFixed(2).toString();
+        }}
+      >
+        ↺
+      </button>
       <canvas
         onMouseMove={mouseMove}
         onMouseUp={mouseUp}
