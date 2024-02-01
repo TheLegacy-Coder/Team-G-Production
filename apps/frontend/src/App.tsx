@@ -44,7 +44,7 @@ function App() {
                   element: <div>secret profile</div>,
                 },
                 {
-                  path: "/search",
+                  path: "/",
                   element: (
                     <div className="topnav">
                       <input type="text" placeholder="Search.." />
