@@ -3,10 +3,28 @@ import { MapNode, mapNodes } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
 
 export const Csvs = () => {
+  const handleExportNodes = () => {
+    console.log("Exporting nodes");
+    const rows: string[] = [];
+    rows.push(
+      "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName",
+    );
+    mapNodes.forEach((row: MapNode) => {
+      rows.push(Object.values(row).slice(0, 8).join(","));
+    });
+    const csvArray = rows.join("\r\n");
+    const a = document.createElement("a");
+    a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+    a.target = "_blank";
+    a.download = "nodes.csv";
+    document.body.appendChild(a);
+    a.click();
+  };
+
   const rows: React.ReactElement[] = [];
   mapNodes.forEach((node: MapNode) => {
     rows.push(
-      <tr>
+      <tr key={node.nodeID}>
         <td>{node.nodeID}</td>
         <td>{node.xcoord}</td>
         <td>{node.ycoord}</td>
@@ -18,8 +36,11 @@ export const Csvs = () => {
       </tr>,
     );
   });
+
   return (
-    <div>
+    <div className={"csvs-page"}>
+      <h1>Nodes</h1>
+      <button onClick={handleExportNodes}>Export CSV</button>
       <table>
         <thead>
           <tr>
