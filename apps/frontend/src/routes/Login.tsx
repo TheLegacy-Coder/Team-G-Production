@@ -18,10 +18,17 @@ export const Login = () => {
   const handleLogin = () => {
     // Implement your login logic here
     // Implementation of displaying either administrator or user login goes here (buttons)
-    loginStore.loggedIn = true;
-    contextMenuState.loadIntendedPage();
-    console.log("Logging in with:", loginType, username, password);
-    forceUpdate();
+    if (
+      loginType === "admin" &&
+      (username !== "admin" || password !== "admin")
+    ) {
+      return;
+    } else {
+      loginStore.login(loginType);
+      contextMenuState.loadIntendedPage();
+      console.log("Logging in with:", loginType, username, password);
+      forceUpdate();
+    }
   };
 
   const LoginTypeButton = ({

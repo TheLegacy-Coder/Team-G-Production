@@ -52,6 +52,10 @@ function App() {
                     </div>
                   ),
                 },
+                {
+                  path: "/csvs",
+                  element: <div>CSVs</div>,
+                },
               ],
             },
           ],
