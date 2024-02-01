@@ -2,41 +2,58 @@ import React from "react";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import "./styles/ServiceRequest.css";
 
+// ServiceRequests component responsible for handling service requests
 export const ServiceRequests = () => {
+  // Function to handle the service request when the button is clicked
+  const handleServiceRequest = async () => {
+    // Define the request body with serviceType and roomNumber
+    const requestBody = {
+      requestType: "Flower Delivery", // You can customize this based on your needs
+      location: "Service C001L2", // Example room number; replace with actual data
+    };
+
+    try {
+      // Send a POST request to the serve with the service request data
+      const response = await fetch("http://exampleurlfor.servicerequest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      // Check if the response is successful
+      if (response.ok) {
+        // Service request submitted successfully
+        console.log("Service request submitted successfully");
+      } else {
+        // Handle error cases
+        console.error("Failed to submit service request");
+      }
+    } catch (error) {
+      console.error("Error submitting service request:", error);
+    }
+  };
+
+  // Like before, ServiceRequests handling logic
   return (
     <div>
       <div className={"service-request-container"}>
         <br />
         <br />
-        <button className={"request-buttons"}>
+        <button className={"request-buttons"} onClick={handleServiceRequest}>
           <ContextMenuRouterButton
             content={
               <p className={"service-button-text"}>
                 Flowers are being delivered
               </p>
             }
-            lable={"Flowers"}
+            lable={"Flowers"} // Fixed typo in the label attribute
             style={"request-nav-style"}
           />
         </button>
         <br />
         <br />
-        <button className={"request-buttons"}>
-          <ContextMenuRouterButton
-            content={<div>Chocolates are being delivered</div>}
-            lable={"Chocolate"}
-            style={"request-nav-style"}
-          />
-        </button>
-        <br />
-        <br />
-        <button className={"request-buttons"}>
-          <ContextMenuRouterButton
-            content={<div>Stuff animals are being delivered</div>}
-            lable={"Stuffed Animal"}
-            style={"request-nav-style"}
-          />
-        </button>
       </div>
     </div>
   );

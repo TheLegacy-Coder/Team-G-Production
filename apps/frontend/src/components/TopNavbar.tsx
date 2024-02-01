@@ -26,18 +26,13 @@ export const TopNavbar = () => {
             protected={true}
             style={"nav-button"}
           />
-          <div>&nbsp;&nbsp;&nbsp;</div>
 
-          <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/profile" style={{ textDecoration: "none" }}>
-            Profile
-          </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
             content={<div>placeholder</div>}
             lable={"Help"}
-            protected={true}
+            protected={false}
             style={"nav-button"}
           />
           <div>&nbsp;&nbsp;&nbsp;</div>
