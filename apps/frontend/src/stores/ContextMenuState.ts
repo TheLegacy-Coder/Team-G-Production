@@ -40,6 +40,10 @@ class ContextMenuState {
     if (this.render != undefined) this.render();
   }
 
+  refresh() {
+    if (this.render != undefined) this.render();
+  }
+
   toggle() {
     this.showing = !this.showing;
     this.showingClass = contextMenuState.showing

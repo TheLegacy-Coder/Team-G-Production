@@ -23,9 +23,12 @@
 }
 
 .request-nav-style {
-  color: white;
-  background: none;
-  border: none;
+  color: #ffffff;
+  background: #7ab5f6;
+  border: 2px solid black;
+  border-radius: 6px;
+  padding: 5px;
+  width: 250px;
   text-decoration: none;
   cursor: pointer;
   justify-content: center;

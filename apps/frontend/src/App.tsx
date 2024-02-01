@@ -12,6 +12,7 @@ import { Csvs } from "./routes/Csvs.tsx";
 
 // Protected Routes
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
+import { ViewRequests } from "./routes/ViewRequests.tsx";
 
 const handleSearch = () => {
   // Implement your login logic here
@@ -56,6 +57,10 @@ function App() {
                 {
                   path: "/csvs",
                   element: <Csvs />,
+                },
+                {
+                  path: "/requests",
+                  element: <ViewRequests />,
                 },
               ],
             },

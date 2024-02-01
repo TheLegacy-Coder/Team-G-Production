@@ -22,12 +22,39 @@ model HighScore {
 }
 
 model Nodes {
-  nodeID    String @id
-  xcoord    Int
-  ycoord    Int
-  floor     String
-  building  String
-  nodeType  String
-  longName  String
-  shortName String
+  nodeID         String           @id
+  xcoord         Int
+  ycoord         Int
+  floor          String
+  building       String
+  nodeType       String
+  longName       String
+  shortName      String
+  ServiceRequest ServiceRequest[]
+}
+
+model Employee {
+  employeeID                                              String           @id
+  firstName                                               String
+  lastName                                                String
+  username                                                String
+  password                                                String
+  job                                                     String
+  accessLevel                                             String
+  ServiceRequest_ServiceRequest_helpingEmployeeToEmployee ServiceRequest[] @relation("ServiceRequest_helpingEmployeeToEmployee")
+  ServiceRequest_ServiceRequest_requesterToEmployee       ServiceRequest[] @relation("ServiceRequest_requesterToEmployee")
+}
+
+model ServiceRequest {
+  requestID                                         String    @id
+  requestType                                       String
+  location                                          String
+  handled                                           Boolean
+  requester                                         String
+  helpingEmployee                                   String?
+  desc                                              String
+  time                                              DateTime? @default(now()) @db.Timestamptz(6)
+  Nodes                                             Nodes     @relation(fields: [location], references: [nodeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk1")
+  Employee_ServiceRequest_helpingEmployeeToEmployee Employee? @relation("ServiceRequest_helpingEmployeeToEmployee", fields: [helpingEmployee], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk2")
+  Employee_ServiceRequest_requesterToEmployee       Employee  @relation("ServiceRequest_requesterToEmployee", fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk3")
 }

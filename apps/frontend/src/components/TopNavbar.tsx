@@ -19,7 +19,12 @@ export const TopNavbar = () => {
           <Link to="/csvs" style={{ textDecoration: "none" }}>
             CSVs
           </Link>
-          <div>&nbsp;&nbsp;&nbsp;</div>
+          <Link to="/requests" style={{ textDecoration: "none" }}>
+            Service Requests
+          </Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Home
+          </Link>
         </div>
       );
     }
@@ -29,13 +34,9 @@ export const TopNavbar = () => {
     <Navbar bg="light" data-bs-theme="light">
       <Container>
         <Nav className="me-auto">
-          <Link to="/" style={{ textDecoration: "none" }}>
-            Home
-          </Link>
-
-          <div>&nbsp;&nbsp;&nbsp;</div>
-
-          <div>&nbsp;&nbsp;&nbsp;</div>
+          {/*<Link to="/" style={{ textDecoration: "none" }}>*/}
+          {/*  Home*/}
+          {/*</Link>*/}
 
           <ContextMenuRouterButton
             content={<div>search placeholder</div>}
@@ -43,18 +44,13 @@ export const TopNavbar = () => {
             protected={true}
             style={"nav-button"}
           />
-          <div>&nbsp;&nbsp;&nbsp;</div>
 
-          <div>&nbsp;&nbsp;&nbsp;</div>
-          <Link to="/profile" style={{ textDecoration: "none" }}>
-            Profile
-          </Link>
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
             content={<div>placeholder</div>}
             lable={"Help"}
-            protected={true}
+            protected={false}
             style={"nav-button"}
           />
           <div>&nbsp;&nbsp;&nbsp;</div>

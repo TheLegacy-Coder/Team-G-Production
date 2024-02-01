@@ -1,5 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
+import {
+  BreadthFirstSearch,
+  MapNode,
+  mapNodes,
+  nodeStore,
+} from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -150,7 +155,7 @@ export const InteractableMap = () => {
     imageHeight = height;
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
-    console.log(drawStep);
+    //console.log(drawStep);
     setTimeout(draw, 15);
   }
 
@@ -269,6 +274,7 @@ export const InteractableMap = () => {
           path = [];
           frames = [[[]]];
           sl = node;
+          nodeStore.setSelectedNode(sl);
           console.log("CLEAR");
         }
       }
@@ -276,6 +282,7 @@ export const InteractableMap = () => {
     if (emptyClick && xDelta == 0 && yDelta == 0) {
       hl = undefined;
       sl = undefined;
+      nodeStore.setSelectedNode(sl);
       path = [];
       frames = [[[]]];
     }
