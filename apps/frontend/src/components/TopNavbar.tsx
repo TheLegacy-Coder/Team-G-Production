@@ -2,7 +2,6 @@ import React from "react";
 import "./styles/TopNavbar.css";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import { CloseProgram } from "../components/CloseProgram.tsx";
-import { Link } from "react-router-dom";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { Login } from "../routes/Login.tsx";
 import { ServiceRequests } from "./ServiceRequests.tsx";
@@ -12,9 +11,9 @@ export const TopNavbar = () => {
     <Navbar bg="light" data-bs-theme="light">
       <Container>
         <Nav className="me-auto">
-          <Link to="/" style={{ textDecoration: "none" }}>
-            Home
-          </Link>
+          {/*<Link to="/" style={{ textDecoration: "none" }}>*/}
+          {/*  Home*/}
+          {/*</Link>*/}
 
           <div>&nbsp;&nbsp;&nbsp;</div>
 

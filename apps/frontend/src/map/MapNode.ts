@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { DispatchWithoutAction } from "react";
 export type MapNode = {
   nodeID: string;
   xcoord: number;
@@ -18,6 +19,22 @@ export type Edge = {
 };
 
 export const mapNodes: Map<string, MapNode> = new Map([]);
+
+class NodeStore {
+  public selectedNode: MapNode | undefined = undefined;
+  public currentRefresh: DispatchWithoutAction | undefined;
+  setSelectedNode(node: MapNode | undefined) {
+    this.selectedNode = node;
+    console.log(node);
+    console.log(this.currentRefresh);
+    if (this.currentRefresh !== undefined) {
+      console.log("refreshing");
+      this.currentRefresh();
+    }
+  }
+}
+
+export const nodeStore = new NodeStore();
 
 axios
   .get("http://localhost:3000/api/map/nodes")

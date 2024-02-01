@@ -1,6 +1,6 @@
 import React from "react";
-import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import "./styles/ServiceRequest.css";
+import { Flowers } from "./Flowers.tsx";
 
 // ServiceRequests component responsible for handling service requests
 export const ServiceRequests = () => {
@@ -42,15 +42,7 @@ export const ServiceRequests = () => {
         <br />
         <br />
         <button className={"request-buttons"} onClick={handleServiceRequest}>
-          <ContextMenuRouterButton
-            content={
-              <p className={"service-button-text"}>
-                Flowers are being delivered
-              </p>
-            }
-            lable={"Flowers"} // Fixed typo in the label attribute
-            style={"request-nav-style"}
-          />
+          <Flowers />
         </button>
         <br />
         <br />
