@@ -1,13 +1,12 @@
 import React, { useReducer } from "react";
 import "./styles/TopNavbar.css";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import { CloseProgram } from "../components/CloseProgram.tsx";
+import { CloseProgram } from "./CloseProgram.tsx";
 import { Link } from "react-router-dom";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { Login } from "../routes/Login.tsx";
 import { loginStore } from "../stores/LoginStore.ts";
 import { ServiceRequests } from "./ServiceRequests.tsx";
-
 
 export const TopNavbar = () => {
   const AdminButtons = () => {
@@ -73,11 +72,10 @@ export const TopNavbar = () => {
             lable={"Login"}
             style={"nav-button"}
           />
-          
-          <div>&nbsp;&nbsp;&nbsp;</div>
-          
-          <AdminButtons />
 
+          <div>&nbsp;&nbsp;&nbsp;</div>
+
+          <AdminButtons />
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
       </Container>
