@@ -1,7 +1,9 @@
 import React, { FormEvent, useReducer } from "react";
-import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { nodeStore } from "../map/MapNode.ts";
-import { getServiceRequests } from "../servicereqs/ServiceRequestNodes.ts";
+import {
+  postServiceRequest,
+  ServiceRequest,
+} from "../servicereqs/ServiceRequestNodes.ts";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -17,6 +19,18 @@ export const Flowers = () => {
     event.preventDefault(); // Prevent default form submission behavior
     console.log("Textarea Value:", getValue(event, "desc"));
     console.log(nodeStore.selectedNode);
+    const requestData: ServiceRequest = {
+      desc: getValue(event, "desc"),
+      handled: false,
+      location:
+        nodeStore.selectedNode?.nodeID === undefined
+          ? "invalid"
+          : nodeStore.selectedNode?.nodeID,
+      requestID: crypto.randomUUID(),
+      requestType: "Flowers",
+      requester: "admin",
+    };
+    postServiceRequest(requestData);
   };
 
   // const handleTextareaChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -25,43 +39,38 @@ export const Flowers = () => {
   console.log("NOE");
   console.log(nodeStore.selectedNode?.longName);
   return (
-    <ContextMenuRouterButton
-      content={
-        <div className={"service-button-text"}>
-          <br />
-          <div>Service Request Description:</div>
+    <div className={"service-button-text"}>
+      <br />
+      <div>Service Request Description:</div>
 
-          <form
-            id="confirmationForm"
-            name="confirmationForm"
-            method="post"
-            onSubmit={handleSubmit}
-          >
-            {/*<textarea*/}
-            {/*    id="confirmationText"*/}
-            {/*    className="text"*/}
-            {/*    style={{width: 250, height: 350}}*/}
-            {/*    name="confirmationText"*/}
-            {/*    form="confirmationForm"*/}
-            {/*    onChange={handleTextareaChange}*/}
-            {/*></textarea>*/}
-            <input type="text" className="desc" name={"desc"} />
-            <input
-              type="text"
-              value={
-                nodeStore.selectedNode === undefined
-                  ? "Select node"
-                  : nodeStore.selectedNode.longName
-              }
-              className="submitButton"
-            />
-            <input type="submit" value="Submit" className="submitButton" />
-          </form>
-          <button onClick={getServiceRequests}> Test Endpoint</button>
-        </div>
-      }
-      lable={"Flowers"} // Fixed typo in the label attribute
-      style={"request-nav-style"}
-    />
+      <form
+        id="confirmationForm"
+        name="confirmationForm"
+        method="post"
+        onSubmit={handleSubmit}
+      >
+        {/*<textarea*/}
+        {/*    id="confirmationText"*/}
+        {/*    className="text"*/}
+        {/*    style={{width: 250, height: 350}}*/}
+        {/*    name="confirmationText"*/}
+        {/*    form="confirmationForm"*/}
+        {/*    onChange={handleTextareaChange}*/}
+        {/*></textarea>*/}
+        <input type="text" className="desc" name={"desc"} />
+        <input
+          type="text"
+          value={
+            nodeStore.selectedNode === undefined
+              ? "Select node"
+              : nodeStore.selectedNode.longName
+          }
+          className="submitButton"
+        />
+        <br />
+        <br />
+        <input type="submit" value="Submit" className="submitButton" />
+      </form>
+    </div>
   );
 };
