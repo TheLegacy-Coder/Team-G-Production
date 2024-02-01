@@ -1,13 +1,23 @@
 import React from "react";
-import Stack from "react-bootstrap/Stack";
 
-import { ResourceButton } from "../components/ResourceButton.tsx";
-import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
+import { ContextMenu } from "../components/ContextMenu.tsx";
+import { InteractableMap } from "./InteractableMap.tsx";
 
 export const Index = () => {
   return (
-    <div className="w-100 h-100 d-flex flex-row overflow-auto">
-      <div>
+    <div
+      className="w-100 h-100 d-flex flex-row overflow-auto"
+      style={{ position: "relative", height: "100%" }}
+    >
+      <ContextMenu />
+      <InteractableMap />
+    </div>
+  );
+};
+
+/*
+
+<div>
         <br />
         <img
           style={{ margin: "20px" }}
@@ -41,6 +51,4 @@ export const Index = () => {
           height="550"
         />
       </div>
-    </div>
-  );
-};
+ */
