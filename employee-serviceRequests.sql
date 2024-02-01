@@ -48,10 +48,16 @@ CREATE TABLE public."ServiceRequest"(
     "requester" text NOT NULL,
     "helpingEmployee" text,
     "desc" text NOT NULL,
-    "time" timestamp NOT NULL
+    "time" timestamp
 );
 
 ALTER TABLE public."ServiceRequest" OWNER to dev;
+
+ALTER TABLE public."ServiceRequest"
+    ALTER COLUMN "time" TYPE timestamp with time zone;
+
+ALTER TABLE public."ServiceRequest"
+    ALTER COLUMN "time" SET default current_timestamp;
 
 --
 -- Name: Employee Employee_pkey; Type: CONSTRAINT; Schema: public; Owner: dev

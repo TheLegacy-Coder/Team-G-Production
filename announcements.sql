@@ -29,10 +29,16 @@ CREATE TABLE public."Announcements"(
     "desc" text NOT NULL,
     "requester" text NOT NULL, --references employee
     "emergency" bool NOT NULL,
-    "time" timestamp NOT NULL
+    "time" timestamp
 );
 
 ALTER TABLE public."Announcements" OWNER to dev;
+
+ALTER TABLE public."Announcements"
+    ALTER COLUMN "time" TYPE timestamp with time zone;
+
+ALTER TABLE public."Announcements"
+    ALTER COLUMN "time" SET default current_timestamp;
 
 
 --
