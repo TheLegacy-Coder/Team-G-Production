@@ -4,7 +4,6 @@ import "./styles/Csvs.css";
 
 export const Csvs = () => {
   const handleExportNodes = () => {
-    console.log("Exporting nodes");
     const rows: string[] = [];
     rows.push(
       "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName",
@@ -19,6 +18,37 @@ export const Csvs = () => {
     a.download = "nodes.csv";
     document.body.appendChild(a);
     a.click();
+  };
+
+  const handleImportNodes = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const importedMapNodes: Map<string, MapNode> = new Map([]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target) {
+        const content = event.target.result;
+        const lines = (content as string).split("\n");
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].split(",");
+          const node: MapNode = {
+            nodeID: line[0],
+            xcoord: parseInt(line[1]),
+            ycoord: parseInt(line[2]),
+            floor: line[3],
+            building: line[4],
+            nodeType: line[5],
+            longName: line[6],
+            shortName: line[7],
+            edges: [],
+          };
+          importedMapNodes.set(node.nodeID, node);
+        }
+      }
+    };
+    reader.readAsText(file);
+    // console.log('imported', importedMapNodes);
   };
 
   const rows: React.ReactElement[] = [];
@@ -41,6 +71,16 @@ export const Csvs = () => {
     <div className={"csvs-page"}>
       <h1>Nodes</h1>
       <button onClick={handleExportNodes}>Export CSV</button>
+      <label style={{ border: "2px solid" }}>
+        <input
+          onChange={handleImportNodes}
+          type={"file"}
+          accept={".csv"}
+          hidden
+        />
+        Import CSV
+      </label>
+
       <table>
         <thead>
           <tr>
