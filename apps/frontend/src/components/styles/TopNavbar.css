@@ -8,3 +8,15 @@
   border-radius: 6px;
   width: 150px;
 }
+
+.nav-button-admin {
+  display: flex;
+  color: black;
+  background: #d1b8bd;
+  border: 5px solid #311823;
+  text-decoration: none;
+  cursor: pointer;
+  justify-content: center;
+  border-radius: 6px;
+  width: 150px;
+}

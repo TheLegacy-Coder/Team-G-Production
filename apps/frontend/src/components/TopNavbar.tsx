@@ -9,27 +9,9 @@ import { loginStore } from "../stores/LoginStore.ts";
 import { ServiceRequests } from "./ServiceRequests.tsx";
 
 export const TopNavbar = () => {
-  const AdminButtons = () => {
-    const [, forceUpdate] = useReducer((x) => x + 1, 0);
-    loginStore.navbarRefreshHook = forceUpdate;
-    console.log(loginStore.loginType, loginStore.loggedIn);
-    if (loginStore.loginType === "admin" && loginStore.loggedIn) {
-      return (
-        <div>
-          <Link to="/csvs" style={{ textDecoration: "none" }}>
-            CSVs
-          </Link>
-          <Link to="/requests" style={{ textDecoration: "none" }}>
-            Service Requests
-          </Link>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            Home
-          </Link>
-        </div>
-      );
-    }
-    return <></>;
-  };
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  loginStore.navbarRefreshHook = forceUpdate;
+
   return (
     <Navbar bg="light" data-bs-theme="light">
       <Container>
@@ -38,12 +20,12 @@ export const TopNavbar = () => {
           {/*  Home*/}
           {/*</Link>*/}
 
-          <ContextMenuRouterButton
-            content={<div>search placeholder</div>}
-            lable={"Search"}
-            protected={true}
-            style={"nav-button"}
-          />
+          {/*  <ContextMenuRouterButton*/}
+          {/*  content={<div>search placeholder</div>}*/}
+          {/*  lable={"Search"}*/}
+          {/*  protected={true}*/}
+          {/*  style={"nav-button"}*/}
+          {/*/>*/}
 
           <div>&nbsp;&nbsp;&nbsp;</div>
 
@@ -71,7 +53,23 @@ export const TopNavbar = () => {
 
           <div>&nbsp;&nbsp;&nbsp;</div>
 
-          <AdminButtons />
+          {loginStore.loginType === "admin" && loginStore.loggedIn ? (
+            <>
+              <Link to="/csvs" className={"nav-button-admin"}>
+                Nodes
+              </Link>
+              <div>&nbsp;&nbsp;&nbsp;</div>
+              <Link to="/requests" className={"nav-button-admin"}>
+                Service Requests
+              </Link>
+              <div>&nbsp;&nbsp;&nbsp;</div>
+              <Link to="/" className={"nav-button-admin"}>
+                Home
+              </Link>
+            </>
+          ) : (
+            <></>
+          )}
         </Nav>
         <CloseProgram /> {/* Add the CloseButton component */}
       </Container>
