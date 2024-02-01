@@ -49,6 +49,7 @@ router.post("/requests", async function (req: Request, res: Response) {
     console.log("Successfully created Service Request");
   } catch (error) {
     console.error("Unable to create Service Request");
+    console.log(error);
     res.sendStatus(204);
     return;
   }
