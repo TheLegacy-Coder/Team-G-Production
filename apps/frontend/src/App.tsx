@@ -14,12 +14,6 @@ import { Csvs } from "./routes/Csvs.tsx";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
 import { ViewRequests } from "./routes/ViewRequests.tsx";
 
-const handleSearch = () => {
-  // Implement your login logic here
-  // Implementation of displaying either administrator or user login goes here (buttons)
-  console.log("Logging in with:");
-};
-
 function App() {
   const router = createBrowserRouter([
     {
@@ -44,15 +38,6 @@ function App() {
                 {
                   path: "/profile",
                   element: <div>secret profile</div>,
-                },
-                {
-                  path: "/",
-                  element: (
-                    <div className="topnav">
-                      <input type="text" placeholder="Search.." />
-                      <button onClick={handleSearch}>Enter</button>
-                    </div>
-                  ),
                 },
                 {
                   path: "/csvs",
