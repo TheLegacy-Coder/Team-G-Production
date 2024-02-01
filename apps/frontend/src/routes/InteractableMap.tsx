@@ -65,7 +65,7 @@ export const InteractableMap = () => {
     }
 
     //Stores local scaled variable to avoid getting/setting conflicts
-    const scaled = scalar;
+    //const scaled = scalar;
     //Stores the width and height of window
     const width =
       window.innerWidth ||
@@ -81,7 +81,7 @@ export const InteractableMap = () => {
     //Clears canvas
     ctx!.clearRect(0, 0, width, height);
     //Scales canvas for zoom
-    ctx!.scale(scaled, scaled);
+    //ctx!.scale(scaled, scaled);
     drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     ctx?.drawImage(image, transX, transY);
     if (frames[drawStep] != undefined) {
@@ -149,8 +149,7 @@ export const InteractableMap = () => {
     imageWidth = width;
     imageHeight = height;
     //Unscales canvas for zoom
-    ctx!.scale(1 / scaled, 1 / scaled);
-    console.log(drawStep);
+    //ctx!.scale(1 / scaled, 1 / scaled);
     setTimeout(draw, 15);
   }
 
@@ -313,7 +312,8 @@ export const InteractableMap = () => {
     });
   }
 
-  function zoom(zoomIn: boolean) {
+  function zoom(zoomIn: boolean, pageX: number, pageY: number) {
+    //const prevScalar = scalar;
     if (zoomIn && scalar < 1.3) {
       //Zooms in
       scalar *= 1.2;
@@ -321,8 +321,11 @@ export const InteractableMap = () => {
       //Zooms out
       scalar *= 1 / 1.2;
     }
+    console.log(pageX);
+    console.log(pageY);
+    //let scaled =  prevScalar / scalar;
     updateXY();
-    draw();
+
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
   }
@@ -333,9 +336,9 @@ export const InteractableMap = () => {
     const delta = evt.deltaY;
 
     if (delta < 0) {
-      zoom(true);
+      zoom(true, evt.pageX, evt.pageY);
     } else {
-      zoom(false);
+      zoom(false, evt.pageX, evt.pageY);
     }
   }
 
@@ -360,7 +363,10 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
-      <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
+      <button
+        className={"zoom-button plus-button"}
+        onClick={() => zoom(true, imageWidth / 2, imageHeight / 2)}
+      >
         +
       </button>
       <button className={"zoom-button zoom-amount"}>
@@ -368,7 +374,7 @@ export const InteractableMap = () => {
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => zoom(false)}
+        onClick={() => zoom(false, imageWidth / 2, imageHeight / 2)}
       >
         -
       </button>
