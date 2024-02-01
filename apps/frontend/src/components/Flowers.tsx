@@ -1,6 +1,7 @@
 import React, { FormEvent, useReducer } from "react";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { nodeStore } from "../map/MapNode.ts";
+import { getServiceRequests } from "../servicereqs/ServiceRequestNodes.ts";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -56,6 +57,7 @@ export const Flowers = () => {
             />
             <input type="submit" value="Submit" className="submitButton" />
           </form>
+          <button onClick={getServiceRequests}> Test Endpoint</button>
         </div>
       }
       lable={"Flowers"} // Fixed typo in the label attribute
