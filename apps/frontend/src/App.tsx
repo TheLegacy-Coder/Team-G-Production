@@ -8,6 +8,7 @@ import { PageNotFound } from "./routes/PageNotFound.tsx";
 import { Index } from "./routes/Index.tsx";
 import { InteractableMap } from "./routes/InteractableMap.tsx";
 import { Login } from "./routes/Login.tsx";
+import { Csvs } from "./routes/Csvs.tsx";
 
 // Protected Routes
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
@@ -54,7 +55,7 @@ function App() {
                 },
                 {
                   path: "/csvs",
-                  element: <div>CSVs</div>,
+                  element: <Csvs />,
                 },
               ],
             },

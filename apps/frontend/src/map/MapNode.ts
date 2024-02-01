@@ -4,7 +4,7 @@ export type MapNode = {
   xcoord: number;
   ycoord: number;
   floor: string;
-  buidling: string;
+  building: string;
   nodeType: string;
   longName: string;
   shortName: string;
