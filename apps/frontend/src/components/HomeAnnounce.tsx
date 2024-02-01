@@ -31,8 +31,7 @@ export const HomeAnnounce = () => {
   if (divRef === null) {
     setTimeout(forceUpdate, 100);
   }
-  //const text =
-  //"As literally stated, Prince Shoutoku – according to legend – was so smart that he could understand ten people questioning him at once, and reply to each of them with perfect answers. This is pointed out by her name, \"Toyosatomimi\". Because of this ability Miko's ears are extremely sensitive, leading her to wear earmuffs. Miko, who is from a high noble family, has from a young age heard many grumbles from government officials around her. Although one would think that nobody is usually able to understand such government officials, she understood all of it, and was able to give precise instructions to them. The aforementioned thus became a rumour that spread throughout society, and thus she gained tremendous popularity as a saint. In addition to this ability, which she acquired through the faith she had received as Prince Shoutoku while in her long slumber, gained the ability to hear other people's desires. By listening to the other's \"ten desires\" simultaneously, she gains insight into the personality, motives, and identities of whose desires she listens to, and thus is able to know everything about the other person; although, originally, such an act wasn't possible before.";
+
   const textLength = text.length * 9; //approximate pixel size for 32px font
 
   //if announcements are small, base the length of the marquee on the div instead of char count
@@ -43,7 +42,6 @@ export const HomeAnnounce = () => {
     marqueeLength = divWidth;
   }
   const speed = marqueeLength / pxps;
-  //const w = divRef === null ? 100 : divRef.scrollWidth;
 
   return (
     <div className={"announcements-bar"} id={"marquee-content"}>
