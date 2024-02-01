@@ -155,7 +155,7 @@ export const InteractableMap = () => {
     imageHeight = height;
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
-    console.log(drawStep);
+    //console.log(drawStep);
     setTimeout(draw, 15);
   }
 
