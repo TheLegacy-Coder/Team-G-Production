@@ -1,6 +1,7 @@
 import React from "react";
 import { MapNode, mapNodes } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
+// import axios, {AxiosResponse} from "axios";
 
 export const Csvs = () => {
   const handleExportNodes = () => {
@@ -21,7 +22,7 @@ export const Csvs = () => {
   };
 
   const handleImportNodes = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const importedMapNodes: Map<string, MapNode> = new Map([]);
+    const importedMapNodes: MapNode[] = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const file = e.target.files[0];
@@ -43,12 +44,27 @@ export const Csvs = () => {
             shortName: line[7],
             edges: [],
           };
-          importedMapNodes.set(node.nodeID, node);
+          importedMapNodes.push(node);
         }
       }
     };
     reader.readAsText(file);
     // console.log('imported', importedMapNodes);
+
+    // delete all old nodes
+    // post all new nodes
+    // const data = {
+    //
+    // }
+    // axios
+    //   .post("http://localhost:3000/api/map/nodesasdfaklsjdflaksjdf", importedMapNodes)
+    //   .then((response: AxiosResponse<MapNode[]>) => {
+    //     console.log(response.data);
+    //     response.data.forEach((node) => {
+    //       node.edges = [];
+    //       mapNodes.set(node.nodeID, node);
+    //     });
+    //   });
   };
 
   const rows: React.ReactElement[] = [];
