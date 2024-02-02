@@ -43,7 +43,7 @@ router.get("/nodes", async function (req: Request, res: Response) {
 router.post("/nodes", async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
-  if (req.body.deleteAll === "true") {
+  if (req.body.deleteAll) {
     try {
       await PrismaClient.nodes.deleteMany({});
       console.log("Successfully wiped Nodes");
@@ -87,7 +87,7 @@ router.get("/edges", async function (req: Request, res: Response) {
 router.post("/edges", async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
-  if (req.body.deleteAll === "true") {
+  if (req.body.deleteAll) {
     try {
       await PrismaClient.edges.deleteMany({});
       console.log("Successfully wiped Edges");
