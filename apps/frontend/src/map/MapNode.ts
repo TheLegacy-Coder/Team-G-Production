@@ -19,6 +19,7 @@ export type Edge = {
 };
 
 export const mapNodes: Map<string, MapNode> = new Map([]);
+export const mapEdges: Map<string, Edge> = new Map([]);
 
 class NodeStore {
   public selectedNode: MapNode | undefined = undefined;
@@ -61,6 +62,8 @@ export function getMapNodes() {
               n1.edges.push(n2);
               n2.edges.push(n1);
             }
+            mapEdges.set(edge.edgeID, edge);
+            console.log("edges ", mapEdges);
           });
         })
         .catch((error) => {
