@@ -8,5 +8,5 @@ export const ProtectedRoutes = () => {
   const auth = loginStore.loggedIn;
 
   loginStore.from = location.pathname;
-  return auth ? <Outlet /> : <Navigate to="/login" replace />;
+  return auth ? <Outlet /> : <Navigate to="/" replace />;
 };

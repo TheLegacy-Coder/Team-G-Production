@@ -1,5 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
+import {
+  BreadthFirstSearch,
+  MapNode,
+  mapNodes,
+  nodeStore,
+} from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -19,10 +24,10 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 //Stores scaled map amount
-let scalar = 1.0;
+let scalar = 0.75;
 //Stores map xy coordinates for translation
-let mapX = 0;
-let mapY = 0;
+let mapX = -1500;
+let mapY = -600;
 //Stores map delta xy coordinates while panning
 let xDelta = 0;
 let yDelta = 0;
@@ -150,7 +155,7 @@ export const InteractableMap = () => {
     imageHeight = height;
     //Unscales canvas for zoom
     ctx!.scale(1 / scaled, 1 / scaled);
-    console.log(drawStep);
+    //console.log(drawStep);
     setTimeout(draw, 15);
   }
 
@@ -269,6 +274,7 @@ export const InteractableMap = () => {
           path = [];
           frames = [[[]]];
           sl = node;
+          nodeStore.setSelectedNode(sl);
           console.log("CLEAR");
         }
       }
@@ -276,6 +282,7 @@ export const InteractableMap = () => {
     if (emptyClick && xDelta == 0 && yDelta == 0) {
       hl = undefined;
       sl = undefined;
+      nodeStore.setSelectedNode(sl);
       path = [];
       frames = [[[]]];
     }
@@ -375,9 +382,10 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          scalar = 1;
-          const scaleID = document.querySelector("#scalar");
-          scaleID!.textContent = scalar.toFixed(2).toString();
+          scalar = 0.75;
+          //Stores map xy coordinates for translation
+          mapX = -1500;
+          mapY = -600;
         }}
       >
         ↺

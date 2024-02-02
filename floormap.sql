@@ -86,7 +86,7 @@ ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 CREATE TABLE public."Edges" (
-    "edgeID" text NOT NULL --Primary Key,
+    "edgeID" text NOT NULL, --Primary Key,
     "startNode" text NOT NULL, --references public."Nodes"("nodeID")
     "endNode" text NOT NULL --references public."Nodes"("nodeID")
 );
@@ -243,9 +243,20 @@ ALTER TABLE ONLY public."Nodes"
 
 ALTER TABLE ONLY public."Edges"
     ADD CONSTRAINT "Edges_pkey" PRIMARY KEY ("edgeID");
-    ADD CONSTRAINT "Edges_pkey" Foreign KEY ("startNode") references "Nodes" ("nodeID");
-    ADD CONSTRAINT "Edges_pkey" Foreign KEY ("endNode") references "Nodes" ("nodeID");
 
+--
+-- Name: Edges Edges_fk1; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."Edges"
+    ADD CONSTRAINT "Edges_fk1" Foreign KEY ("startNode") references public."Nodes" ("nodeID") ON DELETE CASCADE;
+
+--
+-- Name: Edges Edges_fk2; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."Edges"
+    ADD CONSTRAINT "Edges_fk2" FOREIGN KEY ("endNode") references public."Nodes" ("nodeID") ON DELETE CASCADE;
 
 --
 -- PostgreSQL database dump complete
