@@ -41,6 +41,7 @@ getMapNodesEdges();
 
 export function getMapNodesEdges() {
   mapNodes.clear();
+  mapEdges.clear();
   return new Promise((resolve, reject) => {
     axios
       .get("http://localhost:3000/api/map/nodes")
