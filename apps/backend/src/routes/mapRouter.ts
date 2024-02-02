@@ -68,6 +68,39 @@ router.post("/nodes", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
+router.delete("/nodes", async function (req: Request, res: Response) {
+  console.log("req");
+  console.log(req.body.deleteAll);
+  console.log(req.body.deleteIDs);
+
+  if (req.body.deleteAll === "true") {
+    try {
+      await PrismaClient.nodes.deleteMany({});
+      console.log("Successfully wiped all Nodes");
+      res.sendStatus(200);
+      return;
+    } catch (error) {
+      console.error("Unable to wipe all Nodes");
+      res.sendStatus(204);
+      return;
+    }
+  }
+
+  for (let i = 0; i < req.body.deleteIDs.length; i++) {
+    try {
+      await PrismaClient.nodes.delete({
+        where: { nodeID: req.body.deleteIDs[i] },
+      });
+      console.log("Successfully deleted Node " + req.body.deleteIDs[i]);
+    } catch (error) {
+      console.error("Node with ID " + req.body.deleteIDs[i] + " not found!");
+      res.sendStatus(204);
+      return;
+    }
+  }
+  res.sendStatus(200);
+});
+
 router.get("/edges", async function (req: Request, res: Response) {
   console.log("req");
   // Fetch the high score from Prisma
@@ -109,6 +142,39 @@ router.post("/edges", async function (req: Request, res: Response) {
     return;
   }
 
+  res.sendStatus(200);
+});
+
+router.delete("/edges", async function (req: Request, res: Response) {
+  console.log("req");
+  console.log(req.body.deleteAll);
+  console.log(req.body.deleteIDs);
+
+  if (req.body.deleteAll === "true") {
+    try {
+      await PrismaClient.edges.deleteMany({});
+      console.log("Successfully wiped all Edges");
+      res.sendStatus(200);
+      return;
+    } catch (error) {
+      console.error("Unable to wipe all Edges");
+      res.sendStatus(204);
+      return;
+    }
+  }
+
+  for (let i = 0; i < req.body.deleteIDs.length; i++) {
+    try {
+      await PrismaClient.edges.delete({
+        where: { edgeID: req.body.deleteIDs[i] },
+      });
+      console.log("Successfully deleted Edge " + req.body.deleteIDs[i]);
+    } catch (error) {
+      console.error("Edge with ID " + req.body.deleteIDs[i] + " not found!");
+      res.sendStatus(204);
+      return;
+    }
+  }
   res.sendStatus(200);
 });
 
