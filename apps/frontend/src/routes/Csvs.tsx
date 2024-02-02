@@ -49,7 +49,7 @@ const Nodes = () => {
     reader.onload = (event) => {
       if (event.target) {
         const content = event.target.result;
-        const lines = (content as string).split("\n");
+        const lines = (content as string).replace("\r", "").split("\n");
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i].split(",");
           if (line[0] === "") continue;
