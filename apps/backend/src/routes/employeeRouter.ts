@@ -24,32 +24,48 @@ const router: Router = express.Router();
 // });
 
 // Whenever a get request is made, return the high score
-router.get("/requests", async function (req: Request, res: Response) {
+router.get("/", async function (req: Request, res: Response) {
   console.log("req");
-  // Fetch the high score from Prisma
-  const node = await PrismaClient.serviceRequest.findMany();
+  // Fetch the employees from Prisma
+  const emp = await PrismaClient.employee.findMany();
 
   // If the high score doesn't exist
-  if (node === null) {
+  if (emp === null) {
     // Log that (it's a problem)
     console.error("No nodes found in database!");
     res.sendStatus(204); // and send 204, no data
   } else {
     // Otherwise, send the score
-    res.send(node);
+    res.send(emp);
   }
 });
 
-router.post("/requests", async function (req: Request, res: Response) {
+router.post("/", async function (req: Request, res: Response) {
   console.log("req");
-  const requestAttempt: Prisma.ServiceRequestCreateInput = req.body;
+  const empAttempt: Prisma.EmployeeCreateInput = req.body;
 
   try {
-    await PrismaClient.serviceRequest.create({ data: requestAttempt });
-    console.log("Successfully created Service Request");
+    await PrismaClient.employee.create({ data: empAttempt });
+    console.log("Successfully created Employee");
   } catch (error) {
-    console.error("Unable to create Service Request");
-    console.log(error);
+    console.error("Unable to create Employee");
+    res.sendStatus(204);
+    return;
+  }
+
+  res.sendStatus(200);
+});
+
+router.delete("/", async function (req: Request, res: Response) {
+  console.log("req");
+
+  try {
+    await PrismaClient.employee.delete({
+      where: { employeeID: req.body.employeeID },
+    });
+    console.log("Successfully deleted Employee" + req.body.employeeID);
+  } catch (error) {
+    console.error("Employee with ID " + req.body.employeeID + " not found!");
     res.sendStatus(204);
     return;
   }
