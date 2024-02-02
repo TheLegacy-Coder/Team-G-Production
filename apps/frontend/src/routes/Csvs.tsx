@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import {
   Edge,
   getMapNodesEdges,
@@ -12,6 +12,8 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
 const Nodes = () => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const handleExportNodes = () => {
     const rows: string[] = [];
     rows.push(
@@ -30,7 +32,16 @@ const Nodes = () => {
   };
 
   const handleImportNodes = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const importedMapNodes: MapNode[] = [];
+    const importedMapNodes: {
+      nodeID: string;
+      xcoord: number;
+      ycoord: number;
+      floor: string;
+      building: string;
+      nodeType: string;
+      longName: string;
+      shortName: string;
+    }[] = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const file = e.target.files[0];
@@ -41,7 +52,8 @@ const Nodes = () => {
         const lines = (content as string).split("\n");
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i].split(",");
-          const node: MapNode = {
+          if (line[0] === "") continue;
+          const node = {
             nodeID: line[0],
             xcoord: parseInt(line[1]),
             ycoord: parseInt(line[2]),
@@ -50,22 +62,26 @@ const Nodes = () => {
             nodeType: line[5],
             longName: line[6],
             shortName: line[7],
-            edges: [],
           };
           importedMapNodes.push(node);
         }
       }
+
+      axios
+        .post("http://localhost:3000/api/map/nodes", {
+          deleteAll: true,
+          nodes: importedMapNodes,
+        })
+        // update local store
+        .then(() => {
+          getMapNodesEdges().then(() => {
+            forceUpdate();
+          });
+        });
     };
     reader.readAsText(file);
 
     // post all new nodes & replace all old ones
-    axios
-      .post("http://localhost:3000/api/map/nodes", {
-        deleteAll: true,
-        nodes: importedMapNodes,
-      })
-      // update local store
-      .then(getMapNodesEdges);
   };
 
   const rows: React.ReactElement[] = [];
@@ -117,6 +133,8 @@ const Nodes = () => {
 };
 
 const Edges = () => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const handleExportEdges = () => {
     const rows: string[] = [];
     rows.push("edgeID,startNode,endNode");
@@ -143,7 +161,8 @@ const Edges = () => {
         const content = event.target.result;
         const lines = (content as string).split("\n");
         for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].split(",");
+          const line = lines[i].replace("\r", "").split(",");
+          if (line[0] === "") continue;
           const edge: Edge = {
             edgeID: line[0],
             startNode: line[1],
@@ -152,17 +171,21 @@ const Edges = () => {
           importedMapEdges.push(edge);
         }
       }
+      axios
+        .post("http://localhost:3000/api/map/edges", {
+          deleteAll: true,
+          edges: importedMapEdges,
+        })
+        // update local store
+        .then(() => {
+          getMapNodesEdges().then(() => {
+            forceUpdate();
+          });
+        });
     };
     reader.readAsText(file);
 
     // post all new nodes & replace all old ones
-    axios
-      .post("http://localhost:3000/api/map/edges", {
-        deleteAll: true,
-        edges: importedMapEdges,
-      })
-      // update local store
-      .then(getMapNodesEdges);
   };
 
   const rows: React.ReactElement[] = [];
