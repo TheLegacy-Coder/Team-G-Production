@@ -1,16 +1,18 @@
 import React, { useReducer } from "react";
 import "./styles/HomeAnnounce.css";
+import { announcements } from "../stores/AnnouncementsStore.ts";
 
 export const HomeAnnounce = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  const announcementArray: string[] = [
-    "Bob has been admitted after crashing his car into the hospital's front door",
-    "Staff Update: Wilson Wong has joined our team",
-    "Dimitri has lost yet another star",
-    "Scrum Master Tommy Meet & Greet: 02/15/24 @ 3 PM",
-    "Team C has gone missing",
-  ];
+  // const announcementArray: string[] = [
+  //   "Bob has been admitted after crashing his car into the hospital's front door",
+  //   "Staff Update: Wilson Wong has joined our team",
+  //   "Dimitri has lost yet another star",
+  //   "Scrum Master Tommy Meet & Greet: 02/15/24 @ 3 PM",
+  //   "Team C has gone missing",
+  // ];
+  const announcementArray = announcements;
 
   let text = "";
   //add all announcements to a single string that will scroll through
@@ -18,7 +20,7 @@ export const HomeAnnounce = () => {
     if (index != 0) {
       text = text.concat(" • ");
     }
-    text = text.concat(announcement);
+    text = text.concat(announcement.desc);
   });
   if (announcementArray.length == 0) {
     text = "No announcements for today";

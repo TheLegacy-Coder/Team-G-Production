@@ -10,11 +10,9 @@ datasource db {
 }
 
 model Edges {
-  edgeID                       String @id
-  startNode                    String
-  endNode                      String
-  Nodes_Edges_startNodeToNodes Nodes  @relation("Edges_startNodeToNodes", fields: [startNode], references: [nodeID], onDelete: NoAction, onUpdate: NoAction, map: "Edges_fk1")
-  Nodes_Edges_endNodeToNodes   Nodes  @relation("Edges_endNodeToNodes", fields: [endNode], references: [nodeID], onDelete: NoAction, onUpdate: NoAction, map: "Edges_fk2")
+  edgeID    String @id
+  startNode String
+  endNode   String
 }
 
 model HighScore {
@@ -24,17 +22,15 @@ model HighScore {
 }
 
 model Nodes {
-  nodeID                       String           @id
-  xcoord                       Int
-  ycoord                       Int
-  floor                        String
-  building                     String
-  nodeType                     String
-  longName                     String
-  shortName                    String
-  Edges_Edges_startNodeToNodes Edges[]          @relation("Edges_startNodeToNodes")
-  Edges_Edges_endNodeToNodes   Edges[]          @relation("Edges_endNodeToNodes")
-  ServiceRequest               ServiceRequest[]
+  nodeID         String           @id
+  xcoord         Int
+  ycoord         Int
+  floor          String
+  building       String
+  nodeType       String
+  longName       String
+  shortName      String
+  ServiceRequest ServiceRequest[]
 }
 
 model Employee {
@@ -58,17 +54,17 @@ model ServiceRequest {
   requester                                         String
   helpingEmployee                                   String?
   desc                                              String
-  time                                              DateTime  @db.Timestamp(6)
+  time                                              DateTime? @default(now()) @db.Timestamptz(6)
   Nodes                                             Nodes     @relation(fields: [location], references: [nodeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk1")
   Employee_ServiceRequest_helpingEmployeeToEmployee Employee? @relation("ServiceRequest_helpingEmployeeToEmployee", fields: [helpingEmployee], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk2")
   Employee_ServiceRequest_requesterToEmployee       Employee  @relation("ServiceRequest_requesterToEmployee", fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "ServiceRequest_fk3")
 }
 
 model Announcements {
-  announcementID String   @id(map: "Announcenments_pkey")
+  announcementID String    @id(map: "Announcenments_pkey")
   desc           String
   requester      String
   emergency      Boolean
-  time           DateTime @db.Timestamp(6)
-  Employee       Employee @relation(fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "Announcements_fk1")
+  time           DateTime? @default(now()) @db.Timestamptz(6)
+  Employee       Employee  @relation(fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "Announcements_fk1")
 }

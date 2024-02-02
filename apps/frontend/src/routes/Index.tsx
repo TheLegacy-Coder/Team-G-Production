@@ -2,6 +2,7 @@ import React from "react";
 
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
+import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 
 export const Index = () => {
   return (
@@ -11,6 +12,7 @@ export const Index = () => {
     >
       <ContextMenu />
       <InteractableMap />
+      <HomeAnnounce />
     </div>
   );
 };
