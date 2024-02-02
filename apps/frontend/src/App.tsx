@@ -8,15 +8,11 @@ import { PageNotFound } from "./routes/PageNotFound.tsx";
 import { Index } from "./routes/Index.tsx";
 import { InteractableMap } from "./routes/InteractableMap.tsx";
 import { Login } from "./routes/Login.tsx";
+import { Csvs } from "./routes/Csvs.tsx";
 
 // Protected Routes
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
-
-const handleSearch = () => {
-  // Implement your login logic here
-  // Implementation of displaying either administrator or user login goes here (buttons)
-  console.log("Logging in with:");
-};
+import { ViewRequests } from "./routes/ViewRequests.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,13 +40,12 @@ function App() {
                   element: <div>secret profile</div>,
                 },
                 {
-                  path: "/search",
-                  element: (
-                    <div className="topnav">
-                      <input type="text" placeholder="Search.." />
-                      <button onClick={handleSearch}>Enter</button>
-                    </div>
-                  ),
+                  path: "/csvs",
+                  element: <Csvs />,
+                },
+                {
+                  path: "/requests",
+                  element: <ViewRequests />,
                 },
               ],
             },

@@ -1,0 +1,35 @@
+.service-request-container {
+  flex-flow: column;
+  display: flex;
+  text-decoration: none;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.request-buttons {
+  height: 40px;
+  width: 300px;
+  justify-items: center;
+  border-radius: 8px;
+  background-color: #7ab5f6;
+}
+
+.service-button-text {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.request-nav-style {
+  color: #ffffff;
+  background: #7ab5f6;
+  border: 2px solid black;
+  border-radius: 6px;
+  padding: 5px;
+  width: 250px;
+  text-decoration: none;
+  cursor: pointer;
+  justify-content: center;
+}

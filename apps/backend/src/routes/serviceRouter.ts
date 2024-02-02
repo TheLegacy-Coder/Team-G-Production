@@ -43,12 +43,13 @@ router.get("/requests", async function (req: Request, res: Response) {
 router.post("/requests", async function (req: Request, res: Response) {
   console.log("req");
   const requestAttempt: Prisma.ServiceRequestCreateInput = req.body;
-
+  console.log(req.body);
   try {
     await PrismaClient.serviceRequest.create({ data: requestAttempt });
     console.log("Successfully created Service Request");
   } catch (error) {
     console.error("Unable to create Service Request");
+    console.log(error);
     res.sendStatus(204);
     return;
   }
