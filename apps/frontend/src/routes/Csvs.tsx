@@ -74,7 +74,8 @@ const Nodes = () => {
         })
         // update local store
         .then(() => {
-          getMapNodesEdges().then(() => {
+          getMapNodesEdges().then((res) => {
+            console.log(res);
             forceUpdate();
           });
         });

@@ -40,6 +40,7 @@ export const nodeStore = new NodeStore();
 getMapNodesEdges();
 
 export function getMapNodesEdges() {
+  mapNodes.clear();
   return new Promise((resolve, reject) => {
     axios
       .get("http://localhost:3000/api/map/nodes")
