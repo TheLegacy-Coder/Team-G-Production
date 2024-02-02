@@ -26,14 +26,6 @@ export const HomeAnnounce = () => {
     setTimeout(checkUpdates, 10000);
   }
 
-  // const announcementArray: string[] = [
-  //   "Bob has been admitted after crashing his car into the hospital's front door",
-  //   "Staff Update: Wilson Wong has joined our team",
-  //   "Dimitri has lost yet another star",
-  //   "Scrum Master Tommy Meet & Greet: 02/15/24 @ 3 PM",
-  //   "Team C has gone missing",
-  // ];
-
   const announcementArray = announcements;
 
   let text = "";
