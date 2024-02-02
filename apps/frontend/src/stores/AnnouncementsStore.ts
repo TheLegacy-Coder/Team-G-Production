@@ -8,6 +8,13 @@ export interface Announcement {
 }
 
 export let announcements: Announcement[] = [];
+let announcementsLength = 0;
+
+export let announcementsChanged = false;
+
+export function clearAnnouncementFlag() {
+  announcementsChanged = false;
+}
 refreshAnnouncements();
 export function refreshAnnouncements() {
   axios
@@ -15,5 +22,9 @@ export function refreshAnnouncements() {
     .then((response: AxiosResponse<Announcement[]>) => {
       console.log(response.data);
       announcements = response.data;
+      if (announcementsLength !== announcements.length) {
+        announcementsChanged = true;
+        announcementsLength = announcements.length;
+      }
     });
 }

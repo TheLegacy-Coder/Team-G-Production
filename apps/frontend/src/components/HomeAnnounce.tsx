@@ -1,9 +1,30 @@
 import React, { useReducer } from "react";
 import "./styles/HomeAnnounce.css";
-import { announcements } from "../stores/AnnouncementsStore.ts";
+import {
+  announcements,
+  announcementsChanged,
+  clearAnnouncementFlag,
+  refreshAnnouncements,
+} from "../stores/AnnouncementsStore.ts";
 
 export const HomeAnnounce = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  let lock = false;
+
+  if (!lock) {
+    checkUpdates();
+  }
+  function checkUpdates() {
+    if (announcementsChanged) {
+      clearAnnouncementFlag();
+      lock = true;
+      forceUpdate();
+      lock = false;
+    }
+    refreshAnnouncements();
+
+    setTimeout(checkUpdates, 10000);
+  }
 
   // const announcementArray: string[] = [
   //   "Bob has been admitted after crashing his car into the hospital's front door",
@@ -12,6 +33,7 @@ export const HomeAnnounce = () => {
   //   "Scrum Master Tommy Meet & Greet: 02/15/24 @ 3 PM",
   //   "Team C has gone missing",
   // ];
+
   const announcementArray = announcements;
 
   let text = "";
