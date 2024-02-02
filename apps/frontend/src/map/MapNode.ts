@@ -36,37 +36,41 @@ class NodeStore {
 
 export const nodeStore = new NodeStore();
 
-axios
-  .get("http://localhost:3000/api/map/nodes")
-  .then((response: AxiosResponse<MapNode[]>) => {
-    console.log(response.data);
-    response.data.forEach((node) => {
-      node.edges = [];
-      mapNodes.set(node.nodeID, node);
-    });
+getMapNodes();
 
-    axios
-      .get("http://localhost:3000/api/map/edges")
-      .then((response: AxiosResponse<Edge[]>) => {
-        console.log(response.data);
-        response.data.forEach((edge) => {
-          const n1 = mapNodes.get(edge.startNode);
-          const n2 = mapNodes.get(edge.endNode);
-          if (n1 == undefined || n2 == undefined) {
-            console.log("bad edge");
-          } else {
-            n1.edges.push(n2);
-            n2.edges.push(n1);
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+export function getMapNodes() {
+  axios
+    .get("http://localhost:3000/api/map/nodes")
+    .then((response: AxiosResponse<MapNode[]>) => {
+      console.log(response.data);
+      response.data.forEach((node) => {
+        node.edges = [];
+        mapNodes.set(node.nodeID, node);
       });
-  })
-  .catch((error) => {
-    console.error("Error fetching data:", error);
-  });
+
+      axios
+        .get("http://localhost:3000/api/map/edges")
+        .then((response: AxiosResponse<Edge[]>) => {
+          console.log(response.data);
+          response.data.forEach((edge) => {
+            const n1 = mapNodes.get(edge.startNode);
+            const n2 = mapNodes.get(edge.endNode);
+            if (n1 == undefined || n2 == undefined) {
+              console.log("bad edge");
+            } else {
+              n1.edges.push(n2);
+              n2.edges.push(n1);
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+}
 
 //TODO: remove this and replace with an actual backend
 //
