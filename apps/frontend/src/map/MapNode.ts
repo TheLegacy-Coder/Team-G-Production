@@ -37,9 +37,9 @@ class NodeStore {
 
 export const nodeStore = new NodeStore();
 
-getMapNodes();
+getMapNodesEdges();
 
-export function getMapNodes() {
+export function getMapNodesEdges() {
   axios
     .get("http://localhost:3000/api/map/nodes")
     .then((response: AxiosResponse<MapNode[]>) => {
@@ -63,7 +63,6 @@ export function getMapNodes() {
               n2.edges.push(n1);
             }
             mapEdges.set(edge.edgeID, edge);
-            console.log("edges ", mapEdges);
           });
         })
         .catch((error) => {
