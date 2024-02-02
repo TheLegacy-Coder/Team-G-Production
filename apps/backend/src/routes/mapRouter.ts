@@ -1,5 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import PrismaClient from "../bin/database-connection.ts";
+import { Prisma } from "database";
 
 const router: Router = express.Router();
 
@@ -39,6 +40,34 @@ router.get("/nodes", async function (req: Request, res: Response) {
   }
 });
 
+router.post("/nodes", async function (req: Request, res: Response) {
+  console.log("req");
+  console.log(req.body.deleteAll);
+  if (req.body.deleteAll) {
+    try {
+      await PrismaClient.nodes.deleteMany({});
+      console.log("Successfully wiped Nodes");
+    } catch (error) {
+      console.error("Unable to wipe Nodes");
+      res.sendStatus(204);
+      return;
+    }
+  }
+  const requestAttempt: Prisma.NodesCreateManyInput = req.body.nodes;
+
+  try {
+    await PrismaClient.nodes.createMany({ data: requestAttempt });
+    console.log("Successfully created Nodes");
+  } catch (error) {
+    console.error("Unable to create Nodes");
+    console.log(error);
+    res.sendStatus(204);
+    return;
+  }
+
+  res.sendStatus(200);
+});
+
 router.get("/edges", async function (req: Request, res: Response) {
   console.log("req");
   // Fetch the high score from Prisma
@@ -53,6 +82,34 @@ router.get("/edges", async function (req: Request, res: Response) {
     // Otherwise, send the score
     res.send(edges);
   }
+});
+
+router.post("/edges", async function (req: Request, res: Response) {
+  console.log("req");
+  console.log(req.body.deleteAll);
+  if (req.body.deleteAll) {
+    try {
+      await PrismaClient.edges.deleteMany({});
+      console.log("Successfully wiped Edges");
+    } catch (error) {
+      console.error("Unable to wipe Edges");
+      res.sendStatus(204);
+      return;
+    }
+  }
+  const requestAttempt: Prisma.EdgesCreateManyInput = req.body.edges;
+
+  try {
+    await PrismaClient.edges.createMany({ data: requestAttempt });
+    console.log("Successfully created Edges");
+  } catch (error) {
+    console.error("Unable to create Edges");
+    console.log(error);
+    res.sendStatus(204);
+    return;
+  }
+
+  res.sendStatus(200);
 });
 
 export default router;
