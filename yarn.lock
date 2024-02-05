@@ -2003,6 +2003,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"auth0@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "auth0@npm:4.3.0"
+  dependencies:
+    jose: "npm:^4.13.2"
+    uuid: "npm:^9.0.0"
+  checksum: f9bdc2d238089a332f8f17925d6ed0f9f504e656703131186a58b3f0478659ef166ab61ea191d9ae815dc92d222f3c738bdaff678df9b3a581927c14e783fade
+  languageName: node
+  linkType: hard
+
 "axios@npm:^1.4.0":
   version: 1.6.5
   resolution: "axios@npm:1.6.5"
@@ -4123,7 +4133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:^4.13.1, jose@npm:^4.14.4":
+"jose@npm:^4.13.1, jose@npm:^4.13.2, jose@npm:^4.14.4":
   version: 4.15.4
   resolution: "jose@npm:4.15.4"
   checksum: 20fa941597150dffc7af3f41d994500cc3e71cd650b755243dbd80d91cf26c1053f95b78af588f05cfc4371e492a67c5c7a48f689b8605145a8fe28b484d725b
@@ -6044,6 +6054,7 @@ __metadata:
     "@types/react-dom": "npm:^18.0.11"
     "@vitest/ui": "npm:^0.33.0"
     "@yarnpkg/pnpify": "npm:^4.0.0-rc.45"
+    auth0: "npm:^4.3.0"
     eslint: "npm:^8.56.0"
     eslint-config-custom: "workspace:*"
     happy-dom: "npm:^10.6.3"
@@ -6633,6 +6644,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 9d0b6adb72b736e36f2b1b53da0d559125ba3e39d913b6072f6f033e0c87835b414f0836b45bcfaf2bdf698f92297fea1c3cc19b0b258bc182c9c43cc0fab9f2
   languageName: node
   linkType: hard
 
