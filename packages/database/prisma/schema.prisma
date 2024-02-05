@@ -10,9 +10,11 @@ datasource db {
 }
 
 model Edges {
-  edgeID    String @id
-  startNode String
-  endNode   String
+  edgeID                       String @id
+  startNode                    String
+  endNode                      String
+  Nodes_Edges_startNodeToNodes Nodes  @relation("Edges_startNodeToNodes", fields: [startNode], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "Edges_fk1")
+  Nodes_Edges_endNodeToNodes   Nodes  @relation("Edges_endNodeToNodes", fields: [endNode], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "Edges_fk2")
 }
 
 model HighScore {
@@ -22,15 +24,17 @@ model HighScore {
 }
 
 model Nodes {
-  nodeID         String           @id
-  xcoord         Int
-  ycoord         Int
-  floor          String
-  building       String
-  nodeType       String
-  longName       String
-  shortName      String
-  ServiceRequest ServiceRequest[]
+  nodeID                       String           @id
+  xcoord                       Int
+  ycoord                       Int
+  floor                        String
+  building                     String
+  nodeType                     String
+  longName                     String
+  shortName                    String
+  Edges_Edges_startNodeToNodes Edges[]          @relation("Edges_startNodeToNodes")
+  Edges_Edges_endNodeToNodes   Edges[]          @relation("Edges_endNodeToNodes")
+  ServiceRequest               ServiceRequest[]
 }
 
 model Employee {

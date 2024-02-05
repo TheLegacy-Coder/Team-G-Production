@@ -249,14 +249,14 @@ ALTER TABLE ONLY public."Edges"
 --
 
 ALTER TABLE ONLY public."Edges"
-    ADD CONSTRAINT "Edges_fk1" Foreign KEY ("startNode") references public."Nodes" ("nodeID");
+    ADD CONSTRAINT "Edges_fk1" Foreign KEY ("startNode") references public."Nodes" ("nodeID") ON DELETE CASCADE;
 
 --
 -- Name: Edges Edges_fk2; Type: CONSTRAINT; Schema: public; Owner: dev
 --
 
 ALTER TABLE ONLY public."Edges"
-    ADD CONSTRAINT "Edges_fk2" FOREIGN KEY ("endNode") references public."Nodes" ("nodeID");
+    ADD CONSTRAINT "Edges_fk2" FOREIGN KEY ("endNode") references public."Nodes" ("nodeID") ON DELETE CASCADE;
 
 --
 -- PostgreSQL database dump complete

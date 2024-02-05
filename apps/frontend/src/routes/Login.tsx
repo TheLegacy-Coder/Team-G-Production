@@ -67,7 +67,7 @@ export const Login = () => {
 
   return (
     <div className="login-container">
-      {loginStore.loggedIn ? (
+      {loginStore.loggedIn && window.location.pathname !== "/" ? (
         <Navigate to={loginStore.from} replace />
       ) : (
         <div />

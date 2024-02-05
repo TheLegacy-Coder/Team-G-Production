@@ -36,6 +36,8 @@ CREATE TABLE public."Employee"(
 
 ALTER TABLE public."Employee" OWNER to dev;
 
+INSERT INTO public."Employee" VALUES ('admin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
+
 --
 -- Name: Employee; Type: TABLE; Schema: public; Owner: dev
 --
@@ -78,7 +80,7 @@ ALTER TABLE ONLY public."ServiceRequest"
 --
 
 ALTER TABLE ONLY public."ServiceRequest"
-    ADD CONSTRAINT "ServiceRequest_fk1" FOREIGN KEY ("location") REFERENCES public."Nodes" ("nodeID");
+    ADD CONSTRAINT "ServiceRequest_fk1" FOREIGN KEY ("location") REFERENCES public."Nodes" ("nodeID") ON DELETE CASCADE;
 
 --
 -- Name: ServiceRequest ServiceRequest_fk2; Type: CONSTRAINT; Schema: public; Owner: dev
@@ -93,6 +95,8 @@ ALTER TABLE ONLY public."ServiceRequest"
 
 ALTER TABLE ONLY public."ServiceRequest"
     ADD CONSTRAINT "ServiceRequest_fk3" FOREIGN KEY ("requester") REFERENCES public."Employee"("employeeID");
+
+
 
 
 --

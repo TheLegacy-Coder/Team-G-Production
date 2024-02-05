@@ -24,10 +24,10 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 //Stores scaled map amount
-let scalar = 1.0;
+let scalar = 0.75;
 //Stores map xy coordinates for translation
-let mapX = 0;
-let mapY = 0;
+let mapX = -1500;
+let mapY = -600;
 //Stores map delta xy coordinates while panning
 let xDelta = 0;
 let yDelta = 0;
@@ -382,9 +382,10 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          scalar = 1;
-          const scaleID = document.querySelector("#scalar");
-          scaleID!.textContent = scalar.toFixed(2).toString();
+          scalar = 0.75;
+          //Stores map xy coordinates for translation
+          mapX = -1500;
+          mapY = -600;
         }}
       >
         ↺
