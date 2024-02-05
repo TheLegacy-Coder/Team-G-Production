@@ -2,12 +2,14 @@ import React from "react";
 
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
+import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <ContextMenu />
       <InteractableMap />
+      <HomeAnnounce />
     </div>
   );
 };
