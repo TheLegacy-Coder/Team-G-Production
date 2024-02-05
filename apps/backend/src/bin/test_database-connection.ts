@@ -1,3 +1,4 @@
+/*
 import { PrismaClient } from "database";
 
 // Create the prisma client, this automatically connects to the database
@@ -39,3 +40,4 @@ main()
 export default client;
 
 // Prisma automatically closes on shutdown
+*/
