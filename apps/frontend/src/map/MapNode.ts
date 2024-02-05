@@ -131,39 +131,114 @@ export function getMapNodesEdges() {
 //     });
 //   });
 
-export function BreadthFirstSearch(
+export function AStarSearch(
   start: MapNode | undefined,
   end: MapNode | undefined,
 ) {
   if (start == undefined || end == undefined) return [];
+
+  const calculateEuclideanDistance = (
+    node1: MapNode,
+    node2: MapNode,
+  ): number => {
+    return Math.sqrt(
+      Math.pow(node1.xcoord - node2.xcoord, 2) +
+        Math.pow(node1.ycoord - node2.ycoord, 2),
+    );
+  };
+
   const seen: Map<MapNode, MapNode> = new Map([]);
-  seen.set(start, start);
+  const gScore: Map<MapNode, number> = new Map([]);
+  const fScore: Map<MapNode, number> = new Map([]);
+
+  gScore.set(start, 0);
+  fScore.set(start, calculateEuclideanDistance(start, end));
+
   const frontier: MapNode[] = [start];
   let done = false;
-  while (!done || frontier.length != 0) {
-    //frontier [0] is dequed element
-    frontier[0].edges.forEach((node) => {
-      if (!seen.has(node)) {
-        seen.set(node, frontier[0]);
-        if (node == end) {
-          done = true;
+
+  while (!done || frontier.length !== 0) {
+    // Sort frontier based on fScore
+    frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
+
+    const current = frontier.shift() as MapNode;
+
+    if (current === end) {
+      // Reconstruct path
+      const path: MapNode[] = [];
+      let currentPathNode = end;
+      while (currentPathNode !== start) {
+        path.unshift(currentPathNode);
+        currentPathNode = seen.get(currentPathNode) as MapNode;
+      }
+      path.unshift(start);
+      return path.reverse();
+    }
+
+    current.edges.forEach((neighbor) => {
+      const tentativeGScore =
+        (gScore.get(current) || 0) +
+        calculateEuclideanDistance(current, neighbor);
+
+      if (
+        !gScore.has(neighbor) ||
+        tentativeGScore < (gScore.get(neighbor) || 0)
+      ) {
+        seen.set(neighbor, current);
+        gScore.set(neighbor, tentativeGScore);
+        fScore.set(
+          neighbor,
+          tentativeGScore + calculateEuclideanDistance(neighbor, end),
+        );
+
+        if (!frontier.includes(neighbor)) {
+          frontier.push(neighbor);
         }
-        frontier.push(node);
+      }
+
+      if (neighbor === end) {
+        done = true;
       }
     });
-    frontier.shift();
   }
-  console.log(seen);
-  const path: MapNode[] = [];
-  let current = end;
-  while (seen.get(current) != current) {
-    console.log(current);
-    console.log(seen.get(current));
-    path.push(current);
-    const next = seen.get(current);
-    current = next == undefined ? current : next;
-  }
-  path.push(start);
-  return path;
+
+  // If the loop completes without finding a path, return an empty array
+  return [];
 }
-console.log(mapNodes);
+
+// export function BreadthFirstSearch(
+//   start: MapNode | undefined,
+//   end: MapNode | undefined,
+// ) {
+//   if (start == undefined || end == undefined) return [];
+//   const seen: Map<MapNode, MapNode> = new Map([]);
+//   seen.set(start, start);
+//   const frontier: MapNode[] = [start];
+//   let done = false;
+//   while (!done || frontier.length != 0) {
+//     //frontier [0] is dequed element
+//     frontier[0].edges.forEach((node) => {
+//       if (!seen.has(node)) {
+//         seen.set(node, frontier[0]);
+//         if (node == end) {
+//           done = true;
+//         }
+//         frontier.push(node);
+//       }
+//     });
+//     frontier.shift();
+//   }
+//   console.log(seen);
+//   const path: MapNode[] = [];
+//   let current = end;
+//   while (seen.get(current) != current) {
+//     console.log(current);
+//     console.log(seen.get(current));
+//     path.push(current);
+//     const next = seen.get(current);
+//     current = next == undefined ? current : next;
+//   }
+//   path.push(start);
+//   return path;
+// }
+// console.log(mapNodes);
