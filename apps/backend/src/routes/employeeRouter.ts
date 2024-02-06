@@ -26,10 +26,10 @@ const router: Router = express.Router();
 // Whenever a get request is made, return the high score
 router.get("/", async function (req: Request, res: Response) {
   console.log("req");
-  console.log(req.body.getAll); // boolean
-  console.log(req.body.jobType); // string[]
+  console.log(req.query.getAll); // string (true or false)
+  console.log(req.query.jobType); // string[]
 
-  if (req.body.getAll) {
+  if (req.query.getAll === "true") {
     // Fetch all the employees from Prisma
     const allEmps = await PrismaClient.employee.findMany();
     // If employees don't exist
@@ -47,7 +47,7 @@ router.get("/", async function (req: Request, res: Response) {
 
   // Fetch the employees of the given job type from Prisma
   const jobEmps = await PrismaClient.employee.findMany({
-    select: { job: req.body.jobType },
+    where: { job: req.query.jobType as string },
   });
 
   // If employees don't exist
