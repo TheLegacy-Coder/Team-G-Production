@@ -26,9 +26,13 @@ const router: Router = express.Router();
 // Whenever a get request is made, return the high score
 router.get("/requests", async function (req: Request, res: Response) {
   console.log("req");
+  const getAll = req.query.getall;
+  const employeeID = req.query.employeeID;
+  console.log(getAll);
+  console.log(employeeID);
   // Fetch the high score from Prisma
 
-  if (req.body.getAll) {
+  if (getAll == "true") {
     const serviceRequest = await PrismaClient.serviceRequest.findMany();
     // If the high score doesn't exist
     if (serviceRequest === null) {
@@ -41,7 +45,7 @@ router.get("/requests", async function (req: Request, res: Response) {
     }
   } else {
     const serviceRequest = await PrismaClient.serviceRequest.findMany({
-      where: { helpingEmployee: req.body.employeeID },
+      where: { helpingEmployee: employeeID as string },
     });
     // If the high score doesn't exist
     if (serviceRequest === null) {
