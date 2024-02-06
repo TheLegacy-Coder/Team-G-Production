@@ -19,7 +19,7 @@ export const ViewRequests = () => {
               <td>{request.requestID}</td>
               <td>{request.requestType}</td>
               <td>{request.location}</td>
-              <td>{request.handled}</td>
+              <td>{request.status}</td>
               <td>{request.requester}</td>
               <td>{request.helpingEmployee}</td>
               <td>{request.desc}</td>
@@ -45,7 +45,7 @@ export const ViewRequests = () => {
             <th>requestID</th>
             <th>requestType</th>
             <th>location</th>
-            <th>handled</th>
+            <th>status</th>
             <th>requester</th>
             <th>helpingEmployee</th>
             <th>desc</th>
