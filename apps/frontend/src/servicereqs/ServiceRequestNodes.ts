@@ -4,7 +4,7 @@ export interface ServiceRequest {
   requestID: string;
   requestType: string;
   location: string;
-  handled: boolean;
+  status: string;
   requester: string;
   helpingEmployee?: string | null;
   desc: string;

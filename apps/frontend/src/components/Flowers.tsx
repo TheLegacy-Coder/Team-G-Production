@@ -21,7 +21,7 @@ export const Flowers = () => {
     console.log(nodeStore.selectedNode);
     const requestData: ServiceRequest = {
       desc: getValue(event, "desc"),
-      handled: false,
+      status: "Assigned",
       location:
         nodeStore.selectedNode?.nodeID === undefined
           ? "invalid"
