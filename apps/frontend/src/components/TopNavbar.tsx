@@ -53,12 +53,20 @@ export const TopNavbar = () => {
 
           <div>&nbsp;&nbsp;&nbsp;</div>
 
-          {loginStore.loginType === "admin" && loginStore.loggedIn ? (
+          {(loginStore.loginType === "admin" ||
+            loginStore.loginType === "employee") &&
+          loginStore.loggedIn ? (
             <>
-              <Link to="/csvs" className={"nav-button-admin"}>
-                Nodes
-              </Link>
-              <div>&nbsp;&nbsp;&nbsp;</div>
+              {loginStore.loginType === "admin" ? (
+                <>
+                  <Link to="/csvs" className={"nav-button-admin"}>
+                    Nodes
+                  </Link>
+                  <div>&nbsp;&nbsp;&nbsp;</div>
+                </>
+              ) : (
+                <></>
+              )}
               <Link to="/requests" className={"nav-button-admin"}>
                 Service Requests
               </Link>
