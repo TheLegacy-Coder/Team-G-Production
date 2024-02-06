@@ -34,8 +34,22 @@ export const Login = () => {
 
   const AuthLoginButton = () => {
     const { loginWithRedirect } = useAuth0();
-
+    //sends user to login page
     return <button onClick={() => loginWithRedirect()}>AuthLogin</button>;
+  };
+
+  const LogOutButton = () => {
+    const { logout } = useAuth0();
+    //returns to the home page
+    return (
+      <button
+        onClick={() =>
+          logout({ logoutParams: { returnTo: window.location.origin } })
+        }
+      >
+        Log Out
+      </button>
+    );
   };
 
   const LoginTypeButton = ({
@@ -97,6 +111,7 @@ export const Login = () => {
           selected={loginType === "user"}
         />
         <AuthLoginButton />
+        <LogOutButton />
       </div>
 
       <>
