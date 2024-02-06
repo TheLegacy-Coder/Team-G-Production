@@ -20,6 +20,10 @@
   transform: translate(10px, 10px);
 }
 
+.whole-graph-button {
+  transform: translate(200px, 10px);
+}
+
 .zoom-amount {
   transform: translate(50px, 10px);
   width: 50px;

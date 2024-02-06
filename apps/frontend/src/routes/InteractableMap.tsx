@@ -18,6 +18,8 @@ let drawStep = 0;
 let frames: number[][][] = [[[]]];
 const spacing = 50;
 
+let showEdges = false;
+
 //Stores scaled map amount
 let scalar = 0.75;
 //Stores map xy coordinates for translation
@@ -101,6 +103,24 @@ export const InteractableMap = () => {
     }
 
     flip = !flip;
+
+    //if draw edges
+    if (showEdges) {
+      mapNodes.forEach((node) => {
+        // wrap in if
+        ctx!.lineWidth = 3;
+        ctx!.strokeStyle = "#AAAAAA";
+        node.edges.forEach((edge) => {
+          // Start a new Path
+          ctx!.beginPath();
+          ctx!.moveTo(node.xcoord + transX, node.ycoord + transY);
+          ctx!.lineTo(edge.xcoord + transX, edge.ycoord + transY);
+          // Draw the Path
+          ctx!.stroke();
+        });
+      });
+    }
+
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(
@@ -352,6 +372,10 @@ export const InteractableMap = () => {
     }
   }, [ctx]);
 
+  function toggleEdges() {
+    showEdges = !showEdges;
+  }
+
   return (
     <div
       style={
@@ -384,6 +408,12 @@ export const InteractableMap = () => {
         }}
       >
         ↺
+      </button>
+      <button
+        className={"graph-button whole-graph-button"}
+        onClick={toggleEdges}
+      >
+        O
       </button>
       <canvas
         onMouseMove={mouseMove}
