@@ -46,7 +46,7 @@ ALTER TABLE public."Node" OWNER TO dev;
 ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public."HighScore_id_seq"'::regclass);
 
 --
--- Name: Edge; Type: TABLE; Schema: public; Owner: dev
+-- Name: ; Type: TABLE; Schema: public; Owner: dev
 --
 
 CREATE TABLE public."Edge" (
@@ -222,7 +222,137 @@ ALTER TABLE ONLY public."Edge"
 ALTER TABLE ONLY public."Edge"
     ADD CONSTRAINT "Edge_fk2" FOREIGN KEY ("endNode") references public."Node" ("nodeID") ON DELETE CASCADE;
 
+
 --
--- PostgreSQL database dump complete
+-- Name: Employee; Type: TABLE; Schema: public; Owner: dev
 --
 
+CREATE TABLE public."Employee"(
+    "employeeID" text NOT NULL, --Primary Key
+    "firstName" text NOT NULL,
+    "lastName" text NOT NULL,
+    "username" text NOT NULL,
+    "password" text NOT NULL,
+    "job" text NOT NULL,
+    "accessLevel" text NOT NULL
+);
+
+ALTER TABLE public."Employee" OWNER to dev;
+
+--
+-- Name: Employee; Type: TABLE; Schema: public; Owner: dev
+--
+
+CREATE TABLE public."ServiceRequest"(
+    "requestID" text NOT NULL, --Primary Key
+    "requestType" text NOT NULL,
+    "location" text NOT NULL,
+    "status" text NOT NULL,
+    "requester" text, --Foreign Key -> Employee
+    "helpingEmployee" text, --Foreign Key -> Employee
+    "desc" text NOT NULL,
+    "time" timestamp
+);
+
+ALTER TABLE public."ServiceRequest" OWNER to dev;
+
+ALTER TABLE public."ServiceRequest"
+    ALTER COLUMN "time" TYPE timestamp with time zone;
+
+ALTER TABLE public."ServiceRequest"
+    ALTER COLUMN "time" SET default current_timestamp;
+
+--
+-- Name: Employee Employee_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."Employee"
+    ADD CONSTRAINT "Employee_pkey" PRIMARY KEY ("employeeID");
+
+--
+--  Name: ServiceRequest ServiceRequest_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."ServiceRequest"
+    ADD CONSTRAINT "ServiceRequest_pkey" PRIMARY KEY ("requestID");
+
+--
+-- Name: ServiceRequest ServiceRequest_fk1; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."ServiceRequest"
+    ADD CONSTRAINT "ServiceRequest_fk1" FOREIGN KEY ("location") REFERENCES public."Node" ("nodeID") ON DELETE CASCADE;
+
+--
+-- Name: ServiceRequest ServiceRequest_fk2; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."ServiceRequest"
+    ADD CONSTRAINT "ServiceRequest_fk2" FOREIGN KEY ("helpingEmployee") REFERENCES public."Employee" ("employeeID") ON DELETE SET NULL;
+
+--
+-- Name: ServiceRequest ServiceRequest_fk3; Type: CONSTRAINT; Schema: public; Owner: dev
+--
+
+ALTER TABLE ONLY public."ServiceRequest"
+    ADD CONSTRAINT "ServiceRequest_fk3" FOREIGN KEY ("requester") REFERENCES public."Employee"("employeeID") ON DELETE SET NULL;
+
+
+--
+-- Data for Name: Employee; Type: TABLE DATA; Schema: public; Owner: dev
+--
+
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testAdmin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testStaff', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff');
+
+
+--
+-- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: public; Owner: dev
+--
+
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'flowers', 'CCONF001L1', 'assigned', 'testAdmin', 'testStaff', 'flowers to be sent to room');
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'flowers', 'CCONF001L1', 'assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
+
+
+--
+-- Name: Announcement; Type: TABLE; Schema: public; Owner: dev
+--
+
+CREATE TABLE public."Announcement"(
+    "announcementID" text NOT NULL, --primary key
+    "desc" text NOT NULL,
+    "requester" text NOT NULL, --references employee
+    "emergency" bool NOT NULL,
+    "time" timestamp
+);
+
+ALTER TABLE public."Announcement" OWNER to dev;
+
+ALTER TABLE public."Announcement"
+    ALTER COLUMN "time" TYPE timestamp with time zone;
+
+ALTER TABLE public."Announcement"
+    ALTER COLUMN "time" SET default current_timestamp;
+
+
+--
+-- Name: Announcement Announcement_pkey; Type: CONSTRAINT; Schema: public; owner: dev
+--
+
+ALTER TABLE ONLY public."Announcement"
+    ADD CONSTRAINT "Announcenments_pkey" PRIMARY KEY ("announcementID");
+
+--
+-- Name: Announcement Announcement_fk1; Type: CONSTRAINT; Schema: public; owner: dev
+--
+
+ALTER TABLE ONLY public."Announcement"
+    ADD CONSTRAINT "Announcement_fk1" FOREIGN KEY ("requester") REFERENCES public."Employee" ("employeeID");
+
+
+--
+-- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: public; Owner: dev
+--
+
+INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement1', 'Lot C is under Construction', 'testStaff', 'false');
+INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement2', 'THERE IS A FIRE!', 'testAdmin', 'true');

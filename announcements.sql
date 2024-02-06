@@ -21,10 +21,10 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: Announcements; Type: TABLE; Schema: public; Owner: dev
+-- Name: Announcement; Type: TABLE; Schema: public; Owner: dev
 --
 
-CREATE TABLE public."Announcements"(
+CREATE TABLE public."Announcement"(
     "announcementID" text NOT NULL, --primary key
     "desc" text NOT NULL,
     "requester" text NOT NULL, --references employee
@@ -32,25 +32,25 @@ CREATE TABLE public."Announcements"(
     "time" timestamp
 );
 
-ALTER TABLE public."Announcements" OWNER to dev;
+ALTER TABLE public."Announcement" OWNER to dev;
 
-ALTER TABLE public."Announcements"
+ALTER TABLE public."Announcement"
     ALTER COLUMN "time" TYPE timestamp with time zone;
 
-ALTER TABLE public."Announcements"
+ALTER TABLE public."Announcement"
     ALTER COLUMN "time" SET default current_timestamp;
 
 
 --
--- Name: Announcements Announcements_pkey; Type: CONSTRAINT; Schema: public; owner: dev
+-- Name: Announcement Announcement_pkey; Type: CONSTRAINT; Schema: public; owner: dev
 --
 
-ALTER TABLE ONLY public."Announcements"
+ALTER TABLE ONLY public."Announcement"
     ADD CONSTRAINT "Announcenments_pkey" PRIMARY KEY ("announcementID");
 
 --
--- Name: Announcements Announcements_fk1; Type: CONSTRAINT; Schema: public; owner: dev
+-- Name: Announcement Announcement_fk1; Type: CONSTRAINT; Schema: public; owner: dev
 --
 
-ALTER TABLE ONLY public."Announcements"
-    ADD CONSTRAINT "Announcements_fk1" FOREIGN KEY ("requester") REFERENCES public."Employee" ("employeeID");
+ALTER TABLE ONLY public."Announcement"
+    ADD CONSTRAINT "Announcement_fk1" FOREIGN KEY ("requester") REFERENCES public."Employee" ("employeeID");

@@ -1,3 +1,4 @@
+/*
 import express, { Router, Request, Response } from "express";
 import { Prisma } from "database";
 import PrismaClient from "../bin/database-connection.ts";
@@ -44,3 +45,4 @@ router.get("/", async function (req: Request, res: Response) {
 });
 
 export default router;
+*/
