@@ -18,6 +18,8 @@ export type Edge = {
   endNode: string;
 };
 
+export const floors = ["L2", "L1", "1", "2", "3"];
+
 export const mapNodes: Map<string, MapNode> = new Map([]);
 export const mapEdges: Map<string, Edge> = new Map([]);
 
@@ -137,13 +139,15 @@ export function AStarSearch(
 ) {
   if (start == undefined || end == undefined) return [];
 
-  const calculateEuclideanDistance = (
-    node1: MapNode,
-    node2: MapNode,
-  ): number => {
+  const calculateHueristic = (node1: MapNode, node2: MapNode): number => {
     return Math.sqrt(
       Math.pow(node1.xcoord - node2.xcoord, 2) +
-        Math.pow(node1.ycoord - node2.ycoord, 2),
+        Math.pow(node1.ycoord - node2.ycoord, 2) +
+        100000000000 *
+          Math.pow(
+            floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
+            2,
+          ),
     );
   };
 
@@ -152,7 +156,7 @@ export function AStarSearch(
   const fScore: Map<MapNode, number> = new Map([]);
 
   gScore.set(start, 0);
-  fScore.set(start, calculateEuclideanDistance(start, end));
+  fScore.set(start, calculateHueristic(start, end));
 
   const frontier: MapNode[] = [start];
   let done = false;
@@ -162,6 +166,8 @@ export function AStarSearch(
     frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
 
     const current = frontier.shift() as MapNode;
+    console.log(current);
+    console.log(fScore);
 
     if (current === end) {
       // Reconstruct path
@@ -177,8 +183,7 @@ export function AStarSearch(
 
     current.edges.forEach((neighbor) => {
       const tentativeGScore =
-        (gScore.get(current) || 0) +
-        calculateEuclideanDistance(current, neighbor);
+        (gScore.get(current) || 0) + calculateHueristic(current, neighbor);
 
       if (
         !gScore.has(neighbor) ||
@@ -188,7 +193,7 @@ export function AStarSearch(
         gScore.set(neighbor, tentativeGScore);
         fScore.set(
           neighbor,
-          tentativeGScore + calculateEuclideanDistance(neighbor, end),
+          tentativeGScore + calculateHueristic(neighbor, end),
         );
 
         if (!frontier.includes(neighbor)) {
