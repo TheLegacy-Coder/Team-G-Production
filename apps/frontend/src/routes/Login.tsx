@@ -2,6 +2,7 @@ import React, { useReducer, useState } from "react";
 import { loginStore } from "../stores/LoginStore.ts";
 import { Navigate } from "react-router-dom";
 import { contextMenuState } from "../stores/ContextMenuState.ts";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface LoginTypeButtonProps {
   name: string;
@@ -29,6 +30,12 @@ export const Login = () => {
       console.log("Logging in with:", loginType, username, password);
       forceUpdate();
     }
+  };
+
+  const AuthLoginButton = () => {
+    const { loginWithRedirect } = useAuth0();
+
+    return <button onClick={() => loginWithRedirect()}>AuthLogin</button>;
   };
 
   const LoginTypeButton = ({
@@ -89,6 +96,7 @@ export const Login = () => {
           loginType="user"
           selected={loginType === "user"}
         />
+        <AuthLoginButton />
       </div>
 
       <>
