@@ -40,12 +40,6 @@ CREATE TABLE public."Node" (
 ALTER TABLE public."Node" OWNER TO dev;
 
 --
--- Name: HighScore id; Type: DEFAULT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public."HighScore_id_seq"'::regclass);
-
---
 -- Name: ; Type: TABLE; Schema: public; Owner: dev
 --
 
@@ -58,13 +52,6 @@ CREATE TABLE public."Edge" (
 
 ALTER TABLE public."Edge" OWNER TO dev;
 
-
-
---
--- Name: HighScore id; Type: DEFAULT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public."HighScore_id_seq"'::regclass);
 
 
 --
@@ -119,9 +106,6 @@ INSERT INTO public."Edge" ("edgeID", "startNode", "endNode") VALUES ('GHALL005L1
 INSERT INTO public."Edge" ("edgeID", "startNode", "endNode") VALUES ('GHALL006L1_GELEV007L1', 'GHALL006L1', 'GELEV00QL1');
 
 
---
--- Data for Name: HighScore; Type: TABLE DATA; Schema: public; Owner: dev
---
 
 
 
@@ -179,19 +163,6 @@ INSERT INTO public."Node" ("nodeID", xcoord, ycoord, floor, building, "nodeType"
 
 
 
---
--- Name: HighScore_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dev
---
-
-SELECT pg_catalog.setval('public."HighScore_id_seq"', 1, false);
-
-
---
--- Name: HighScore HighScore_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore"
-    ADD CONSTRAINT "HighScore_pkey" PRIMARY KEY (id);
 
 
 --
