@@ -344,7 +344,6 @@ export const InteractableMap = () => {
       scalar *= 1 / 1.2;
     }
     updateXY();
-    draw();
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
   }
@@ -410,7 +409,7 @@ export const InteractableMap = () => {
         ↺
       </button>
       <button
-        className={"graph-button whole-graph-button"}
+        className={"zoom-button whole-graph-button"}
         onClick={toggleEdges}
       >
         O
