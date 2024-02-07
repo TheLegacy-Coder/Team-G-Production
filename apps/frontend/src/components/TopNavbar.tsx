@@ -10,6 +10,7 @@ import { ServiceRequests } from "./ServiceRequests.tsx";
 
 export const TopNavbar = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   loginStore.navbarRefreshHook = forceUpdate;
 
   return (
@@ -35,6 +36,7 @@ export const TopNavbar = () => {
             protected={false}
             style={"nav-button"}
           />
+
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
