@@ -19,7 +19,7 @@ export const ViewRequests = () => {
               <td>{request.requestID}</td>
               <td>{request.requestType}</td>
               <td>{request.location}</td>
-              <td>{request.handled}</td>
+              <td>{request.status}</td>
               <td>{request.requester}</td>
               <td>{request.helpingEmployee}</td>
               <td>{request.desc}</td>
