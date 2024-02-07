@@ -1,11 +1,9 @@
 import React, { FormEvent, useReducer, useEffect, useState } from "react";
 import { nodeStore } from "../map/MapNode.ts";
-import {
-  postServiceRequest,
-  ServiceRequest,
-} from "../servicereqs/ServiceRequestNodes.ts";
+import { postServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import axios, { AxiosResponse } from "axios";
 import { Employee } from "../employee/Employee.ts";
+import { Prisma } from "database";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -56,7 +54,7 @@ export const Flowers = () => {
     console.log("Textarea Value:", getValue(event, "desc"));
     console.log(nodeStore.selectedNode);
     const index: number = employeeNames.indexOf(selectedEmployee);
-    const requestData: ServiceRequest = {
+    const requestData: Prisma.ServiceRequestUncheckedCreateInput = {
       desc: getValue(event, "desc"),
       status: "Assigned",
       location:
@@ -66,7 +64,8 @@ export const Flowers = () => {
       requestID: crypto.randomUUID(),
       requestType: "Flowers",
       helpingEmployee: employeeIDs[index],
-      requester: "admin",
+      requester: "testAdmin",
+      time: null,
     };
     postServiceRequest(requestData);
   };
