@@ -64,7 +64,7 @@ router.get("/requests", async function (req: Request, res: Response) {
 
 router.post("/requests", async function (req: Request, res: Response) {
   console.log("req");
-  const requestAttempt: Prisma.ServiceRequestCreateInput = req.body;
+  const requestAttempt: Prisma.ServiceRequestUncheckedCreateInput = req.body;
   console.log(req.body);
   try {
     await PrismaClient.serviceRequest.create({ data: requestAttempt });
