@@ -65,7 +65,6 @@ export const Flowers = () => {
       requestType: "Flowers",
       helpingEmployee: employeeIDs[index],
       requester: "testAdmin",
-      time: null,
     };
     postServiceRequest(requestData);
   };
