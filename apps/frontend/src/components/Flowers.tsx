@@ -11,21 +11,28 @@ export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   nodeStore.currentRefresh = forceUpdate;
   const [employeeNames, setEmployeeNames] = useState<string[]>([]);
+  const [employeeIDs, setEmployeeIDs] = useState<string[]>([]);
+
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
   useEffect(() => {
     // Fetch employee names using API call and update the state
-    const fetchEmployeeNames = async () => {
+    const fetchEmployeeNamesAndIDS = async () => {
       try {
         axios
           .get("http://localhost:3000/api/employees?jobType=flowerdeliveryman")
           .then((response: AxiosResponse<Employee[]>) => {
             const employees: string[] = [];
+            const employeeIDs: string[] = [];
             console.log(response.data);
             response.data.forEach((emp) => {
               employees.push(emp.firstName + " " + emp.lastName);
+              employeeIDs.push(emp.employeeID);
             });
             console.log(employees);
+            console.log(employeeIDs);
             setEmployeeNames(employees);
+            setEmployeeIDs(employeeIDs);
           });
 
         // Replace with the actual property holding employee names in the API response
@@ -34,7 +41,7 @@ export const Flowers = () => {
       }
     };
 
-    fetchEmployeeNames();
+    fetchEmployeeNamesAndIDS();
   }, []); // Empty dependency array to ensure the effect runs only once when the component mounts
 
   function getValue(event: FormEvent<HTMLFormElement>, name: string) {
@@ -48,6 +55,7 @@ export const Flowers = () => {
     event.preventDefault();
     console.log("Textarea Value:", getValue(event, "desc"));
     console.log(nodeStore.selectedNode);
+    const index: number = employeeNames.indexOf(selectedEmployee);
     const requestData: ServiceRequest = {
       desc: getValue(event, "desc"),
       status: "Assigned",
@@ -57,6 +65,7 @@ export const Flowers = () => {
           : nodeStore.selectedNode?.nodeID,
       requestID: crypto.randomUUID(),
       requestType: "Flowers",
+      helpingEmployee: employeeIDs[index],
       requester: "admin",
     };
     postServiceRequest(requestData);
@@ -92,7 +101,7 @@ export const Flowers = () => {
         <br />
         <select
           className="employeeDropdown"
-          onChange={(event) => console.log(event.target.value)}
+          onChange={(event) => setSelectedEmployee(event.target.value)}
         >
           <option value="" disabled selected>
             Select Employee
