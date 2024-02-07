@@ -1,8 +1,22 @@
 .nav-button {
-  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-  background: none;
-  border: none;
+  color: black;
+  background: #b8c4d1;
+  border: 5px solid #456789;
   text-decoration: none;
   cursor: pointer;
   justify-content: center;
+  border-radius: 6px;
+  width: 150px;
+}
+
+.nav-button-admin {
+  display: flex;
+  color: black;
+  background: #d1b8bd;
+  border: 5px solid #311823;
+  text-decoration: none;
+  cursor: pointer;
+  justify-content: center;
+  border-radius: 6px;
+  width: 150px;
 }

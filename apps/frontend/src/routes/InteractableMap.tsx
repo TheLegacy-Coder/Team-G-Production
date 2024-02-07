@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { BreadthFirstSearch, MapNode, mapNodes } from "../map/MapNode.ts";
+import { AStarSearch, MapNode, mapNodes, nodeStore } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -18,11 +18,13 @@ let drawStep = 0;
 let frames: number[][][] = [[[]]];
 const spacing = 50;
 
+let showEdges = false;
+
 //Stores scaled map amount
-let scalar = 1.0;
+let scalar = 0.75;
 //Stores map xy coordinates for translation
-let mapX = 0;
-let mapY = 0;
+let mapX = -1500;
+let mapY = -600;
 //Stores map delta xy coordinates while panning
 let xDelta = 0;
 let yDelta = 0;
@@ -65,7 +67,7 @@ export const InteractableMap = () => {
     }
 
     //Stores local scaled variable to avoid getting/setting conflicts
-    //const scaled = scalar;
+    const scaled = scalar;
     //Stores the width and height of window
     const width =
       window.innerWidth ||
@@ -81,7 +83,7 @@ export const InteractableMap = () => {
     //Clears canvas
     ctx!.clearRect(0, 0, width, height);
     //Scales canvas for zoom
-    //ctx!.scale(scaled, scaled);
+    ctx!.scale(scaled, scaled);
     drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     ctx?.drawImage(image, transX, transY);
     if (frames[drawStep] != undefined) {
@@ -101,6 +103,24 @@ export const InteractableMap = () => {
     }
 
     flip = !flip;
+
+    //if draw edges
+    if (showEdges) {
+      mapNodes.forEach((node) => {
+        // wrap in if
+        ctx!.lineWidth = 3;
+        ctx!.strokeStyle = "#AAAAAA";
+        node.edges.forEach((edge) => {
+          // Start a new Path
+          ctx!.beginPath();
+          ctx!.moveTo(node.xcoord + transX, node.ycoord + transY);
+          ctx!.lineTo(edge.xcoord + transX, edge.ycoord + transY);
+          // Draw the Path
+          ctx!.stroke();
+        });
+      });
+    }
+
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(
@@ -149,7 +169,8 @@ export const InteractableMap = () => {
     imageWidth = width;
     imageHeight = height;
     //Unscales canvas for zoom
-    //ctx!.scale(1 / scaled, 1 / scaled);
+    ctx!.scale(1 / scaled, 1 / scaled);
+    //console.log(drawStep);
     setTimeout(draw, 15);
   }
 
@@ -221,7 +242,7 @@ export const InteractableMap = () => {
       if (dist < 10) {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
-          path = BreadthFirstSearch(sl, node);
+          path = AStarSearch(sl, node);
           totalDistance = 0;
           steps = [0];
           let last: MapNode | undefined = undefined;
@@ -268,6 +289,7 @@ export const InteractableMap = () => {
           path = [];
           frames = [[[]]];
           sl = node;
+          nodeStore.setSelectedNode(sl);
           console.log("CLEAR");
         }
       }
@@ -275,6 +297,7 @@ export const InteractableMap = () => {
     if (emptyClick && xDelta == 0 && yDelta == 0) {
       hl = undefined;
       sl = undefined;
+      nodeStore.setSelectedNode(sl);
       path = [];
       frames = [[[]]];
     }
@@ -312,8 +335,7 @@ export const InteractableMap = () => {
     });
   }
 
-  function zoom(zoomIn: boolean, pageX: number, pageY: number) {
-    //const prevScalar = scalar;
+  function zoom(zoomIn: boolean) {
     if (zoomIn && scalar < 1.3) {
       //Zooms in
       scalar *= 1.2;
@@ -321,11 +343,7 @@ export const InteractableMap = () => {
       //Zooms out
       scalar *= 1 / 1.2;
     }
-    console.log(pageX);
-    console.log(pageY);
-    //let scaled =  prevScalar / scalar;
     updateXY();
-
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
   }
@@ -336,9 +354,9 @@ export const InteractableMap = () => {
     const delta = evt.deltaY;
 
     if (delta < 0) {
-      zoom(true, evt.pageX, evt.pageY);
+      zoom(true);
     } else {
-      zoom(false, evt.pageX, evt.pageY);
+      zoom(false);
     }
   }
 
@@ -353,6 +371,10 @@ export const InteractableMap = () => {
     }
   }, [ctx]);
 
+  function toggleEdges() {
+    showEdges = !showEdges;
+  }
+
   return (
     <div
       style={
@@ -363,10 +385,7 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
-      <button
-        className={"zoom-button plus-button"}
-        onClick={() => zoom(true, imageWidth / 2, imageHeight / 2)}
-      >
+      <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
         +
       </button>
       <button className={"zoom-button zoom-amount"}>
@@ -374,19 +393,26 @@ export const InteractableMap = () => {
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => zoom(false, imageWidth / 2, imageHeight / 2)}
+        onClick={() => zoom(false)}
       >
         -
       </button>
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          scalar = 1;
-          const scaleID = document.querySelector("#scalar");
-          scaleID!.textContent = scalar.toFixed(2).toString();
+          scalar = 0.75;
+          //Stores map xy coordinates for translation
+          mapX = -1500;
+          mapY = -600;
         }}
       >
         ↺
+      </button>
+      <button
+        className={"zoom-button whole-graph-button"}
+        onClick={toggleEdges}
+      >
+        O
       </button>
       <canvas
         onMouseMove={mouseMove}

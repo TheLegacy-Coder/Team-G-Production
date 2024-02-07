@@ -9,25 +9,60 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model Edges {
-  edgeID    String @id
-  startNode String
-  endNode   String
+model Employee {
+  employeeID                                              String           @id
+  firstName                                               String
+  lastName                                                String
+  username                                                String
+  password                                                String
+  job                                                     String
+  accessLevel                                             String
+  Announcement                                            Announcement[]
+  ServiceRequest_ServiceRequest_helpingEmployeeToEmployee ServiceRequest[] @relation("ServiceRequest_helpingEmployeeToEmployee")
+  ServiceRequest_ServiceRequest_requesterToEmployee       ServiceRequest[] @relation("ServiceRequest_requesterToEmployee")
 }
 
-model HighScore {
-  id    Int      @id @default(autoincrement())
-  time  DateTime
-  score Int
+model ServiceRequest {
+  requestID                                         String    @id
+  requestType                                       String
+  location                                          String
+  status                                            String
+  requester                                         String?
+  helpingEmployee                                   String?
+  desc                                              String
+  time                                              DateTime? @default(now()) @db.Timestamptz(6)
+  Nodes                                             Node      @relation(fields: [location], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequest_fk1")
+  Employee_ServiceRequest_helpingEmployeeToEmployee Employee? @relation("ServiceRequest_helpingEmployeeToEmployee", fields: [helpingEmployee], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk2")
+  Employee_ServiceRequest_requesterToEmployee       Employee? @relation("ServiceRequest_requesterToEmployee", fields: [requester], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk3")
 }
 
-model Nodes {
-  nodeID    String @id
-  xcoord    Int
-  ycoord    Int
-  floor     String
-  building  String
-  nodeType  String
-  longName  String
-  shortName String
+model Announcement {
+  announcementID String    @id(map: "Announcenments_pkey")
+  desc           String
+  requester      String
+  emergency      Boolean
+  time           DateTime? @default(now()) @db.Timestamptz(6)
+  Employee       Employee  @relation(fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "Announcement_fk1")
+}
+
+model Edge {
+  edgeID                    String @id
+  startNode                 String
+  endNode                   String
+  Node_Edge_startNodeToNode Node   @relation("Edge_startNodeToNode", fields: [startNode], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "Edge_fk1")
+  Node_Edge_endNodeToNode   Node   @relation("Edge_endNodeToNode", fields: [endNode], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "Edge_fk2")
+}
+
+model Node {
+  nodeID                    String           @id
+  xcoord                    Int
+  ycoord                    Int
+  floor                     String
+  building                  String
+  nodeType                  String
+  longName                  String
+  shortName                 String
+  Edge_Edge_startNodeToNode Edge[]           @relation("Edge_startNodeToNode")
+  Edge_Edge_endNodeToNode   Edge[]           @relation("Edge_endNodeToNode")
+  ServiceRequest            ServiceRequest[]
 }
