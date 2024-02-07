@@ -9,6 +9,7 @@ import { Dropdown, DropdownButton, Stack } from "react-bootstrap";
 
 export const ViewRequests = () => {
   const [rows, setRows] = useState<React.ReactElement[]>([]);
+  const [statusChanged, setStatusChanged] = useState(false);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleStatusChange = (requestID: string, newStatus: string) => {
@@ -19,17 +20,17 @@ export const ViewRequests = () => {
       })
       .then((response) => {
         console.log(response);
-        forceUpdate();
+        setStatusChanged(true);
         return response.data;
       })
       .catch((error) => {
         console.error("Error fetching service requests:", error);
-        forceUpdate();
         return undefined;
       });
   };
 
   useEffect(() => {
+    setStatusChanged(false);
     getServiceRequests().then((list) => {
       const renderStatus = (request: ServiceRequest) => {
         const renderStatusChangeButton = (status: string) => {
@@ -83,7 +84,7 @@ export const ViewRequests = () => {
       console.log(newRows);
       forceUpdate();
     });
-  }, []);
+  }, [statusChanged]);
 
   console.log(rows);
   return (
