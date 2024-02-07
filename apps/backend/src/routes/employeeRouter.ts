@@ -26,17 +26,40 @@ const router: Router = express.Router();
 // Whenever a get request is made, return the high score
 router.get("/", async function (req: Request, res: Response) {
   console.log("req");
-  // Fetch the employees from Prisma
-  const emp = await PrismaClient.employee.findMany();
+  console.log(req.query.getAll); // string (true or false)
+  console.log(req.query.jobType); // string[]
 
-  // If the high score doesn't exist
-  if (emp === null) {
+  if (req.query.getAll === "true") {
+    // Fetch all the employees from Prisma
+    const allEmps = await PrismaClient.employee.findMany();
+    // If employees don't exist
+    if (allEmps === null) {
+      // Log that (it's a problem)
+      console.error("No employees found in database!");
+      res.sendStatus(204); // and send 204, no data
+      return;
+    } else {
+      // Otherwise, send the all
+      res.send(allEmps);
+      return;
+    }
+  }
+
+  // Fetch the employees of the given job type from Prisma
+  const jobEmps = await PrismaClient.employee.findMany({
+    where: { job: req.query.jobType as string },
+  });
+
+  // If employees don't exist
+  if (jobEmps === null) {
     // Log that (it's a problem)
-    console.error("No nodes found in database!");
+    console.error("No employees found in database!");
     res.sendStatus(204); // and send 204, no data
+    return;
   } else {
-    // Otherwise, send the score
-    res.send(emp);
+    // Otherwise, send the employees
+    res.send(jobEmps);
+    return;
   }
 });
 

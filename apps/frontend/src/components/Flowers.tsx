@@ -1,10 +1,11 @@
 import React, { FormEvent, useReducer, useEffect, useState } from "react";
-import { MapNode, nodeStore } from "../map/MapNode.ts";
+import { nodeStore } from "../map/MapNode.ts";
 import {
   postServiceRequest,
   ServiceRequest,
 } from "../servicereqs/ServiceRequestNodes.ts";
 import axios, { AxiosResponse } from "axios";
+import { Employee } from "../employee/Employee.ts";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -16,12 +17,12 @@ export const Flowers = () => {
     const fetchEmployeeNames = async () => {
       try {
         axios
-          .get("http://localhost:3000/api/map/nodes")
-          .then((response: AxiosResponse<MapNode[]>) => {
+          .get("http://localhost:3000/api/employees?jobType=flowerdeliveryman")
+          .then((response: AxiosResponse<Employee[]>) => {
             const employees: string[] = [];
             console.log(response.data);
-            response.data.forEach((node) => {
-              employees.push(node.shortName);
+            response.data.forEach((emp) => {
+              employees.push(emp.firstName + " " + emp.lastName);
             });
             console.log(employees);
             setEmployeeNames(employees);
