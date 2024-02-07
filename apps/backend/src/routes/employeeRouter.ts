@@ -28,6 +28,7 @@ router.get("/", async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.query.getAll); // string (true or false)
   // console.log((req.query.jobTypes as string).split(",")); // string[]
+  console.log(req.query.getID); // string employeeID
   let jobEmps;
 
   if (req.query.getAll === "true") {
@@ -42,6 +43,24 @@ router.get("/", async function (req: Request, res: Response) {
     } else {
       // Otherwise, send the all
       res.send(allEmps);
+      return;
+    }
+  }
+
+  if (req.query.getID) {
+    // Fetch the employee of the given ID from Prisma
+    const emp = await PrismaClient.employee.findUnique({
+      where: { employeeID: req.query.getID as string },
+    });
+    // If employee doesn't exist
+    if (emp === null) {
+      // Log that (it's a problem)
+      console.error("No employee found in database!");
+      res.sendStatus(204); // and send 204, no data
+      return;
+    } else {
+      // Otherwise, send the employee
+      res.send(emp);
       return;
     }
   }
