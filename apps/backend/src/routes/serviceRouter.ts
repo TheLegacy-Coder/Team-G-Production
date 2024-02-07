@@ -33,7 +33,9 @@ router.get("/requests", async function (req: Request, res: Response) {
   // Fetch the high score from Prisma
 
   if (getAll == "true") {
-    const serviceRequest = await PrismaClient.serviceRequest.findMany();
+    const serviceRequest = await PrismaClient.serviceRequest.findMany({
+      orderBy: { time: "desc" },
+    });
     // If the high score doesn't exist
     if (serviceRequest === null) {
       // Log that (it's a problem)
@@ -45,6 +47,7 @@ router.get("/requests", async function (req: Request, res: Response) {
     }
   } else {
     const serviceRequest = await PrismaClient.serviceRequest.findMany({
+      orderBy: { time: "desc" },
       where: { helpingEmployee: employeeID as string },
     });
     // If the high score doesn't exist
