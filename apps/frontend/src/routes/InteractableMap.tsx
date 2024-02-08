@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  BreadthFirstSearch,
-  MapNode,
-  mapNodes,
-  nodeStore,
-} from "../map/MapNode.ts";
+import { AStarSearch, MapNode, mapNodes, nodeStore } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -227,7 +222,7 @@ export const InteractableMap = () => {
       if (dist < 10) {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
-          path = BreadthFirstSearch(sl, node);
+          path = AStarSearch(sl, node);
           totalDistance = 0;
           steps = [0];
           let last: MapNode | undefined = undefined;
