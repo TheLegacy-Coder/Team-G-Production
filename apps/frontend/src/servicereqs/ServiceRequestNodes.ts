@@ -2,7 +2,7 @@ import axios from "axios";
 import { currentEmployee, loginStore } from "../stores/LoginStore.ts";
 import { Prisma } from "database";
 
-export interface ServiceRequest {
+export type ServiceRequest = {
   requestID: string;
   requestType: string;
   location: string;
@@ -11,11 +11,11 @@ export interface ServiceRequest {
   helpingEmployee?: string | null;
   desc: string;
   time?: string;
-}
+};
 
-export interface ServiceRequestsWrapper {
+export type ServiceRequestsWrapper = {
   data: ServiceRequest[];
-}
+};
 
 export const serviceRequests: Map<string, ServiceRequest> = new Map([]);
 
