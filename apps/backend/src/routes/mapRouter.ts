@@ -27,7 +27,25 @@ const router: Router = express.Router();
 router.get("/nodes", async function (req: Request, res: Response) {
   console.log("req");
   // Fetch the high score from Prisma
-  const node = await PrismaClient.node.findMany();
+  let node;
+
+  if (req.query.Floors) {
+    const floors = (req.query.Floors as string).split(",");
+    if (floors.length === 0) {
+      node = await PrismaClient.node.findMany();
+    } else {
+      node = await PrismaClient.node.findMany({
+        where: { floor: floors[0] },
+      });
+      for (let i = 1; i < floors.length; i++) {
+        node = node.concat(
+          await PrismaClient.node.findMany({ where: { floor: floors[i] } }),
+        );
+      }
+    }
+  } else {
+    node = await PrismaClient.node.findMany();
+  }
 
   // If the high score doesn't exist
   if (node === null) {

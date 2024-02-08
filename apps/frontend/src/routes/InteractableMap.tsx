@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  BreadthFirstSearch,
-  MapNode,
-  mapNodes,
-  nodeStore,
-} from "../map/MapNode.ts";
+import { AStarSearch, MapNode, mapNodes, nodeStore } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -22,6 +17,8 @@ let steps: number[] = [];
 let drawStep = 0;
 let frames: number[][][] = [[[]]];
 const spacing = 50;
+
+let showEdges = false;
 
 //Stores scaled map amount
 let scalar = 0.75;
@@ -106,6 +103,24 @@ export const InteractableMap = () => {
     }
 
     flip = !flip;
+
+    //if draw edges
+    if (showEdges) {
+      mapNodes.forEach((node) => {
+        // wrap in if
+        ctx!.lineWidth = 3;
+        ctx!.strokeStyle = "#AAAAAA";
+        node.edges.forEach((edge) => {
+          // Start a new Path
+          ctx!.beginPath();
+          ctx!.moveTo(node.xcoord + transX, node.ycoord + transY);
+          ctx!.lineTo(edge.xcoord + transX, edge.ycoord + transY);
+          // Draw the Path
+          ctx!.stroke();
+        });
+      });
+    }
+
     mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(
@@ -227,7 +242,7 @@ export const InteractableMap = () => {
       if (dist < 10) {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
-          path = BreadthFirstSearch(sl, node);
+          path = AStarSearch(sl, node);
           totalDistance = 0;
           steps = [0];
           let last: MapNode | undefined = undefined;
@@ -329,7 +344,6 @@ export const InteractableMap = () => {
       scalar *= 1 / 1.2;
     }
     updateXY();
-    draw();
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
   }
@@ -356,6 +370,10 @@ export const InteractableMap = () => {
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
   }, [ctx]);
+
+  function toggleEdges() {
+    showEdges = !showEdges;
+  }
 
   return (
     <div
@@ -389,6 +407,12 @@ export const InteractableMap = () => {
         }}
       >
         ↺
+      </button>
+      <button
+        className={"zoom-button whole-graph-button"}
+        onClick={toggleEdges}
+      >
+        O
       </button>
       <canvas
         onMouseMove={mouseMove}
