@@ -1,10 +1,11 @@
 import axios from "axios";
+import { Prisma } from "database";
 
 export interface ServiceRequest {
   requestID: string;
   requestType: string;
   location: string;
-  handled: boolean;
+  status: string;
   requester: string;
   helpingEmployee?: string | null;
   desc: string;
@@ -21,7 +22,9 @@ export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
   return axios.get("http://localhost:3000/api/services/requests"); // REPLACE WITH ACTUAL URL
 }
 
-export function postServiceRequest(request: ServiceRequest) {
+export function postServiceRequest(
+  request: Prisma.ServiceRequestUncheckedCreateInput,
+) {
   axios
     .post("http://localhost:3000/api/services/requests", request) // REPLACE WITH ACTUAL URL
     .then((response) => {

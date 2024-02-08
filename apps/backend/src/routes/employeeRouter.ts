@@ -27,9 +27,7 @@ const router: Router = express.Router();
 router.get("/", async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.query.getAll); // string (true or false)
-  // console.log((req.query.jobTypes as string).split(",")); // string[]
-  console.log(req.query.getID); // string employeeID
-  let jobEmps;
+  console.log(req.query.jobType); // string[]
 
   if (req.query.getAll === "true") {
     // Fetch all the employees from Prisma
@@ -47,42 +45,10 @@ router.get("/", async function (req: Request, res: Response) {
     }
   }
 
-  if (req.query.getID) {
-    // Fetch the employee of the given ID from Prisma
-    const emp = await PrismaClient.employee.findUnique({
-      where: { employeeID: req.query.getID as string },
-    });
-    // If employee doesn't exist
-    if (emp === null) {
-      // Log that (it's a problem)
-      console.error("No employee found in database!");
-      res.sendStatus(204); // and send 204, no data
-      return;
-    } else {
-      // Otherwise, send the employee
-      res.send(emp);
-      return;
-    }
-  }
-
-  const jobTypes = (req.query.jobTypes as string).split(",");
-
-  jobEmps = await PrismaClient.employee.findMany({
-    where: { job: jobTypes[0] },
-  });
-
-  for (let i = 1; i < jobTypes.length; i++) {
-    jobEmps = jobEmps.concat(
-      await PrismaClient.employee.findMany({
-        where: { job: jobTypes[i] },
-      }),
-    );
-  }
-
   // Fetch the employees of the given job type from Prisma
-  // const jobEmps = await PrismaClient.employee.findMany({
-  //   where: { job: jobTypes[0] },
-  // });
+  const jobEmps = await PrismaClient.employee.findMany({
+    where: { job: req.query.jobType as string },
+  });
 
   // If employees don't exist
   if (jobEmps === null) {
