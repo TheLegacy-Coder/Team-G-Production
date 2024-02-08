@@ -6,7 +6,7 @@ const router: Router = express.Router();
 
 router.get("/", async function (req: Request, res: Response) {
   console.log("req");
-  const announcement = await PrismaClient.announcements.findMany();
+  const announcement = await PrismaClient.announcement.findMany();
 
   if (announcement === null) {
     console.error("No announcements found in database!");
@@ -18,10 +18,10 @@ router.get("/", async function (req: Request, res: Response) {
 
 router.post("/", async function (req: Request, res: Response) {
   console.log("req");
-  const requestAttempt: Prisma.AnnouncementsCreateInput = req.body;
+  const requestAttempt: Prisma.AnnouncementCreateInput = req.body;
 
   try {
-    await PrismaClient.announcements.create({ data: requestAttempt });
+    await PrismaClient.announcement.create({ data: requestAttempt });
     console.log("Successfully created Announcement");
   } catch (error) {
     console.error("Unable to create Announcement");
@@ -37,7 +37,7 @@ router.delete("/", async function (req: Request, res: Response) {
   console.log(req);
 
   try {
-    await PrismaClient.announcements.delete({
+    await PrismaClient.announcement.delete({
       where: { announcementID: req.body.announcementID },
     });
     console.log("Successfully deleted Announcement");
