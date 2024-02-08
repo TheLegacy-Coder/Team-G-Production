@@ -282,8 +282,8 @@ INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username"
 -- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: public; Owner: dev
 --
 
-INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'flowers', 'CCONF001L1', 'assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
-INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'flowers', 'CCONF001L1', 'assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
 
 
 --
