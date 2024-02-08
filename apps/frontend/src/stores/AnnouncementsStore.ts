@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 
-export interface Announcement {
+export type Announcement = {
   announcementID: string;
   desc: string;
   requester: string;
   emergency: boolean;
-}
+};
 
 export let announcements: Announcement[] = [];
 let announcementsLength = 0;
