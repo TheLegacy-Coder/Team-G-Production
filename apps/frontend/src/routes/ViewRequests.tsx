@@ -97,7 +97,7 @@ export const ViewRequests = () => {
             <th>requestID</th>
             <th>requestType</th>
             <th>location</th>
-            <th>handled</th>
+            <th>status</th>
             <th>requester</th>
             <th>helpingEmployee</th>
             <th>desc</th>
