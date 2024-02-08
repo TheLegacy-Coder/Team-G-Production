@@ -4,6 +4,7 @@ import { postServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import axios, { AxiosResponse } from "axios";
 import { Employee } from "../employee/Employee.ts";
 import { Prisma } from "database";
+import { currentEmployee } from "../stores/LoginStore.ts";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -18,7 +19,7 @@ export const Flowers = () => {
     const fetchEmployeeNamesAndIDS = async () => {
       try {
         axios
-          .get("http://localhost:3000/api/employees?jobType=flowerdeliveryman")
+          .get("http://localhost:3000/api/employees?jobTypes=flowerdeliveryman")
           .then((response: AxiosResponse<Employee[]>) => {
             const employees: string[] = [];
             const employeeIDs: string[] = [];
@@ -64,7 +65,7 @@ export const Flowers = () => {
       requestID: crypto.randomUUID(),
       requestType: "Flowers",
       helpingEmployee: employeeIDs[index],
-      requester: "testAdmin",
+      requester: currentEmployee?.employeeID,
     };
     postServiceRequest(requestData);
   };

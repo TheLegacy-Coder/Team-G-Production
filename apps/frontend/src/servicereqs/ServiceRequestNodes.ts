@@ -1,5 +1,5 @@
 import axios from "axios";
-import { loginStore } from "../stores/LoginStore.ts";
+import { currentEmployee, loginStore } from "../stores/LoginStore.ts";
 import { Prisma } from "database";
 
 export interface ServiceRequest {
@@ -26,7 +26,7 @@ export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
     }); // REPLACE WITH ACTUAL URL
   } else {
     return axios.get("http://localhost:3000/api/services/requests", {
-      params: { employeeID: "a" },
+      params: { employeeID: currentEmployee?.employeeID },
     }); // REPLACE WITH ACTUAL URL
   }
 }
