@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loginStore } from "../stores/LoginStore.ts";
 import { Prisma } from "database";
 
 export interface ServiceRequest {
@@ -19,7 +20,15 @@ export interface ServiceRequestsWrapper {
 export const serviceRequests: Map<string, ServiceRequest> = new Map([]);
 
 export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
-  return axios.get("http://localhost:3000/api/services/requests"); // REPLACE WITH ACTUAL URL
+  if (loginStore.loginType === "admin" && loginStore.loggedIn) {
+    return axios.get("http://localhost:3000/api/services/requests", {
+      params: { getAll: true },
+    }); // REPLACE WITH ACTUAL URL
+  } else {
+    return axios.get("http://localhost:3000/api/services/requests", {
+      params: { employeeID: "a" },
+    }); // REPLACE WITH ACTUAL URL
+  }
 }
 
 export function postServiceRequest(
