@@ -404,6 +404,8 @@ export const InteractableMap = () => {
           //Stores map xy coordinates for translation
           mapX = -1500;
           mapY = -600;
+          const scaleID = document.querySelector("#scalar");
+          scaleID!.textContent = scalar.toFixed(2).toString();
         }}
       >
         ↺
