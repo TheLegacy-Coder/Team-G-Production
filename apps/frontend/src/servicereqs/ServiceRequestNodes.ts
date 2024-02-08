@@ -1,27 +1,39 @@
 import axios from "axios";
+import { currentEmployee, loginStore } from "../stores/LoginStore.ts";
+import { Prisma } from "database";
 
-export interface ServiceRequest {
+export type ServiceRequest = {
   requestID: string;
   requestType: string;
   location: string;
-  handled: boolean;
+  status: string;
   requester: string;
   helpingEmployee?: string | null;
   desc: string;
   time?: string;
-}
+};
 
-export interface ServiceRequestsWrapper {
+export type ServiceRequestsWrapper = {
   data: ServiceRequest[];
-}
+};
 
 export const serviceRequests: Map<string, ServiceRequest> = new Map([]);
 
 export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
-  return axios.get("http://localhost:3000/api/services/requests"); // REPLACE WITH ACTUAL URL
+  if (loginStore.loginType === "admin" && loginStore.loggedIn) {
+    return axios.get("http://localhost:3000/api/services/requests", {
+      params: { getAll: true },
+    }); // REPLACE WITH ACTUAL URL
+  } else {
+    return axios.get("http://localhost:3000/api/services/requests", {
+      params: { employeeID: currentEmployee?.employeeID },
+    }); // REPLACE WITH ACTUAL URL
+  }
 }
 
-export function postServiceRequest(request: ServiceRequest) {
+export function postServiceRequest(
+  request: Prisma.ServiceRequestUncheckedCreateInput,
+) {
   axios
     .post("http://localhost:3000/api/services/requests", request) // REPLACE WITH ACTUAL URL
     .then((response) => {

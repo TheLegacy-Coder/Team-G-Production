@@ -26,23 +26,45 @@ const router: Router = express.Router();
 // Whenever a get request is made, return the high score
 router.get("/requests", async function (req: Request, res: Response) {
   console.log("req");
+  const getAll = req.query.getall;
+  const employeeID = req.query.employeeID;
+  console.log(getAll);
+  console.log(employeeID);
   // Fetch the high score from Prisma
-  const node = await PrismaClient.serviceRequest.findMany();
 
-  // If the high score doesn't exist
-  if (node === null) {
-    // Log that (it's a problem)
-    console.error("No nodes found in database!");
-    res.sendStatus(204); // and send 204, no data
+  if (getAll == "true") {
+    const serviceRequest = await PrismaClient.serviceRequest.findMany({
+      orderBy: { time: "desc" },
+    });
+    // If the high score doesn't exist
+    if (serviceRequest === null) {
+      // Log that (it's a problem)
+      console.error("No Service Requests found in database!");
+      res.sendStatus(204); // and send 204, no data
+    } else {
+      // Otherwise, send the score
+      res.send(serviceRequest);
+    }
   } else {
-    // Otherwise, send the score
-    res.send(node);
+    const serviceRequest = await PrismaClient.serviceRequest.findMany({
+      orderBy: { time: "desc" },
+      where: { helpingEmployee: employeeID as string },
+    });
+    // If the high score doesn't exist
+    if (serviceRequest === null) {
+      // Log that (it's a problem)
+      console.error("No Service Requests found!");
+      res.sendStatus(204); // and send 204, no data
+    } else {
+      // Otherwise, send the score
+      res.send(serviceRequest);
+    }
   }
 });
 
 router.post("/requests", async function (req: Request, res: Response) {
   console.log("req");
-  const requestAttempt: Prisma.ServiceRequestCreateInput = req.body;
+  const requestAttempt: Prisma.ServiceRequestUncheckedCreateInput = req.body;
   console.log(req.body);
   try {
     await PrismaClient.serviceRequest.create({ data: requestAttempt });
@@ -55,6 +77,24 @@ router.post("/requests", async function (req: Request, res: Response) {
   }
 
   res.sendStatus(200);
+});
+
+router.patch("/requests", async function (req: Request, res: Response) {
+  console.log("patch");
+  try {
+    await PrismaClient.serviceRequest.update({
+      where: { requestID: req.body.requestID },
+      data: { status: req.body.status },
+    });
+    console.log(
+      "Updated " + req.body.requestID + " to status " + req.body.status,
+    );
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(204);
+    return;
+  }
 });
 
 export default router;

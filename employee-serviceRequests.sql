@@ -46,7 +46,7 @@ CREATE TABLE public."ServiceRequest"(
     "requestID" text NOT NULL, --Primary Key
     "requestType" text NOT NULL,
     "location" text NOT NULL,
-    "handled" bool NOT NULL,
+    "status" text NOT NULL,
     "requester" text NOT NULL,
     "helpingEmployee" text,
     "desc" text NOT NULL,
@@ -80,7 +80,7 @@ ALTER TABLE ONLY public."ServiceRequest"
 --
 
 ALTER TABLE ONLY public."ServiceRequest"
-    ADD CONSTRAINT "ServiceRequest_fk1" FOREIGN KEY ("location") REFERENCES public."Nodes" ("nodeID") ON DELETE CASCADE;
+    ADD CONSTRAINT "ServiceRequest_fk1" FOREIGN KEY ("location") REFERENCES public."Node" ("nodeID") ON DELETE CASCADE;
 
 --
 -- Name: ServiceRequest ServiceRequest_fk2; Type: CONSTRAINT; Schema: public; Owner: dev
