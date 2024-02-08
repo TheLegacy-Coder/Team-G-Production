@@ -275,6 +275,7 @@ ALTER TABLE ONLY public."ServiceRequest"
 
 INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c415e271e231c3b5f45af0', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
 INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testStaff', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff');
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c429b2125832ae8f4c0077', 'Flow', 'Erman', 'Flow', 'Erman', 'flowerdeliveryman', 'staff');
 
 
 --
@@ -326,4 +327,4 @@ ALTER TABLE ONLY public."Announcement"
 --
 
 INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement1', 'Lot C is under Construction', 'testStaff', 'false');
-INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement2', 'THERE IS A FIRE!', 'testAdmin', 'true');
+INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement2', 'THERE IS A FIRE!', 'auth0|65c415e271e231c3b5f45af0', 'true');

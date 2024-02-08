@@ -56,7 +56,7 @@ export const TopNavbar = () => {
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           {(loginStore.loginType === "admin" ||
-            loginStore.loginType === "employee") &&
+            loginStore.loginType === "staff") &&
           loginStore.loggedIn ? (
             <>
               {loginStore.loginType === "admin" ? (
