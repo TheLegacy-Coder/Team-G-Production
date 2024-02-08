@@ -37,7 +37,6 @@ export function postServiceRequest(
   axios
     .post("http://localhost:3000/api/services/requests", request) // REPLACE WITH ACTUAL URL
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .catch((error) => {

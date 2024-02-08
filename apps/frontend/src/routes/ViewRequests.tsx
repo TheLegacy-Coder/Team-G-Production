@@ -19,7 +19,6 @@ export const ViewRequests = () => {
         status: newStatus,
       })
       .then((response) => {
-        console.log(response);
         setStatusChanged(true);
         return response.data;
       })
@@ -64,8 +63,6 @@ export const ViewRequests = () => {
       const newRows: React.ReactElement[] = [];
       if (list !== undefined) {
         list.data.forEach((request) => {
-          console.log("t");
-          console.log(request);
           newRows.push(
             <tr key={request.requestID}>
               <td>{request.requestID}</td>
@@ -81,12 +78,10 @@ export const ViewRequests = () => {
         });
       }
       setRows(newRows);
-      console.log(newRows);
       forceUpdate();
     });
   }, [statusChanged]);
 
-  console.log(rows);
   return (
     <div className={"csvs-page"}>
       <h1>Service Requests</h1>
