@@ -1,4 +1,6 @@
 import { DispatchWithoutAction } from "react";
+import { Employee } from "../employee/Employee.ts";
+import axios, { AxiosResponse } from "axios";
 //import { Auth0Lock } from 'auth0-lock';
 
 // Initializing our Auth0Lock
@@ -17,6 +19,7 @@ export const lock = new Auth0Lock(
 );
 
 export let currentProfile = undefined;
+export let currentEmployee: undefined | Employee = undefined;
 export let currentToken = undefined;
 // @ts-expect-error this will complain about no import but it runs due to index.html includes
 lock.on("authenticated", function (authResult) {
@@ -31,6 +34,13 @@ lock.on("authenticated", function (authResult) {
       currentToken = authResult.accessToken;
       console.log(profile);
       currentProfile = profile;
+      axios
+        .get("http://localhost:3000/api/employees/?getID=" + profile.sub)
+        .then((response: AxiosResponse<Employee>) => {
+          currentEmployee = response.data;
+          console.log(currentEmployee);
+          loginStore.login(currentEmployee.accessLevel);
+        });
 
       //save Access Token only if necessary
       // privateStore.accessToken = accessToken;

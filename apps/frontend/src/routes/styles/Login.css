@@ -17,15 +17,15 @@
 }
 
 .auth0-lock.auth0-lock .auth0-lock-header {
-  background: #b8c4d1 !important;
+  background: #ffffff !important;
 }
 
 .auth0-lock.auth0-lock .auth0-lock-header-bg {
-  background: #b8c4d1 !important;
+  background: #ffffff !important;
 }
 
 .auth0-lock-confirmation {
-  background: #b8c4d1 !important;
+  background: #ffffff !important;
 }
 
 .auth0-lock-header-bg-blur {
@@ -39,5 +39,5 @@
   background: #7089a2 !important;
 }
 .auth0-lock-content-wrapper {
-  background: #b8c4d1 !important;
+  background: #ffffff !important;
 }
