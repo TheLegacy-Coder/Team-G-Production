@@ -14,6 +14,7 @@
   border-width: 1px;
   background: white;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .service-request-form-text-large {
@@ -34,6 +35,7 @@
   background: white;
   height: 32px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .service-request-form-submit {
