@@ -40,7 +40,7 @@
   border: 2px solid black;
   border-radius: 16px;
   overflow: hidden;
-  background: #ffffff;
+  background: #b8c4d1;
   position: relative;
   box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
 }
@@ -48,7 +48,8 @@
 .context-menu-title-box {
   position: relative;
   top: 0px;
-  background: #7089a2;
+  background: #00284f;
+  color: white;
   height: 90px;
 }
 

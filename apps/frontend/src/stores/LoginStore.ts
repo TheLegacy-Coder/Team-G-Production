@@ -1,5 +1,5 @@
 import { DispatchWithoutAction } from "react";
-import { Employee } from "../employee/Employee.ts";
+import { Employee } from "common/src/Employee.ts";
 import axios, { AxiosResponse } from "axios";
 //import { Auth0Lock } from 'auth0-lock';
 

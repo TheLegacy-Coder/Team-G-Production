@@ -1,4 +1,4 @@
-export type Employee = {
+export interface Employee {
   employeeID: string;
   firstName: string;
   lastName: string;
@@ -6,4 +6,4 @@ export type Employee = {
   password: string;
   job: string;
   accessLevel: string;
-};
+}

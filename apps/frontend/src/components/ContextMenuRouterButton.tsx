@@ -9,6 +9,7 @@ export interface ContextMenuRouterButtonProps {
   lable: string;
   protected?: boolean;
   style: string;
+  customText?: string;
 }
 
 export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
@@ -26,7 +27,7 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
 
   return (
     <Nav className={props.style} onClick={route}>
-      {props.lable}
+      {props.customText !== undefined ? props.customText : props.lable}
     </Nav>
   );
 }
