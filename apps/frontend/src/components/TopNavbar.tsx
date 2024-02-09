@@ -7,6 +7,7 @@ import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { Login } from "../routes/Login.tsx";
 import { loginStore } from "../stores/LoginStore.ts";
 import { ServiceRequests } from "./ServiceRequests.tsx";
+import { HelpPage } from "./HelpPage.tsx";
 
 export const TopNavbar = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -31,7 +32,11 @@ export const TopNavbar = () => {
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
-            content={<div>placeholder</div>}
+            content={
+              <div>
+                <HelpPage />
+              </div>
+            }
             lable={"Help"}
             protected={false}
             style={"nav-button"}
