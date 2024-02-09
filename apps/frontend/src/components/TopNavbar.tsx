@@ -32,11 +32,7 @@ export const TopNavbar = () => {
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
-            content={
-              <div>
-                <HelpPage />
-              </div>
-            }
+            content={<HelpPage />}
             lable={"Help"}
             protected={false}
             style={"nav-button"}
