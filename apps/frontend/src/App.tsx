@@ -13,6 +13,7 @@ import { Csvs } from "./routes/Csvs.tsx";
 // Protected Routes
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
 import { ViewRequests } from "./routes/ViewRequests.tsx";
+import { ViewEmployees } from "./routes/ViewEmployees.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -46,6 +47,10 @@ function App() {
                 {
                   path: "/requests",
                   element: <ViewRequests />,
+                },
+                {
+                  path: "/employees",
+                  element: <ViewEmployees />,
                 },
               ],
             },

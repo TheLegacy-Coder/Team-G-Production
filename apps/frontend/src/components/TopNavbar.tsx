@@ -73,6 +73,10 @@ export const TopNavbar = () => {
                 Service Requests
               </Link>
               <div>&nbsp;&nbsp;&nbsp;</div>
+              <Link to="/employees" className={"nav-button-admin"}>
+                Employees
+              </Link>
+              <div>&nbsp;&nbsp;&nbsp;</div>
               <Link to="/" className={"nav-button-admin"}>
                 Home
               </Link>
