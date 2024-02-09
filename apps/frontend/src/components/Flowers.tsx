@@ -23,13 +23,10 @@ export const Flowers = () => {
           .then((response: AxiosResponse<Employee[]>) => {
             const employees: string[] = [];
             const employeeIDs: string[] = [];
-            console.log(response.data);
             response.data.forEach((emp) => {
               employees.push(emp.firstName + " " + emp.lastName);
               employeeIDs.push(emp.employeeID);
             });
-            console.log(employees);
-            console.log(employeeIDs);
             setEmployeeNames(employees);
             setEmployeeIDs(employeeIDs);
           });
@@ -52,8 +49,6 @@ export const Flowers = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Textarea Value:", getValue(event, "desc"));
-    console.log(nodeStore.selectedNode);
     const index: number = employeeNames.indexOf(selectedEmployee);
     const requestData: Prisma.ServiceRequestUncheckedCreateInput = {
       desc: getValue(event, "desc"),
@@ -69,9 +64,6 @@ export const Flowers = () => {
     };
     postServiceRequest(requestData);
   };
-
-  console.log("NOE");
-  console.log(nodeStore.selectedNode?.longName);
 
   return (
     <div className={"service-button-text"}>
