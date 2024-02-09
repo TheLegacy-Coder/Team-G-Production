@@ -5,7 +5,7 @@ export const HelpPage = () => {
   return (
     <div className="help-page-container">
       <div>
-        Thank you for choosing Brigham & Women's hospital navigation program to
+        Thank you for choosing Brigham & Women's Hospital Navigation Program to
         assist you during your visit to our medical facility. We understand that
         navigating a hospital can sometimes be overwhelming, which is why we've
         designed this program to make your experience as smooth and stress-free
