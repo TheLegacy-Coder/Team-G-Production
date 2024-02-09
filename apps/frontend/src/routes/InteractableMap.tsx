@@ -283,14 +283,14 @@ export const InteractableMap = () => {
             }
             frames.push(temp);
           }
-          console.log("frames");
-          console.log(frames);
+          // console.log("frames");
+          // console.log(frames);
         } else {
           path = [];
           frames = [[[]]];
           sl = node;
           nodeStore.setSelectedNode(sl);
-          console.log("CLEAR");
+          // console.log("CLEAR");
         }
       }
     });
