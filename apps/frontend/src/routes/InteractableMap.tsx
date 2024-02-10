@@ -1,5 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { AStarSearch, MapNode, mapNodes, nodeStore } from "../map/MapNode.ts";
+import React, { useCallback, useEffect, useRef } from "react";
+import {
+  setStartNode,
+  setEndNode,
+  getEndNode,
+  getStartNode,
+  AStarSearch,
+  MapNode,
+  mapNodes,
+  nodeStore,
+} from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
 let imageWidth = 100;
@@ -233,6 +242,65 @@ export const InteractableMap = () => {
     return { x, y };
   }
 
+  const poll = useCallback(() => {
+    sl = getStartNode();
+    hl = getEndNode();
+    if (hl.nodeID.length > 0) {
+      path = [];
+      frames = [[[]]];
+      aStar(hl);
+    }
+  }, []);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 1000);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
+  function aStar(node: MapNode) {
+    path = AStarSearch(sl, node);
+    totalDistance = 0;
+    steps = [0];
+    let last: MapNode | undefined = undefined;
+    path.forEach((node) => {
+      if (last != undefined) {
+        const length = Math.sqrt(
+          Math.pow(last.ycoord - node.ycoord, 2) +
+            Math.pow(last.xcoord - node.xcoord, 2),
+        );
+        totalDistance += length;
+        steps.push(totalDistance);
+      }
+      last = node;
+    });
+    //bake frames
+    for (let f = 0; f < spacing; f++) {
+      const temp = [];
+      for (let i = 0; i < totalDistance / spacing; i++) {
+        let prog = spacing * i + (f % spacing);
+        let s = 0;
+        while (s < path.length) {
+          if (prog < steps[s]) {
+            break;
+          }
+          s++;
+        }
+        s--;
+        prog -= steps[s];
+        if (s + 1 < path.length) {
+          const angleRadians = Math.atan2(
+            path[s].ycoord - path[s + 1].ycoord,
+            path[s].xcoord - path[s + 1].xcoord,
+          );
+          const x = path[s].xcoord - Math.cos(angleRadians) * prog;
+          const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+          temp.push([x, y]);
+        }
+      }
+      frames.push(temp);
+    }
+  }
+
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     const cord = getXY(evt);
 
@@ -244,61 +312,36 @@ export const InteractableMap = () => {
       if (dist < 10) {
         emptyClick = false;
         if (sl != undefined && path.length == 0) {
-          path = AStarSearch(sl, node);
-          totalDistance = 0;
-          steps = [0];
-          let last: MapNode | undefined = undefined;
-          path.forEach((node) => {
-            if (last != undefined) {
-              const length = Math.sqrt(
-                Math.pow(last.ycoord - node.ycoord, 2) +
-                  Math.pow(last.xcoord - node.xcoord, 2),
-              );
-              totalDistance += length;
-              steps.push(totalDistance);
-            }
-            last = node;
-          });
-          //bake frames
-          for (let f = 0; f < spacing; f++) {
-            const temp = [];
-            for (let i = 0; i < totalDistance / spacing; i++) {
-              let prog = spacing * i + (f % spacing);
-              let s = 0;
-              while (s < path.length) {
-                if (prog < steps[s]) {
-                  break;
-                }
-                s++;
-              }
-              s--;
-              prog -= steps[s];
-              if (s + 1 < path.length) {
-                const angleRadians = Math.atan2(
-                  path[s].ycoord - path[s + 1].ycoord,
-                  path[s].xcoord - path[s + 1].xcoord,
-                );
-                const x = path[s].xcoord - Math.cos(angleRadians) * prog;
-                const y = path[s].ycoord - Math.sin(angleRadians) * prog;
-                temp.push([x, y]);
-              }
-            }
-            frames.push(temp);
-          }
+          setEndNode(node);
+          aStar(node);
           // console.log("frames");
           // console.log(frames);
         } else {
           path = [];
           frames = [[[]]];
-          sl = node;
-          nodeStore.setSelectedNode(sl);
+          setStartNode(node);
+          //sl = node;
+          nodeStore.setSelectedNode(node);
           // console.log("CLEAR");
         }
       }
     });
     if (emptyClick && xDelta == 0 && yDelta == 0) {
-      hl = undefined;
-      sl = undefined;
+      //hl = undefined;
+      //sl = undefined;
+      const blankNode: MapNode = {
+        nodeID: "",
+        xcoord: 0,
+        ycoord: 0,
+        floor: "",
+        building: "",
+        nodeType: "",
+        longName: "",
+        shortName: "",
+        edges: [],
+      };
+      setStartNode(blankNode);
+      setEndNode(blankNode);
       nodeStore.setSelectedNode(sl);
       path = [];
       frames = [[[]]];

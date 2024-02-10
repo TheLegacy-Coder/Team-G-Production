@@ -82,6 +82,25 @@ export function getMapNodesEdges() {
   });
 }
 
+let startNode: MapNode;
+let endNode: MapNode;
+
+export function setStartNode(node: MapNode) {
+  startNode = node;
+}
+
+export function getStartNode(): MapNode {
+  return startNode;
+}
+
+export function setEndNode(node: MapNode) {
+  endNode = node;
+}
+
+export function getEndNode(): MapNode {
+  return endNode;
+}
+
 //TODO: remove this and replace with an actual backend
 //
 // fetch(rawNodes)

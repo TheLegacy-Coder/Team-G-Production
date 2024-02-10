@@ -1,13 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./styles/LocationDropdown.css";
-import { MapNode, mapNodes } from "../map/MapNode.ts"; // Importing MapNode type
+import {
+  setStartNode,
+  setEndNode,
+  getEndNode,
+  getStartNode,
+  MapNode,
+  mapNodes,
+} from "../map/MapNode.ts"; // Importing MapNode type
+
+const blankNode: MapNode = {
+  nodeID: "ID",
+  xcoord: 1,
+  ycoord: 1,
+  floor: "floor",
+  building: "build",
+  nodeType: "node",
+  longName: "longName",
+  shortName: "shortName",
+  edges: [],
+};
 
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
   const [endLocations, setEndLocations] = useState<MapNode[]>([]);
   const [selectedStartLocation, setSelectedStartLocation] =
-    useState<string>("");
-  const [selectedEndLocation, setSelectedEndLocation] = useState<string>("");
+    useState<MapNode>(blankNode);
+  const [selectedEndLocation, setSelectedEndLocation] =
+    useState<MapNode>(blankNode);
+  //const [name,setName] = useState("");
 
   // Fetch map nodes and set start and end locations
   useEffect(() => {
@@ -27,18 +48,38 @@ const LocationDropdown: React.FC = () => {
     fetchMapNodes();
   }, []);
 
+  const poll = useCallback(() => {
+    setSelectedStartLocation(getStartNode());
+    setSelectedEndLocation(getEndNode());
+  }, [setSelectedStartLocation, setSelectedEndLocation]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 1000);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
   // Event handler for selecting start location
   const handleStartLocationChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setSelectedStartLocation(event.target.value);
+    const selectedNodeID = event.target.value;
+    const node = mapNodes.get(selectedNodeID);
+    if (node) {
+      console.log("Got start location: " + node.nodeID);
+      setStartNode(node);
+    }
   };
 
   // Event handler for selecting end location
   const handleEndLocationChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setSelectedEndLocation(event.target.value);
+    const selectedNodeID = event.target.value;
+    const node = mapNodes.get(selectedNodeID);
+    if (node) {
+      console.log("Got end location: " + node.nodeID);
+      setEndNode(node);
+    }
   };
 
   // Pathfinding logic can go here
@@ -57,7 +98,7 @@ const LocationDropdown: React.FC = () => {
         <label htmlFor="startLocation">Start Location:</label>
         <select
           id="startLocation"
-          value={selectedStartLocation}
+          value={selectedStartLocation ? selectedStartLocation.nodeID : ""}
           onChange={handleStartLocationChange}
         >
           <option value="">Select start location</option>
@@ -73,7 +114,7 @@ const LocationDropdown: React.FC = () => {
         <label htmlFor="endLocation">End Location:</label>
         <select
           id="endLocation"
-          value={selectedEndLocation}
+          value={selectedEndLocation ? selectedEndLocation.nodeID : ""}
           onChange={handleEndLocationChange}
         >
           <option value="">Select end location</option>
