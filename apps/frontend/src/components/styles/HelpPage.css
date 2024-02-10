@@ -1,0 +1,17 @@
+.help-page-container {
+  font-family: "Times New Roman", sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: midnightblue;
+}
+
+.help-page-container div {
+  margin-bottom: 20px;
+}
+
+.help-page-container div:last-child {
+  margin-bottom: 0; /* Remove bottom margin for the last div */
+}

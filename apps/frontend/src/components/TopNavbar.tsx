@@ -7,9 +7,11 @@ import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { Login } from "../routes/Login.tsx";
 import { loginStore } from "../stores/LoginStore.ts";
 import { ServiceRequests } from "./ServiceRequests.tsx";
+import { HelpPage } from "./HelpPage.tsx";
 
 export const TopNavbar = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   loginStore.navbarRefreshHook = forceUpdate;
 
   return (
@@ -30,11 +32,12 @@ export const TopNavbar = () => {
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
-            content={<div>placeholder</div>}
+            content={<HelpPage />}
             lable={"Help"}
             protected={false}
             style={"nav-button"}
           />
+
           <div>&nbsp;&nbsp;&nbsp;</div>
 
           <ContextMenuRouterButton
@@ -53,12 +56,20 @@ export const TopNavbar = () => {
 
           <div>&nbsp;&nbsp;&nbsp;</div>
 
-          {loginStore.loginType === "admin" && loginStore.loggedIn ? (
+          {(loginStore.loginType === "admin" ||
+            loginStore.loginType === "staff") &&
+          loginStore.loggedIn ? (
             <>
-              <Link to="/csvs" className={"nav-button-admin"}>
-                Nodes
-              </Link>
-              <div>&nbsp;&nbsp;&nbsp;</div>
+              {loginStore.loginType === "admin" ? (
+                <>
+                  <Link to="/csvs" className={"nav-button-admin"}>
+                    Nodes
+                  </Link>
+                  <div>&nbsp;&nbsp;&nbsp;</div>
+                </>
+              ) : (
+                <></>
+              )}
               <Link to="/requests" className={"nav-button-admin"}>
                 Service Requests
               </Link>

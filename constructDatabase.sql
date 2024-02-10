@@ -40,12 +40,6 @@ CREATE TABLE public."Node" (
 ALTER TABLE public."Node" OWNER TO dev;
 
 --
--- Name: HighScore id; Type: DEFAULT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public."HighScore_id_seq"'::regclass);
-
---
 -- Name: ; Type: TABLE; Schema: public; Owner: dev
 --
 
@@ -58,13 +52,6 @@ CREATE TABLE public."Edge" (
 
 ALTER TABLE public."Edge" OWNER TO dev;
 
-
-
---
--- Name: HighScore id; Type: DEFAULT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore" ALTER COLUMN id SET DEFAULT nextval('public."HighScore_id_seq"'::regclass);
 
 
 --
@@ -119,9 +106,6 @@ INSERT INTO public."Edge" ("edgeID", "startNode", "endNode") VALUES ('GHALL005L1
 INSERT INTO public."Edge" ("edgeID", "startNode", "endNode") VALUES ('GHALL006L1_GELEV007L1', 'GHALL006L1', 'GELEV00QL1');
 
 
---
--- Data for Name: HighScore; Type: TABLE DATA; Schema: public; Owner: dev
---
 
 
 
@@ -179,19 +163,6 @@ INSERT INTO public."Node" ("nodeID", xcoord, ycoord, floor, building, "nodeType"
 
 
 
---
--- Name: HighScore_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dev
---
-
-SELECT pg_catalog.setval('public."HighScore_id_seq"', 1, false);
-
-
---
--- Name: HighScore HighScore_pkey; Type: CONSTRAINT; Schema: public; Owner: dev
---
-
-ALTER TABLE ONLY public."HighScore"
-    ADD CONSTRAINT "HighScore_pkey" PRIMARY KEY (id);
 
 
 --
@@ -302,16 +273,18 @@ ALTER TABLE ONLY public."ServiceRequest"
 -- Data for Name: Employee; Type: TABLE DATA; Schema: public; Owner: dev
 --
 
-INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testAdmin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c415e271e231c3b5f45af0', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
 INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testStaff', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff');
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c429b2125832ae8f4c0077', 'Flow', 'Erman', 'Flow', 'Erman', 'flowerdeliveryman', 'staff');
+INSERT INTO public."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c430e6717b4796d888c313', 'Daisy', 'Deliverer', 'Daisy', 'Deliverer', 'flowerdeliveryman', 'staff');
 
 
 --
 -- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: public; Owner: dev
 --
 
-INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'flowers', 'CCONF001L1', 'assigned', 'testAdmin', 'testStaff', 'flowers to be sent to room');
-INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'flowers', 'CCONF001L1', 'assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
+INSERT INTO public."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
 
 
 --
@@ -355,4 +328,4 @@ ALTER TABLE ONLY public."Announcement"
 --
 
 INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement1', 'Lot C is under Construction', 'testStaff', 'false');
-INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement2', 'THERE IS A FIRE!', 'testAdmin', 'true');
+INSERT INTO public."Announcement" ("announcementID", "desc", "requester", "emergency") VALUES ('announcement2', 'THERE IS A FIRE!', 'auth0|65c415e271e231c3b5f45af0', 'true');

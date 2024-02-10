@@ -1,31 +1,34 @@
 import React, { FormEvent, useReducer, useEffect, useState } from "react";
 import { nodeStore } from "../map/MapNode.ts";
-import {
-  postServiceRequest,
-  ServiceRequest,
-} from "../servicereqs/ServiceRequestNodes.ts";
+import { postServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import axios, { AxiosResponse } from "axios";
 import { Employee } from "../employee/Employee.ts";
+import { Prisma } from "database";
+import { currentEmployee } from "../stores/LoginStore.ts";
 
 export const Flowers = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   nodeStore.currentRefresh = forceUpdate;
   const [employeeNames, setEmployeeNames] = useState<string[]>([]);
+  const [employeeIDs, setEmployeeIDs] = useState<string[]>([]);
+
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
   useEffect(() => {
     // Fetch employee names using API call and update the state
-    const fetchEmployeeNames = async () => {
+    const fetchEmployeeNamesAndIDS = async () => {
       try {
         axios
-          .get("http://localhost:3000/api/employees?jobType=flowerdeliveryman")
+          .get("http://localhost:3000/api/employees?jobTypes=flowerdeliveryman")
           .then((response: AxiosResponse<Employee[]>) => {
             const employees: string[] = [];
-            console.log(response.data);
+            const employeeIDs: string[] = [];
             response.data.forEach((emp) => {
               employees.push(emp.firstName + " " + emp.lastName);
+              employeeIDs.push(emp.employeeID);
             });
-            console.log(employees);
             setEmployeeNames(employees);
+            setEmployeeIDs(employeeIDs);
           });
 
         // Replace with the actual property holding employee names in the API response
@@ -34,7 +37,7 @@ export const Flowers = () => {
       }
     };
 
-    fetchEmployeeNames();
+    fetchEmployeeNamesAndIDS();
   }, []); // Empty dependency array to ensure the effect runs only once when the component mounts
 
   function getValue(event: FormEvent<HTMLFormElement>, name: string) {
@@ -46,24 +49,21 @@ export const Flowers = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Textarea Value:", getValue(event, "desc"));
-    console.log(nodeStore.selectedNode);
-    const requestData: ServiceRequest = {
+    const index: number = employeeNames.indexOf(selectedEmployee);
+    const requestData: Prisma.ServiceRequestUncheckedCreateInput = {
       desc: getValue(event, "desc"),
-      handled: false,
+      status: "Assigned",
       location:
         nodeStore.selectedNode?.nodeID === undefined
           ? "invalid"
           : nodeStore.selectedNode?.nodeID,
       requestID: crypto.randomUUID(),
       requestType: "Flowers",
-      requester: "admin",
+      helpingEmployee: employeeIDs[index],
+      requester: currentEmployee?.employeeID,
     };
     postServiceRequest(requestData);
   };
-
-  console.log("NOE");
-  console.log(nodeStore.selectedNode?.longName);
 
   return (
     <div className={"service-button-text"}>
@@ -92,7 +92,7 @@ export const Flowers = () => {
         <br />
         <select
           className="employeeDropdown"
-          onChange={(event) => console.log(event.target.value)}
+          onChange={(event) => setSelectedEmployee(event.target.value)}
         >
           <option value="" disabled selected>
             Select Employee
