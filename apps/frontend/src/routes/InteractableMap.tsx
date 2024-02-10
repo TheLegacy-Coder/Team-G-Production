@@ -33,9 +33,11 @@ let startX = 0;
 let startY = 0;
 //Stores whether to update map position if moving
 let moveMap = false;
+
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
+
   let ctx = canvasCtxRef.current;
 
   const image = new Image();
