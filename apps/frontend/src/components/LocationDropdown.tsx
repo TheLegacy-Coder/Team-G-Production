@@ -1,0 +1,133 @@
+import React, { useCallback, useEffect, useState } from "react";
+import "./styles/LocationDropdown.css";
+import {
+  setStartNode,
+  setEndNode,
+  getEndNode,
+  getStartNode,
+  MapNode,
+  mapNodes,
+} from "../map/MapNode.ts"; // Importing MapNode type
+
+const blankNode: MapNode = {
+  nodeID: "ID",
+  xcoord: 1,
+  ycoord: 1,
+  floor: "floor",
+  building: "build",
+  nodeType: "node",
+  longName: "longName",
+  shortName: "shortName",
+  edges: [],
+};
+
+const LocationDropdown: React.FC = () => {
+  const [startLocations, setStartLocations] = useState<MapNode[]>([]);
+  const [endLocations, setEndLocations] = useState<MapNode[]>([]);
+  const [selectedStartLocation, setSelectedStartLocation] =
+    useState<MapNode>(blankNode);
+  const [selectedEndLocation, setSelectedEndLocation] =
+    useState<MapNode>(blankNode);
+  //const [name,setName] = useState("");
+
+  // Fetch map nodes and set start and end locations
+  useEffect(() => {
+    const fetchMapNodes = async () => {
+      try {
+        // Fetch map nodes from the mapNodes variable
+        const nodes = Array.from(mapNodes.values());
+
+        // Set start and end locations
+        setStartLocations(nodes);
+        setEndLocations(nodes);
+      } catch (error) {
+        console.error("Error fetching map nodes:", error);
+      }
+    };
+
+    fetchMapNodes();
+  }, []);
+
+  const poll = useCallback(() => {
+    setSelectedStartLocation(getStartNode());
+    setSelectedEndLocation(getEndNode());
+  }, [setSelectedStartLocation, setSelectedEndLocation]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 1000);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
+  // Event handler for selecting start location
+  const handleStartLocationChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedNodeID = event.target.value;
+    const node = mapNodes.get(selectedNodeID);
+    if (node) {
+      console.log("Got start location: " + node.nodeID);
+      setStartNode(node);
+    }
+  };
+
+  // Event handler for selecting end location
+  const handleEndLocationChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedNodeID = event.target.value;
+    const node = mapNodes.get(selectedNodeID);
+    if (node) {
+      console.log("Got end location: " + node.nodeID);
+      setEndNode(node);
+    }
+  };
+
+  // Pathfinding logic can go here
+  useEffect(() => {
+    // Check if both start and end locations are selected
+    if (selectedStartLocation && selectedEndLocation) {
+      // Perform pathfinding logic here
+      console.log("Start Location:", selectedStartLocation);
+      console.log("End Location:", selectedEndLocation);
+    }
+  }, [selectedStartLocation, selectedEndLocation]);
+
+  return (
+    <div className="location-dropdowns">
+      <div className="dropdown">
+        <label htmlFor="startLocation">Start Location:</label>
+        <select
+          id="startLocation"
+          value={selectedStartLocation ? selectedStartLocation.nodeID : ""}
+          onChange={handleStartLocationChange}
+        >
+          <option value="">Select start location</option>
+          {/* Render options for start location */}
+          {startLocations.map((node) => (
+            <option key={node.nodeID} value={node.nodeID}>
+              {node.longName}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="dropdown">
+        <label htmlFor="endLocation">End Location:</label>
+        <select
+          id="endLocation"
+          value={selectedEndLocation ? selectedEndLocation.nodeID : ""}
+          onChange={handleEndLocationChange}
+        >
+          <option value="">Select end location</option>
+          {/* Render options for end location */}
+          {endLocations.map((node) => (
+            <option key={node.nodeID} value={node.nodeID}>
+              {node.longName}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+export default LocationDropdown;
