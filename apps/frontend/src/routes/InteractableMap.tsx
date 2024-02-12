@@ -13,16 +13,11 @@ import "../components/styles/ZoomButton.css";
 
 const canvasSize = { x: 0, y: 0 };
 const offset = { x: 0, y: 0 };
-//let hl: MapNode | undefined = undefined;
-//let sl: MapNode | undefined = undefined;
 
 let startNode: MapNode | undefined = undefined;
 let endNode: MapNode | undefined = undefined;
-
 let hoverNode: MapNode | undefined = undefined;
 let path: MapNode[] = [];
-
-let flip = false;
 
 let totalDistance = 0;
 let steps: number[] = [];
@@ -31,6 +26,8 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
+
+let showDetail = false;
 
 //Stores scaled map amount
 let scalar = 1;
@@ -118,6 +115,7 @@ export const InteractableMap = () => {
       });
     }
 
+    // draws the path trail
     if (frames[drawStep] != undefined) {
       frames[drawStep].forEach((frame) => {
         ctx!.beginPath();
@@ -127,7 +125,23 @@ export const InteractableMap = () => {
       });
     }
 
-    flip = !flip;
+    mapNodes.forEach((node) => {
+      if (
+        node !== startNode &&
+        node !== endNode &&
+        node !== hoverNode &&
+        showDetail
+      ) {
+        drawNodeDetails(node);
+      }
+    });
+
+    for (let i = 0; i < 2; i++) {
+      let node: MapNode | undefined = undefined;
+      if (i === 0 && startNode !== undefined) node = startNode;
+      else if (i === 1 && endNode !== undefined) node = endNode;
+      if (node !== undefined) drawNodeDetails(node);
+    }
 
     mapNodes.forEach((node) => {
       ctx!.beginPath();
@@ -144,19 +158,33 @@ export const InteractableMap = () => {
       ctx!.lineWidth = 5;
       ctx!.strokeStyle = "#330000";
       ctx!.stroke();
-      if (node == startNode || node == endNode || node == hoverNode) {
-        ctx!.fillStyle = "#FFFFFF";
-        ctx!.strokeStyle = "#000000";
-        ctx!.fillRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
-        ctx!.strokeRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
-        ctx!.font = "bold 10pt Courier";
-        ctx!.textAlign = "center";
-        ctx!.fillStyle = "#550000";
-        ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 28);
-      }
     });
 
+    if (hoverNode !== undefined) drawNodeDetails(hoverNode);
+
     setTimeout(draw, 15);
+  }
+
+  function drawNodeDetails(node: MapNode) {
+    ctx!.fillStyle = "#FFFFFF";
+    ctx!.strokeStyle = "#000000";
+    ctx!.lineWidth = 5 / scalar;
+    ctx!.fillRect(
+      node.xcoord - 80 / scalar,
+      node.ycoord + 15,
+      160 / scalar,
+      20 / scalar,
+    );
+    ctx!.strokeRect(
+      node.xcoord - 80 / scalar,
+      node.ycoord + 15,
+      160 / scalar,
+      20 / scalar,
+    );
+    ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
+    ctx!.textAlign = "center";
+    ctx!.fillStyle = "#550000";
+    ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 15 + 13 / scalar);
   }
 
   //Draws on canvas when map image loaded
@@ -464,6 +492,14 @@ export const InteractableMap = () => {
         }}
       >
         O
+      </button>
+      <button
+        className={"zoom-button show-detail-button"}
+        onClick={() => {
+          showDetail = !showDetail;
+        }}
+      >
+        X
       </button>
       <canvas
         onMouseMove={mouseMove}
