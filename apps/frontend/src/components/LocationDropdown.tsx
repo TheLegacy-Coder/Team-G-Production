@@ -9,7 +9,7 @@ import {
   mapNodes,
 } from "../map/MapNode.ts"; // Importing MapNode type
 
-const blankNode: MapNode = {
+/*const blankNode: MapNode = {
   nodeID: "ID",
   xcoord: 1,
   ycoord: 1,
@@ -19,15 +19,17 @@ const blankNode: MapNode = {
   longName: "longName",
   shortName: "shortName",
   edges: [],
-};
+};*/
 
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
   const [endLocations, setEndLocations] = useState<MapNode[]>([]);
-  const [selectedStartLocation, setSelectedStartLocation] =
-    useState<MapNode>(blankNode);
-  const [selectedEndLocation, setSelectedEndLocation] =
-    useState<MapNode>(blankNode);
+  const [selectedStartLocation, setSelectedStartLocation] = useState<
+    MapNode | undefined
+  >(undefined);
+  const [selectedEndLocation, setSelectedEndLocation] = useState<
+    MapNode | undefined
+  >(undefined);
   //const [name,setName] = useState("");
 
   // Fetch map nodes and set start and end locations

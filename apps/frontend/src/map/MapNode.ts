@@ -82,22 +82,22 @@ export function getMapNodesEdges() {
   });
 }
 
-let startNode: MapNode;
-let endNode: MapNode;
+let startNode: MapNode | undefined;
+let endNode: MapNode | undefined;
 
-export function setStartNode(node: MapNode) {
+export function setStartNode(node: MapNode | undefined) {
   startNode = node;
 }
 
-export function getStartNode(): MapNode {
+export function getStartNode(): MapNode | undefined {
   return startNode;
 }
 
-export function setEndNode(node: MapNode) {
+export function setEndNode(node: MapNode | undefined) {
   endNode = node;
 }
 
-export function getEndNode(): MapNode {
+export function getEndNode(): MapNode | undefined {
   return endNode;
 }
 
@@ -188,6 +188,9 @@ export function AStarSearch(
     // console.log(current);
     // console.log(fScore);
 
+    if (current === undefined) {
+      return [];
+    }
     if (current === end) {
       // Reconstruct path
       const path: MapNode[] = [];

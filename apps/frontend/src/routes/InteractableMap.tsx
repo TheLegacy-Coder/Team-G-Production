@@ -154,10 +154,12 @@ export const InteractableMap = () => {
   const poll = useCallback(() => {
     sl = getStartNode();
     hl = getEndNode();
-    if (hl.nodeID.length > 0) {
-      path = [];
-      frames = [[[]]];
-      aStar(hl);
+    if (hl === undefined) {
+      return;
+    } else if (hl!.nodeID.length > 0) {
+      //path = [];
+      //frames = [[[]]];
+      aStar(hl!);
     }
   }, []);
 
@@ -212,6 +214,9 @@ export const InteractableMap = () => {
 
   // resets map position to a default position
   function homePosition() {
+    if (ctx === null) {
+      return;
+    }
     ctx!.translate(-1200, -400);
     updateCoords();
     scalar = 0.75;
@@ -298,19 +303,8 @@ export const InteractableMap = () => {
       }
     });
     if (emptyClick && delta.x == 0 && delta.y == 0) {
-      const blankNode: MapNode = {
-        nodeID: "",
-        xcoord: 0,
-        ycoord: 0,
-        floor: "",
-        building: "",
-        nodeType: "",
-        longName: "",
-        shortName: "",
-        edges: [],
-      };
-      setStartNode(blankNode);
-      setEndNode(blankNode);
+      setStartNode(undefined);
+      setEndNode(undefined);
       nodeStore.setSelectedNode(sl);
       path = [];
       frames = [[[]]];
