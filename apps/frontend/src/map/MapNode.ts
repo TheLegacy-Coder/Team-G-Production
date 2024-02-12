@@ -82,6 +82,25 @@ export function getMapNodesEdges() {
   });
 }
 
+let startNode: MapNode | undefined;
+let endNode: MapNode | undefined;
+
+export function setStartNode(node: MapNode | undefined) {
+  startNode = node;
+}
+
+export function getStartNode(): MapNode | undefined {
+  return startNode;
+}
+
+export function setEndNode(node: MapNode | undefined) {
+  endNode = node;
+}
+
+export function getEndNode(): MapNode | undefined {
+  return endNode;
+}
+
 //TODO: remove this and replace with an actual backend
 //
 // fetch(rawNodes)
@@ -169,6 +188,9 @@ export function AStarSearch(
     // console.log(current);
     // console.log(fScore);
 
+    if (current === undefined) {
+      return [];
+    }
     if (current === end) {
       // Reconstruct path
       const path: MapNode[] = [];
