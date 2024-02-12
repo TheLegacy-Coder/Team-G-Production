@@ -17,27 +17,64 @@
 }
 
 .auth0-lock.auth0-lock .auth0-lock-header {
-  background: #ffffff !important;
+  background: #b8c4d1 !important;
 }
 
 .auth0-lock.auth0-lock .auth0-lock-header-bg {
-  background: #ffffff !important;
+  background: #b8c4d1 !important;
 }
 
 .auth0-lock-confirmation {
-  background: #ffffff !important;
+  background: #b8c4d1 !important;
 }
 
 .auth0-lock-header-bg-blur {
   display: none !important;
 }
 
+.auth0-lock-header {
+  display: none !important;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-tabs li a {
+  background: #00284f !important;
+  color: #aaaaaa !important;
+  font-size: 18px;
+}
+.auth0-lock.auth0-lock .auth0-lock-tabs li.auth0-lock-tabs-current span {
+  background: #00284f !important;
+  color: white !important;
+  font-size: 18px;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-terms {
+  background: none !important;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-input-block {
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  background-color: white !important;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-confirmation {
+  height: 50% !important;
+  font-size: 0 !important;
+}
+
 .auth0-lock.auth0-lock
   .auth0-lock-social-button.auth0-lock-social-big-button[data-provider=""],
 .auth0-lock.auth0-lock
   .auth0-lock-social-button.auth0-lock-social-big-button[data-provider="auth0"] {
-  background: #7089a2 !important;
+  background: #00284f !important;
+  color: white !important;
 }
 .auth0-lock-content-wrapper {
-  background: #ffffff !important;
+  background: #b8c4d1 !important;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-confirmation .checkmark {
+  width: 300px !important;
+  height: 300px !important;
 }

@@ -1,10 +1,26 @@
-export const JobAssignments = {
-  Flowers: ["Florist"],
-  Religious: ["Priest"],
-  Sanitation: ["Janitor"],
-  Interpreter: ["Spanish Translator", "Mandarin Translator"],
-  Transport: ["Driver", "Pilot"],
-};
+export enum RequestType {
+  Flowers,
+  Religious,
+  Sanitation,
+  Interpreter,
+  Transport,
+}
+
+export const JobAssignments = new Map<RequestType, string[]>([
+  [RequestType.Flowers, ["Florist", "flowerdeliveryman"]],
+  [RequestType.Religious, ["Priest"]],
+  [RequestType.Sanitation, ["Janitor"]],
+  [RequestType.Interpreter, ["Spanish Translator", "Mandarin Translator"]],
+  [RequestType.Transport, ["Driver", "Pilot"]],
+]);
+
+export const ServiceRequestEndpoints = new Map<RequestType, string>([
+  [RequestType.Flowers, "services/requests/flowers"],
+  [RequestType.Religious, "services/requests/religious"],
+  [RequestType.Sanitation, "services/requests/sanitation"],
+  [RequestType.Interpreter, "services/requests/interpreter"],
+  [RequestType.Transport, "services/requests/transport"],
+]);
 
 export interface ServiceRequest {
   requestID: string;
@@ -29,7 +45,7 @@ export interface ServiceRequestFlowers extends ServiceRequest {
 }
 
 export interface ServiceRequestReligious extends ServiceRequest {
-  faith: string;
+  faith: "Christianity" | "Judaism" | "Islam" | "Hinduism" | "Buddhism";
 }
 
 export interface ServiceRequestSanitation extends ServiceRequest {

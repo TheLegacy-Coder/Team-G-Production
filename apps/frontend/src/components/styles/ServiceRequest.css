@@ -8,7 +8,7 @@
   font-size: 16px;
 }
 
-.request-buttons {
+.request-button {
   height: 40px;
   width: 300px;
   justify-items: center;
@@ -24,12 +24,16 @@
 
 .request-nav-style {
   color: #ffffff;
-  background: #7ab5f6;
+  background: #00284f;
   border: 2px solid black;
-  border-radius: 6px;
+  font-size: 18px;
+  border-radius: 5px;
   padding: 5px;
-  width: 250px;
+  width: 350px;
+  height: 50px;
+  justify-content: center;
+  align-content: center;
   text-decoration: none;
   cursor: pointer;
-  justify-content: center;
+  margin-bottom: 40px;
 }

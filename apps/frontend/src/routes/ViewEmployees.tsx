@@ -1,6 +1,17 @@
 import React, { useEffect, useReducer, useState } from "react";
 import "./styles/ViewEmployees.css";
-import { getEmployees } from "../employee/Employee.ts";
+import axios from "axios";
+import { Employee } from "common/src/Employee.ts";
+
+export interface EmployeeWrapper {
+  data: Employee[];
+}
+
+async function getEmployees(): Promise<EmployeeWrapper> {
+  return axios.get("http://localhost:3000/api/employees", {
+    params: { getAll: true },
+  });
+}
 
 export const ViewEmployees = () => {
   const [rows, setRows] = useState<React.ReactElement[]>([]);

@@ -1,7 +1,8 @@
 import React from "react";
 import "./styles/ServiceRequest.css";
-import { Flowers } from "./Flowers.tsx";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
+import { ServiceRequestForm } from "./ServiceRequestForm.tsx";
+import { RequestType } from "common/src/ServiceRequests.ts";
 
 // ServiceRequests component responsible for handling service requests
 export const ServiceRequests = () => {
@@ -12,8 +13,32 @@ export const ServiceRequests = () => {
         <br />
         <br />
         <ContextMenuRouterButton
-          content={<Flowers />}
+          content={<ServiceRequestForm requestType={RequestType.Flowers} />}
           lable={"Flowers"} // Fixed typo in the label attribute
+          style={"request-nav-style"}
+        />
+
+        <ContextMenuRouterButton
+          content={<ServiceRequestForm requestType={RequestType.Interpreter} />}
+          lable={"Interpreter"} // Fixed typo in the label attribute
+          style={"request-nav-style"}
+        />
+
+        <ContextMenuRouterButton
+          content={<ServiceRequestForm requestType={RequestType.Religious} />}
+          lable={"Religious"} // Fixed typo in the label attribute
+          style={"request-nav-style"}
+        />
+
+        <ContextMenuRouterButton
+          content={<ServiceRequestForm requestType={RequestType.Transport} />}
+          lable={"Transport"} // Fixed typo in the label attribute
+          style={"request-nav-style"}
+        />
+
+        <ContextMenuRouterButton
+          content={<ServiceRequestForm requestType={RequestType.Sanitation} />}
+          lable={"Sanitation"} // Fixed typo in the label attribute
           style={"request-nav-style"}
         />
         <br />
