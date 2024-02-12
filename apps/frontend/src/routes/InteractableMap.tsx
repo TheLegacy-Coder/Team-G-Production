@@ -13,8 +13,12 @@ import "../components/styles/ZoomButton.css";
 
 const canvasSize = { x: 0, y: 0 };
 const offset = { x: 0, y: 0 };
-let hl: MapNode | undefined = undefined;
-let sl: MapNode | undefined = undefined;
+//let hl: MapNode | undefined = undefined;
+//let sl: MapNode | undefined = undefined;
+
+let startNode: MapNode | undefined = undefined;
+let endNode: MapNode | undefined = undefined;
+
 let hoverNode: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 
@@ -129,10 +133,10 @@ export const InteractableMap = () => {
       ctx!.beginPath();
       ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
       ctx!.fillStyle =
-        sl == node
+        startNode == node
           ? "#00FF00"
-          : hl == node
-            ? "#0000FF"
+          : endNode == node
+            ? "#00ffff"
             : hoverNode == node
               ? "#0000FF"
               : "#FF0000";
@@ -140,7 +144,7 @@ export const InteractableMap = () => {
       ctx!.lineWidth = 5;
       ctx!.strokeStyle = "#330000";
       ctx!.stroke();
-      if (node == hl || node == sl || node == hoverNode) {
+      if (node == startNode || node == endNode || node == hoverNode) {
         ctx!.fillStyle = "#FFFFFF";
         ctx!.strokeStyle = "#000000";
         ctx!.fillRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
@@ -162,24 +166,23 @@ export const InteractableMap = () => {
   };
 
   const poll = useCallback(() => {
-    sl = getStartNode();
-    hl = getEndNode();
-    if (hl === undefined) {
-      return;
-    } else if (hl!.nodeID.length > 0) {
-      //path = [];
-      //frames = [[[]]];
-      aStar(hl!);
+    startNode = getStartNode();
+    endNode = getEndNode();
+    if (startNode !== undefined && endNode !== undefined) {
+      nodeStore.setSelectedNode(startNode);
+      path = [];
+      frames = [[[]]];
+      aStar();
     }
   }, []);
 
   useEffect(() => {
-    const intervalID = setInterval(poll, 1000);
+    const intervalID = setInterval(poll, 10);
     return () => clearInterval(intervalID);
   }, [poll]);
 
-  function aStar(node: MapNode) {
-    path = AStarSearch(sl, node);
+  function aStar() {
+    path = AStarSearch(startNode, endNode);
     totalDistance = 0;
     steps = [0];
     let last: MapNode | undefined = undefined;
@@ -305,22 +308,23 @@ export const InteractableMap = () => {
       );
       if (dist < 10) {
         emptyClick = false;
-        if (sl != undefined && path.length == 0) {
+        if (startNode != undefined && path.length == 0) {
+          nodeStore.setSelectedNode(startNode);
           setEndNode(node);
-          aStar(node);
+          aStar();
         } else {
           path = [];
           frames = [[[]]];
           setStartNode(node);
           //sl = node;
-          nodeStore.setSelectedNode(sl);
+          nodeStore.setSelectedNode(startNode);
         }
       }
     });
     if (emptyClick && delta.x == 0 && delta.y == 0) {
       setStartNode(undefined);
       setEndNode(undefined);
-      nodeStore.setSelectedNode(sl);
+      nodeStore.setSelectedNode(startNode);
       path = [];
       frames = [[[]]];
     }
@@ -366,14 +370,12 @@ export const InteractableMap = () => {
         Math.pow(tfCursor!.x - node.xcoord, 2) +
           Math.pow(tfCursor!.y - node.ycoord, 2),
       );
-      if (dist < 10 && path.length == 0) {
-        hl = node;
+      if (dist < 10) {
         hoverNode = node;
         //changed = true;
       } else {
-        if (hl == node && path.length == 0) {
+        if (hoverNode == node) {
           //changed = true;
-          hl = undefined;
           hoverNode = undefined;
         }
       }

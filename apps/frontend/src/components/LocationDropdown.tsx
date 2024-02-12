@@ -29,7 +29,6 @@ const LocationDropdown: React.FC = () => {
         const nodes = Array.from(mapNodes.values());
 
         // Set start and end locations
-        console.log("array length " + mapNodes.values());
         setStartLocations(nodes);
         setEndLocations(nodes);
       } catch (error) {
@@ -37,7 +36,8 @@ const LocationDropdown: React.FC = () => {
       }
     };
 
-    fetchMapNodes();
+    //fetchMapNodes();
+    setInterval(fetchMapNodes, 100);
   }, []);
 
   const poll = useCallback(() => {
