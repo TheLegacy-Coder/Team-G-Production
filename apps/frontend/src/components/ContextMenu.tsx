@@ -7,6 +7,7 @@ import { loginStore } from "../stores/LoginStore.ts";
 import "./styles/ContextMenu.css";
 import { Csvs } from "../routes/Csvs.tsx";
 import { ViewRequests } from "../routes/ViewRequests.tsx";
+import { ViewEmployees } from "../routes/ViewEmployees.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -53,6 +54,13 @@ export function ContextMenu() {
                 <ContextMenuRouterButton
                   content={<Csvs />}
                   lable={"Nodes & Edges"}
+                  protected={true}
+                  admin={true}
+                  style={"context-menu-tab-admin"}
+                />
+                <ContextMenuRouterButton
+                  content={<ViewEmployees />}
+                  lable={"Employees"}
                   protected={true}
                   admin={true}
                   style={"context-menu-tab-admin"}
