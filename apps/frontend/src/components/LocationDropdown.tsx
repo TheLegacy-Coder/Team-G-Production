@@ -9,18 +9,6 @@ import {
   mapNodes,
 } from "../map/MapNode.ts"; // Importing MapNode type
 
-/*const blankNode: MapNode = {
-  nodeID: "ID",
-  xcoord: 1,
-  ycoord: 1,
-  floor: "floor",
-  building: "build",
-  nodeType: "node",
-  longName: "longName",
-  shortName: "shortName",
-  edges: [],
-};*/
-
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
   const [endLocations, setEndLocations] = useState<MapNode[]>([]);
@@ -34,12 +22,14 @@ const LocationDropdown: React.FC = () => {
 
   // Fetch map nodes and set start and end locations
   useEffect(() => {
+    console.log("fetch nodes");
     const fetchMapNodes = async () => {
       try {
         // Fetch map nodes from the mapNodes variable
         const nodes = Array.from(mapNodes.values());
 
         // Set start and end locations
+        console.log("array length " + mapNodes.values());
         setStartLocations(nodes);
         setEndLocations(nodes);
       } catch (error) {
@@ -56,7 +46,7 @@ const LocationDropdown: React.FC = () => {
   }, [setSelectedStartLocation, setSelectedEndLocation]);
 
   useEffect(() => {
-    const intervalID = setInterval(poll, 1000);
+    const intervalID = setInterval(poll, 10);
     return () => clearInterval(intervalID);
   }, [poll]);
 

@@ -15,6 +15,7 @@ const canvasSize = { x: 0, y: 0 };
 const offset = { x: 0, y: 0 };
 let hl: MapNode | undefined = undefined;
 let sl: MapNode | undefined = undefined;
+let hoverNode: MapNode | undefined = undefined;
 let path: MapNode[] = [];
 
 let flip = false;
@@ -30,18 +31,18 @@ let showEdges = false;
 //Stores scaled map amount
 let scalar = 1;
 //Stores map delta xy coordinates while panning
-const delta = { x: 0, y: 0 };
+const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
 //Stores the start xy of mouse when pressed to test click clear or not
-const pageStart = { x: 0, y: 0 };
+const pageStart: { x: number; y: number } | undefined = { x: 0, y: 0 };
 //Stores whether to update map position if moving
 let moveMap = false;
 // start position in image frame for translating when panning
-let startPos = { x: 0, y: 0 };
+let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
-let tfCursor = { x: 0, y: 0 };
-let centerPos = { x: 0, y: 0 };
-let upleftCorner = { x: 0, y: 0 };
-let downrightCorner = { x: 0, y: 0 };
+let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
 const zoomAmount = 0.1;
 
@@ -73,6 +74,9 @@ export const InteractableMap = () => {
 
   // converts coordinates from page frame to image frame
   function tfPoint(x: number, y: number) {
+    if (ctx === null) {
+      return undefined;
+    }
     const origin = new DOMPoint(x, y);
     return ctx!.getTransform().invertSelf().transformPoint(origin);
   }
@@ -125,12 +129,18 @@ export const InteractableMap = () => {
       ctx!.beginPath();
       ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
       ctx!.fillStyle =
-        sl == node ? "#00FF00" : hl == node ? "#0000FF" : "#FF0000";
+        sl == node
+          ? "#00FF00"
+          : hl == node
+            ? "#0000FF"
+            : hoverNode == node
+              ? "#0000FF"
+              : "#FF0000";
       ctx!.fill();
       ctx!.lineWidth = 5;
       ctx!.strokeStyle = "#330000";
       ctx!.stroke();
-      if (node == hl || node == sl) {
+      if (node == hl || node == sl || node == hoverNode) {
         ctx!.fillStyle = "#FFFFFF";
         ctx!.strokeStyle = "#000000";
         ctx!.fillRect(node.xcoord - 80, node.ycoord + 15, 160, 20);
@@ -238,6 +248,8 @@ export const InteractableMap = () => {
   }
 
   function boundCoords() {
+    if (downrightCorner === undefined || upleftCorner === undefined)
+      return null;
     if (downrightCorner.x - upleftCorner.x > image.width) {
       // centers canvas along x axis
       ctx!.translate(upleftCorner.x, 0);
@@ -280,13 +292,16 @@ export const InteractableMap = () => {
 
   // runs when mouse reeased
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (tfCursor === undefined || delta === undefined) {
+      return null;
+    }
     moveMap = false;
     evt.pageX;
     let emptyClick = true;
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
-        Math.pow(tfCursor.x - node.xcoord, 2) +
-          Math.pow(tfCursor.y - node.ycoord, 2),
+        Math.pow(tfCursor!.x - node.xcoord, 2) +
+          Math.pow(tfCursor!.y - node.ycoord, 2),
       );
       if (dist < 10) {
         emptyClick = false;
@@ -316,6 +331,9 @@ export const InteractableMap = () => {
 
   //Starts moving map according to mouse drag
   function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (pageStart === undefined) {
+      return null;
+    }
     pageStart.x = evt.pageX;
     pageStart.y = evt.pageY;
     moveMap = true;
@@ -327,9 +345,17 @@ export const InteractableMap = () => {
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     tfCursor = tfPoint(evt.pageX - offset.x, evt.pageY - offset.y);
 
+    if (
+      delta === undefined ||
+      tfCursor === undefined ||
+      startPos === undefined
+    ) {
+      return null;
+    }
+
     if (moveMap) {
-      delta.x = evt.pageX - pageStart.x;
-      delta.y = evt.pageY - pageStart.y;
+      delta.x = evt.pageX - pageStart!.x;
+      delta.y = evt.pageY - pageStart!.y;
       ctx!.translate(
         tfCursor.x + offset.x / scalar - startPos.x,
         tfCursor.y + offset.y / scalar - startPos.y,
@@ -337,16 +363,18 @@ export const InteractableMap = () => {
     }
     mapNodes.forEach((node) => {
       const dist = Math.sqrt(
-        Math.pow(tfCursor.x - node.xcoord, 2) +
-          Math.pow(tfCursor.y - node.ycoord, 2),
+        Math.pow(tfCursor!.x - node.xcoord, 2) +
+          Math.pow(tfCursor!.y - node.ycoord, 2),
       );
       if (dist < 10 && path.length == 0) {
         hl = node;
+        hoverNode = node;
         //changed = true;
       } else {
         if (hl == node && path.length == 0) {
           //changed = true;
           hl = undefined;
+          hoverNode = undefined;
         }
       }
     });
@@ -371,6 +399,9 @@ export const InteractableMap = () => {
 
   //Adjusts zoom according to scroll
   function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
+    if (tfCursor === undefined) {
+      return null;
+    }
     const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
     zoom(zoomDelta, tfCursor.x, tfCursor.y);
   }
@@ -398,7 +429,7 @@ export const InteractableMap = () => {
     >
       <button
         className={"zoom-button plus-button"}
-        onClick={() => zoom(1 + zoomAmount, centerPos.x, centerPos.y)}
+        onClick={() => zoom(1 + zoomAmount, centerPos!.x, centerPos!.y)}
       >
         +
       </button>
@@ -407,7 +438,7 @@ export const InteractableMap = () => {
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => zoom(1 - zoomAmount, centerPos.x, centerPos.y)}
+        onClick={() => zoom(1 - zoomAmount, centerPos!.x, centerPos!.y)}
       >
         -
       </button>
@@ -417,7 +448,7 @@ export const InteractableMap = () => {
           ctx!.scale(1 / scalar, 1 / scalar);
           scalar *= 1 / scalar;
           updateCoords();
-          ctx!.translate(upleftCorner.x, upleftCorner.y);
+          ctx!.translate(upleftCorner!.x, upleftCorner!.y);
           updateCoords();
           homePosition();
         }}
