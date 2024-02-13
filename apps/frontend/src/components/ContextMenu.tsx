@@ -8,6 +8,7 @@ import "./styles/ContextMenu.css";
 import { Csvs } from "../routes/Csvs.tsx";
 import { ViewRequests } from "../routes/ViewRequests.tsx";
 import { ViewEmployees } from "../routes/ViewEmployees.tsx";
+import { Profile } from "./Profile.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -32,11 +33,22 @@ export function ContextMenu() {
           style={"context-menu-tab"}
         />
 
-        <ContextMenuRouterButton
-          content={<Login />}
-          lable={"Login"}
-          style={"context-menu-tab"}
-        />
+        {loginStore.loggedIn ? (
+          // Render Profile button when logged in
+          <ContextMenuRouterButton
+            content={<Profile />}
+            lable={"Profile"}
+            protected={false}
+            style={"context-menu-tab"}
+          />
+        ) : (
+          // Render Login button when logged out
+          <ContextMenuRouterButton
+            content={<Login />}
+            lable={"Login"}
+            style={"context-menu-tab"}
+          />
+        )}
 
         <ContextMenuRouterButton
           content={<ServiceRequests />}
