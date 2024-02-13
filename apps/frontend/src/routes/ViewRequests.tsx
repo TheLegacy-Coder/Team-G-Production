@@ -7,15 +7,24 @@ import {
 } from "../servicereqs/ServiceRequestNodes.ts";
 import axios from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
+import {
+  ServiceRequestExternalTransport,
+  ServiceRequestFlowers,
+  ServiceRequestInterpreter,
+  ServiceRequestReligious,
+  ServiceRequestSanitation,
+} from "common/src/ServiceRequests.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
   requests: ServiceRequest[] | undefined;
+  type?: string;
 }
 
 export const RequestsTable = ({
   updateRequests,
   requests,
+  type,
 }: RequestsTableProps) => {
   const [stati] = useState(new Map<string, string>());
 
@@ -73,6 +82,32 @@ export const RequestsTable = ({
         <td>{request.helpingEmployee}</td>
         <td>{request.desc}</td>
         <td>{request.time}</td>
+        {type === "Flowers" && (
+          <>
+            <td>{(request as ServiceRequestFlowers).flowerType}</td>
+            <td>{(request as ServiceRequestFlowers).amount}</td>
+          </>
+        )}
+        {type === "Religious" && (
+          <td>{(request as ServiceRequestReligious).faith}</td>
+        )}
+        {type === "Sanitation" && (
+          <>
+            <td>
+              {(request as ServiceRequestSanitation).hazardous.toString()}
+            </td>
+            <td>{(request as ServiceRequestSanitation).messType}</td>
+          </>
+        )}
+        {type === "Interpreter" && (
+          <td>{(request as ServiceRequestInterpreter).language}</td>
+        )}
+        {type === "Transport" && (
+          <>
+            <td>{(request as ServiceRequestExternalTransport).vehicle}</td>
+            <td>{(request as ServiceRequestExternalTransport).destination}</td>
+          </>
+        )}
       </tr>,
     );
   });
@@ -89,6 +124,26 @@ export const RequestsTable = ({
           <th>Employee</th>
           <th>Description</th>
           <th>Time</th>
+          {type === "Flowers" && (
+            <>
+              <th>Flower Type</th>
+              <th>Amount</th>
+            </>
+          )}
+          {type === "Religious" && <th>Faith</th>}
+          {type === "Sanitation" && (
+            <>
+              <th>Hazardous</th>
+              <th>Mess Type</th>
+            </>
+          )}
+          {type === "Interpreter" && <th>Language</th>}
+          {type === "Transport" && (
+            <>
+              <th>Vehicle</th>
+              <th>Destination</th>
+            </>
+          )}
         </tr>
       </thead>
       <tbody>{rows}</tbody>
@@ -125,6 +180,27 @@ export const ViewRequests = () => {
           <RequestsTable
             updateRequests={updateRequests}
             requests={requests?.Flowers}
+            type={"Flowers"}
+          />,
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={requests?.Religious}
+            type={"Religious"}
+          />,
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={requests?.Sanitation}
+            type={"Sanitation"}
+          />,
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={requests?.Interpreter}
+            type={"Interpreter"}
+          />,
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={requests?.Transport}
+            type={"Transport"}
           />,
         ]}
       />
