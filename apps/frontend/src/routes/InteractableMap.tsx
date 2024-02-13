@@ -8,6 +8,7 @@ import {
   MapNode,
   mapNodes,
   nodeStore,
+  mapEdges,
 } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
@@ -26,8 +27,6 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
-
-let showDetail = false;
 
 //Stores scaled map amount
 let scalar = 1;
@@ -106,12 +105,14 @@ export const InteractableMap = () => {
           ctx!.lineWidth = 3;
           ctx!.strokeStyle = "#AAAAAA";
           node.edges.forEach((edge) => {
-            // Start a new Path
-            ctx!.beginPath();
-            ctx!.moveTo(node.xcoord, node.ycoord);
-            ctx!.lineTo(edge.xcoord, edge.ycoord);
-            // Draw the Path
-            ctx!.stroke();
+            if (edge.floor === currenFloor) {
+              // Start a new Path
+              ctx!.beginPath();
+              ctx!.moveTo(node.xcoord, node.ycoord);
+              ctx!.lineTo(edge.xcoord, edge.ycoord);
+              // Draw the Path
+              ctx!.stroke();
+            }
           });
         }
       });
@@ -125,26 +126,6 @@ export const InteractableMap = () => {
         ctx!.fillStyle = "#0000FF";
         ctx!.fill();
       });
-    }
-
-    mapNodes.forEach((node) => {
-      if (node.floor === currenFloor) {
-        if (
-          node !== startNode &&
-          node !== endNode &&
-          node !== hoverNode &&
-          showDetail
-        ) {
-          drawNodeDetails(node);
-        }
-      }
-    });
-
-    for (let i = 0; i < 2; i++) {
-      let node: MapNode | undefined = undefined;
-      if (i === 0 && startNode !== undefined) node = startNode;
-      else if (i === 1 && endNode !== undefined) node = endNode;
-      if (node !== undefined) drawNodeDetails(node);
     }
 
     mapNodes.forEach((node) => {
@@ -172,29 +153,60 @@ export const InteractableMap = () => {
   }
 
   function drawNodeDetails(node: MapNode) {
-    if (node.floor === currenFloor) {
-      ctx!.fillStyle = "#FFFFFF";
-      ctx!.strokeStyle = "#000000";
-      ctx!.lineWidth = 5 / scalar;
-      ctx!.fillRect(
-        node.xcoord - 80 / scalar,
-        node.ycoord + 15,
-        160 / scalar,
-        20 / scalar,
-      );
-      ctx!.strokeRect(
-        node.xcoord - 80 / scalar,
-        node.ycoord + 15,
-        160 / scalar,
-        20 / scalar,
-      );
-      ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
-      ctx!.textAlign = "center";
-      ctx!.fillStyle = "#550000";
+    ctx!.fillStyle = "#FFFFFF";
+    ctx!.strokeStyle = "#000000";
+    ctx!.lineWidth = 5 / scalar;
+    //let content = node.shortName + "\nAdjacent Nodes and Edge ID:\n";
+    const content: string[] = [];
+    content.push(node.shortName);
+    content.push(
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push("Adjacent Nodes:");
+    let lineCount = 3;
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      content.push(node.edges[i].shortName);
+    }
+    content.push("Adjacent Edges:");
+    lineCount++;
+
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      let lineContent = "";
+      mapEdges.forEach((edge) => {
+        if (
+          (edge.startNode === node.nodeID &&
+            edge.endNode === node.edges[i].nodeID) ||
+          (edge.endNode === node.nodeID &&
+            edge.startNode === node.edges[i].nodeID)
+        ) {
+          lineContent = edge.edgeID;
+        }
+      });
+      content.push(lineContent);
+    }
+
+    ctx!.fillRect(
+      node.xcoord - 100 / scalar,
+      node.ycoord + 15,
+      200 / scalar,
+      5 + (15 / scalar) * lineCount,
+    );
+    ctx!.strokeRect(
+      node.xcoord - 100 / scalar,
+      node.ycoord + 15,
+      200 / scalar,
+      5 + (15 / scalar) * lineCount,
+    );
+    ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
+    ctx!.textAlign = "center";
+    ctx!.fillStyle = "#550000";
+    for (let i = 0; i < lineCount; i++) {
       ctx!.fillText(
-        node.shortName,
+        content[i],
         node.xcoord,
-        node.ycoord + 15 + 13 / scalar,
+        node.ycoord + 14 + (14 / scalar) * (i + 1),
       );
     }
   }
@@ -512,14 +524,6 @@ export const InteractableMap = () => {
         }}
       >
         O
-      </button>
-      <button
-        className={"zoom-button show-detail-button"}
-        onClick={() => {
-          showDetail = !showDetail;
-        }}
-      >
-        X
       </button>
       <button
         className={"zoom-button third-floor"}
