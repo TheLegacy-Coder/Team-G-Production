@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
 import {
   getServiceRequests,
@@ -7,11 +7,22 @@ import {
 import axios from "axios";
 
 export const ViewRequests = () => {
-  const [rows, setRows] = useState<React.ReactElement[]>([]);
-  const [statusChanged, setStatusChanged] = useState(false);
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [stati] = useState(new Map<string, string>());
 
+  // Get requests from DB and store them in state
+  const updateRequests = () => {
+    getServiceRequests().then((list) => {
+      if (list !== undefined) {
+        setRequests(list.data);
+      }
+    });
+  };
+
+  // Fetch the requests from the server on load
+  useEffect(updateRequests, []);
+
+  // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
     axios
       .patch("http://localhost:3000/api/services/requests", {
@@ -19,7 +30,8 @@ export const ViewRequests = () => {
         status: newStatus,
       })
       .then((response) => {
-        setStatusChanged(true);
+        // Update the requests in state
+        updateRequests();
         return response.data;
       })
       .catch((error) => {
@@ -28,55 +40,48 @@ export const ViewRequests = () => {
       });
   };
 
-  useEffect(() => {
-    setStatusChanged(false);
-    getServiceRequests().then((list) => {
-      const renderStatus = (request: ServiceRequest) => {
-        stati.set(request.requestID, request.status);
-        return (
-          <>
-            <select
-              name="status"
-              id={request.requestID}
-              className={"status"}
-              value={stati.get(request.requestID)}
-              onChange={(e) => {
-                stati.set(e.target.id, e.target.value);
-                handleStatusChange(e.target.id, e.target.value);
-              }}
-            >
-              <option value="Assigned">Assigned</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-            </select>
-          </>
-        );
-      };
+  // Render a select element for the status cell of a request
+  const renderStatus = (request: ServiceRequest) => {
+    stati.set(request.requestID, request.status);
+    return (
+      <>
+        <select
+          name="status"
+          id={request.requestID}
+          className={"status"}
+          value={stati.get(request.requestID)}
+          onChange={(e) => {
+            stati.set(e.target.id, e.target.value);
+            handleStatusChange(e.target.id, e.target.value);
+          }}
+        >
+          <option value="Assigned">Assigned</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </>
+    );
+  };
 
-      const newRows: React.ReactElement[] = [];
-      if (list !== undefined) {
-        list.data.forEach((request) => {
-          newRows.push(
-            <tr key={request.requestID}>
-              <td>{request.requestID}</td>
-              <td>{request.requestType}</td>
-              <td>{request.location}</td>
-              <td>{renderStatus(request)}</td>
-              <td>{request.requester}</td>
-              <td>{request.helpingEmployee}</td>
-              <td>{request.desc}</td>
-              <td>{request.time}</td>
-            </tr>,
-          );
-        });
-      }
-      setRows(newRows);
-      forceUpdate();
-    });
-  }, [stati, statusChanged]);
+  // Render rows for requests
+  const rows: React.ReactElement[] = [];
+  requests.forEach((request) => {
+    rows.push(
+      <tr key={request.requestID}>
+        <td>{request.requestID}</td>
+        <td>{request.requestType}</td>
+        <td>{request.location}</td>
+        <td>{renderStatus(request)}</td>
+        <td>{request.requester}</td>
+        <td>{request.helpingEmployee}</td>
+        <td>{request.desc}</td>
+        <td>{request.time}</td>
+      </tr>,
+    );
+  });
 
   return (
-    <div className={"csvs-page"}>
+    <div className={"view-requests-page"}>
       <table>
         <thead>
           <tr>
