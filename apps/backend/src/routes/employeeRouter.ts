@@ -130,4 +130,40 @@ router.delete("/", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
+router.patch("/", async function (req: Request, res: Response) {
+  console.log("Patch");
+  try {
+    await PrismaClient.employee.updateMany({
+      where: { employeeID: req.body.employeeID },
+      data: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        job: req.body.job,
+        email: req.body.email,
+        accessLevel: req.body.accessLevel,
+      },
+    });
+    console.log(
+      "Employee " +
+        req.body.employeeID +
+        " now has fields: " +
+        req.body.firstName +
+        ", " +
+        req.body.lastName +
+        ", " +
+        req.body.job +
+        ", " +
+        req.body.email +
+        ", " +
+        req.body.accessLevel,
+    );
+    res.sendStatus(200);
+  } catch (error) {
+    console.log("Update on Employee " + req.body.employeeID + " has Failed");
+    res.sendStatus(204);
+    return;
+  }
+  return;
+});
+
 export default router;
