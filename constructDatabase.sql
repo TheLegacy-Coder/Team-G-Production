@@ -202,8 +202,7 @@ CREATE TABLE dev."Employee"(
     "employeeID" text NOT NULL, --Primary Key
     "firstName" text NOT NULL,
     "lastName" text NOT NULL,
-    "username" text NOT NULL,
-    "password" text NOT NULL,
+    "email" text NOT NULL,
     "job" text NOT NULL,
     "accessLevel" text NOT NULL
 );
@@ -217,6 +216,7 @@ CREATE TABLE dev."Employee"(
 CREATE TABLE dev."ServiceRequest"(
     "requestID" text NOT NULL, --Primary Key
     "requestType" text NOT NULL,
+    "priority" text NOT NULL,
     "location" text NOT NULL,
     "status" text NOT NULL,
     "requester" text, --Foreign Key -> Employee
@@ -273,18 +273,18 @@ ALTER TABLE ONLY dev."ServiceRequest"
 -- Data for Name: Employee; Type: TABLE DATA; Schema: dev; Owner: dev
 --
 
-INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c415e271e231c3b5f45af0', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
-INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('testStaff', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff');
-INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c429b2125832ae8f4c0077', 'Flow', 'Erman', 'Flow', 'Erman', 'flowerdeliveryman', 'staff');
-INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "username", "password", "job", "accessLevel") VALUES ('auth0|65c430e6717b4796d888c313', 'Daisy', 'Deliverer', 'Daisy', 'Deliverer', 'flowerdeliveryman', 'staff');
+INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "email", "job", "accessLevel") VALUES ('auth0|65c415e271e231c3b5f45af0', 'admin', 'admin', 'softengc24G@gmail.com', 'admin', 'admin');
+INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "email", "job", "accessLevel") VALUES ('testStaff', 'staff', 'staff', 'staff', 'staff', 'staff');
+INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "email", "job", "accessLevel") VALUES ('auth0|65c429b2125832ae8f4c0077', 'Flow', 'Erman', 'fekeg78344@laymro.com', 'flowerdeliveryman', 'staff');
+INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "email", "job", "accessLevel") VALUES ('auth0|65c430e6717b4796d888c313', 'Daisy', 'Deliverer', 'jebenow403@fkcod.com', 'flowerdeliveryman', 'staff');
 
 
 --
 -- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: dev; Owner: dev
 --
 
-INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
-INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
+INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "priority", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'Low', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
+INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "priority", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'High', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
 
 
 --
