@@ -9,6 +9,7 @@ import { Csvs } from "../routes/Csvs.tsx";
 import { ViewRequests } from "../routes/ViewRequests.tsx";
 import { ViewEmployees } from "../routes/ViewEmployees.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
+import { HelpPage } from "./HelpPage.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -27,7 +28,7 @@ export function ContextMenu() {
           {contextMenuState.showing ? "→" : "←"}
         </div>
         <ContextMenuRouterButton
-          content={<div>placeholder</div>}
+          content={<HelpPage />}
           lable={"Help"}
           protected={false}
           style={"context-menu-tab"}

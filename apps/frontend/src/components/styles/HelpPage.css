@@ -5,7 +5,11 @@
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  color: midnightblue;
+  background: #00284f;
+  height: 100%;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .help-page-container div {
@@ -14,4 +18,8 @@
 
 .help-page-container div:last-child {
   margin-bottom: 0; /* Remove bottom margin for the last div */
+}
+
+a {
+  color: white;
 }
