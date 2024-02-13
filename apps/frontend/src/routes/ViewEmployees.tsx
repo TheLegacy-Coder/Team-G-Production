@@ -42,16 +42,14 @@ export const ViewEmployees = () => {
 
   return (
     <div className={"employees-page"}>
-      <h1>Employees</h1>
-
       <table>
         <thead>
           <tr>
-            <th>employeeID</th>
-            <th>firstName</th>
-            <th>lastName</th>
-            <th>job</th>
-            <th>accessLevel</th>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Job</th>
+            <th>Access Level</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

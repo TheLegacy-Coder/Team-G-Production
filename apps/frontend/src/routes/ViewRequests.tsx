@@ -5,12 +5,12 @@ import {
   ServiceRequest,
 } from "../servicereqs/ServiceRequestNodes.ts";
 import axios from "axios";
-import { Dropdown, DropdownButton, Stack } from "react-bootstrap";
 
 export const ViewRequests = () => {
   const [rows, setRows] = useState<React.ReactElement[]>([]);
   const [statusChanged, setStatusChanged] = useState(false);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [stati] = useState(new Map<string, string>());
 
   const handleStatusChange = (requestID: string, newStatus: string) => {
     axios
@@ -32,31 +32,24 @@ export const ViewRequests = () => {
     setStatusChanged(false);
     getServiceRequests().then((list) => {
       const renderStatus = (request: ServiceRequest) => {
-        const renderStatusChangeButton = (status: string) => {
-          return (
-            <Dropdown.Item
-              as="button"
-              disabled={request.status === status}
-              onClick={() => handleStatusChange(request.requestID, status)}
-            >
-              Change to {status}
-            </Dropdown.Item>
-          );
-        };
-
+        stati.set(request.requestID, request.status);
         return (
-          <Stack direction="horizontal" gap={2}>
-            {request.status}
-            <DropdownButton
-              id="dropdown-item-button"
-              title=""
-              variant={"secondary"}
+          <>
+            <select
+              name="status"
+              id={request.requestID}
+              className={"status"}
+              value={stati.get(request.requestID)}
+              onChange={(e) => {
+                stati.set(e.target.id, e.target.value);
+                handleStatusChange(e.target.id, e.target.value);
+              }}
             >
-              {renderStatusChangeButton("Assigned")}
-              {renderStatusChangeButton("In Progress")}
-              {renderStatusChangeButton("Completed")}
-            </DropdownButton>
-          </Stack>
+              <option value="Assigned">Assigned</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </>
         );
       };
 
@@ -80,23 +73,21 @@ export const ViewRequests = () => {
       setRows(newRows);
       forceUpdate();
     });
-  }, [statusChanged]);
+  }, [stati, statusChanged]);
 
   return (
     <div className={"csvs-page"}>
-      <h1>Service Requests</h1>
-
       <table>
         <thead>
           <tr>
-            <th>requestID</th>
-            <th>requestType</th>
-            <th>location</th>
-            <th>status</th>
-            <th>requester</th>
-            <th>helpingEmployee</th>
-            <th>desc</th>
-            <th>time</th>
+            <th>Request ID</th>
+            <th>Request Type</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Requester</th>
+            <th>Employee</th>
+            <th>Description</th>
+            <th>Time</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
