@@ -42,25 +42,30 @@
 }
 
 .third-floor {
-  transform: translate(10px, 200px);
+  transform: translateX(10px);
+  bottom: 240px;
 }
 
 .second-floor {
-  transform: translate(10px, 240px);
+  transform: translateX(10px);
+  bottom: 200px;
 }
 
 .first-floor {
-  transform: translate(10px, 280px);
+  transform: translateX(10px);
+  bottom: 160px;
 }
 
 .lower-floor {
-  transform: translate(10px, 320px);
+  transform: translateX(10px);
+  bottom: 120px;
 }
 
 .lowest-floor {
-  transform: translate(10px, 360px);
+  transform: translateX(10px);
+  bottom: 80px;
 }
 
 .path-floor {
-  background-color: blue;
+  background-color: lightblue;
 }
