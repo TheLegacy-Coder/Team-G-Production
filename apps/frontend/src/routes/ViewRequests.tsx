@@ -3,24 +3,21 @@ import "./styles/ViewRequests.css";
 import {
   getServiceRequests,
   ServiceRequest,
+  ServiceRequestList,
 } from "../servicereqs/ServiceRequestNodes.ts";
 import axios from "axios";
+import { TabSwitcher } from "../components/TabSwitcher.tsx";
 
-export const ViewRequests = () => {
-  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+interface RequestsTableProps {
+  updateRequests: () => void;
+  requests: ServiceRequest[] | undefined;
+}
+
+export const RequestsTable = ({
+  updateRequests,
+  requests,
+}: RequestsTableProps) => {
   const [stati] = useState(new Map<string, string>());
-
-  // Get requests from DB and store them in state
-  const updateRequests = () => {
-    getServiceRequests().then((list) => {
-      if (list !== undefined) {
-        setRequests(list.data);
-      }
-    });
-  };
-
-  // Fetch the requests from the server on load
-  useEffect(updateRequests, []);
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
@@ -65,7 +62,7 @@ export const ViewRequests = () => {
 
   // Render rows for requests
   const rows: React.ReactElement[] = [];
-  requests.forEach((request) => {
+  requests?.forEach((request) => {
     rows.push(
       <tr key={request.requestID}>
         <td>{request.requestID}</td>
@@ -81,22 +78,56 @@ export const ViewRequests = () => {
   });
 
   return (
+    <table>
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Request Type</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Requester</th>
+          <th>Employee</th>
+          <th>Description</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
+};
+
+export const ViewRequests = () => {
+  const [requests, setRequests] = useState<ServiceRequestList>();
+
+  // Get requests from DB and store them in state
+  const updateRequests = () => {
+    getServiceRequests().then((list) => {
+      if (list !== undefined) {
+        setRequests(list.data);
+      }
+    });
+  };
+
+  // Fetch the requests from the server on load
+  useEffect(updateRequests, []);
+
+  return (
     <div className={"view-requests-page"}>
-      <table>
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Request Type</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Requester</th>
-            <th>Employee</th>
-            <th>Description</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
+      <TabSwitcher
+        titles={[
+          "Flowers",
+          "Religious",
+          "Sanitation",
+          "Interpreter",
+          "Transport",
+        ]}
+        components={[
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={requests?.Flowers}
+          />,
+        ]}
+      />
     </div>
   );
 };

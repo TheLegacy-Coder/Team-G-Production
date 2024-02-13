@@ -1,6 +1,13 @@
 import axios from "axios";
 import { currentEmployee, loginStore } from "../stores/LoginStore.ts";
 import { Prisma } from "database";
+import {
+  ServiceRequestExternalTransport,
+  ServiceRequestFlowers,
+  ServiceRequestInterpreter,
+  ServiceRequestReligious,
+  ServiceRequestSanitation,
+} from "common/src/ServiceRequests.ts";
 
 export type ServiceRequest = {
   requestID: string;
@@ -13,14 +20,95 @@ export type ServiceRequest = {
   time?: string;
 };
 
+export type ServiceRequestList = {
+  Flowers: ServiceRequestFlowers[];
+  Religious: ServiceRequestReligious[];
+  Sanitation: ServiceRequestSanitation[];
+  Interpreter: ServiceRequestInterpreter[];
+  Transport: ServiceRequestExternalTransport[];
+};
+
 export type ServiceRequestsWrapper = {
-  data: ServiceRequest[];
+  data: ServiceRequestList;
 };
 
 export const serviceRequests: Map<string, ServiceRequest> = new Map([]);
 
 export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
   if (loginStore.loginType === "admin" && loginStore.loggedIn) {
+    return {
+      data: {
+        Flowers: [
+          {
+            requestID: "1",
+            requestType: "Flowers",
+            location: "Hospital",
+            status: "Assigned",
+            priority: "Low",
+            requester: "John Doe",
+            helpingEmployee: "Jane Doe",
+            desc: "Need flowers for patient",
+            flowerType: "Roses",
+            amount: 12,
+          },
+        ],
+        Religious: [
+          {
+            requestID: "2",
+            requestType: "Religious",
+            location: "Hospital",
+            status: "In Progress",
+            priority: "Medium",
+            requester: "Jane Doe",
+            helpingEmployee: null,
+            desc: "Need a Rabbi",
+            faith: "Judaism",
+          },
+        ],
+        Sanitation: [
+          {
+            requestID: "3",
+            requestType: "Sanitation",
+            location: "Hospital",
+            status: "Completed",
+            priority: "High",
+            requester: "John Doe",
+            helpingEmployee: "Jane Doe",
+            desc: "Need to clean up vomit",
+            hazardous: true,
+            messType: "Vomit",
+          },
+        ],
+        Interpreter: [
+          {
+            requestID: "4",
+            requestType: "Interpreter",
+            location: "Hospital",
+            status: "Assigned",
+            priority: "Emergency",
+            requester: "Jane Doe",
+            helpingEmployee: null,
+            desc: "Need a Spanish interpreter",
+            language: "Spanish",
+          },
+        ],
+        Transport: [
+          {
+            requestID: "5",
+            requestType: "Transport",
+            location: "Hospital",
+            status: "In Progress",
+            priority: "High",
+            requester: "John Doe",
+            helpingEmployee: "Jane Doe",
+            desc: "Need an ambulance",
+            vehicle: "Ambulance",
+            destination: "Hospital",
+          },
+        ],
+      },
+    };
+
     return axios.get("http://localhost:3000/api/services/requests", {
       params: { getAll: true },
     }); // REPLACE WITH ACTUAL URL
