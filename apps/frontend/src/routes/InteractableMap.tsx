@@ -219,18 +219,20 @@ export const InteractableMap = () => {
   };
 
   const aStar = useCallback(() => {
-    path = AStarSearch(startNode, endNode);
+    // filters path not on floor
+    const unfilteredPath = AStarSearch(startNode, endNode);
+    unfilteredPath.forEach((node) => {
+      if (node.floor === currentFloor) {
+        path.push(node);
+      }
+    });
+
     totalDistance = 0;
     steps = [0];
     let last: MapNode | undefined = undefined;
+    // gets distance based on connected nodes
     path.forEach((node) => {
-      if (node.floor === currentFloor) {
-        const index = path.indexOf(node);
-        path.slice(index);
-      }
-    });
-    path.forEach((node) => {
-      if (last != undefined) {
+      if (last != undefined /* && node.edges.includes(last)*/) {
         const length = Math.sqrt(
           Math.pow(last.ycoord - node.ycoord, 2) +
             Math.pow(last.xcoord - node.xcoord, 2),
@@ -254,7 +256,7 @@ export const InteractableMap = () => {
         }
         s--;
         prog -= steps[s];
-        if (s + 1 < path.length) {
+        if (s + 1 < path.length && path[s + 1].edges.includes(path[s])) {
           const angleRadians = Math.atan2(
             path[s].ycoord - path[s + 1].ycoord,
             path[s].xcoord - path[s + 1].xcoord,
