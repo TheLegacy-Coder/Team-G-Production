@@ -27,6 +27,7 @@ export const RequestsTable = ({
   type,
 }: RequestsTableProps) => {
   const [stati] = useState(new Map<string, string>());
+  const [filter, setFilter] = useState<string>("All");
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
@@ -69,85 +70,110 @@ export const RequestsTable = ({
     );
   };
 
-  // Render rows for requests
+  // Render rows for requests based on the selected filter
   const rows: React.ReactElement[] = [];
   requests?.forEach((request) => {
-    rows.push(
-      <tr key={request.requestID}>
-        <td>{request.requestID}</td>
-        <td>{request.requestType}</td>
-        <td>{request.location}</td>
-        <td>{renderStatus(request)}</td>
-        <td>{request.requester}</td>
-        <td>{request.helpingEmployee}</td>
-        <td>{request.desc}</td>
-        <td>{request.time}</td>
-        {type === "Flowers" && (
-          <>
-            <td>{(request as ServiceRequestFlowers).flowerType}</td>
-            <td>{(request as ServiceRequestFlowers).amount}</td>
-          </>
-        )}
-        {type === "Religious" && (
-          <td>{(request as ServiceRequestReligious).faith}</td>
-        )}
-        {type === "Sanitation" && (
-          <>
-            <td>
-              {(request as ServiceRequestSanitation).hazardous.toString()}
-            </td>
-            <td>{(request as ServiceRequestSanitation).messType}</td>
-          </>
-        )}
-        {type === "Interpreter" && (
-          <td>{(request as ServiceRequestInterpreter).language}</td>
-        )}
-        {type === "Transport" && (
-          <>
-            <td>{(request as ServiceRequestExternalTransport).vehicle}</td>
-            <td>{(request as ServiceRequestExternalTransport).destination}</td>
-          </>
-        )}
-      </tr>,
-    );
+    if (
+      filter === "All" ||
+      (filter === "Assigned" && request.status === "Assigned") ||
+      (filter === "In Progress" && request.status === "In Progress") ||
+      (filter === "Completed" && request.status === "Completed")
+    ) {
+      rows.push(
+        <tr key={request.requestID}>
+          <td>{request.requestID}</td>
+          <td>{request.requestType}</td>
+          <td>{request.location}</td>
+          <td>{renderStatus(request)}</td>
+          <td>{request.requester}</td>
+          <td>{request.helpingEmployee}</td>
+          <td>{request.desc}</td>
+          <td>{request.time}</td>
+          {type === "Flowers" && (
+            <>
+              <td>{(request as ServiceRequestFlowers).flowerType}</td>
+              <td>{(request as ServiceRequestFlowers).amount}</td>
+            </>
+          )}
+          {type === "Religious" && (
+            <td>{(request as ServiceRequestReligious).faith}</td>
+          )}
+          {type === "Sanitation" && (
+            <>
+              <td>
+                {(request as ServiceRequestSanitation).hazardous.toString()}
+              </td>
+              <td>{(request as ServiceRequestSanitation).messType}</td>
+            </>
+          )}
+          {type === "Interpreter" && (
+            <td>{(request as ServiceRequestInterpreter).language}</td>
+          )}
+          {type === "Transport" && (
+            <>
+              <td>{(request as ServiceRequestExternalTransport).vehicle}</td>
+              <td>
+                {(request as ServiceRequestExternalTransport).destination}
+              </td>
+            </>
+          )}
+        </tr>,
+      );
+    }
   });
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Request ID</th>
-          <th>Request Type</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Requester</th>
-          <th>Employee</th>
-          <th>Description</th>
-          <th>Time</th>
-          {type === "Flowers" && (
-            <>
-              <th>Flower Type</th>
-              <th>Amount</th>
-            </>
-          )}
-          {type === "Religious" && <th>Faith</th>}
-          {type === "Sanitation" && (
-            <>
-              <th>Hazardous</th>
-              <th>Mess Type</th>
-            </>
-          )}
-          {type === "Interpreter" && <th>Language</th>}
-          {type === "Transport" && (
-            <>
-              <th>Vehicle</th>
-              <th>Destination</th>
-            </>
-          )}
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+    <>
+      <div className="filter">
+        <label htmlFor="statusFilter">Filter by Status:</label>
+        <select
+          name="statusFilter"
+          id="statusFilter"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Assigned">Assigned</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Request Type</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Requester</th>
+            <th>Employee</th>
+            <th>Description</th>
+            <th>Time</th>
+            {type === "Flowers" && (
+              <>
+                <th>Flower Type</th>
+                <th>Amount</th>
+              </>
+            )}
+            {type === "Religious" && <th>Faith</th>}
+            {type === "Sanitation" && (
+              <>
+                <th>Hazardous</th>
+                <th>Mess Type</th>
+              </>
+            )}
+            {type === "Interpreter" && <th>Language</th>}
+            {type === "Transport" && (
+              <>
+                <th>Vehicle</th>
+                <th>Destination</th>
+              </>
+            )}
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    </>
   );
 };
 
