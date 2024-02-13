@@ -87,8 +87,10 @@ const LocationDropdown: React.FC = () => {
   return (
     <div className="location-dropdowns">
       <div className="dropdown">
+        <br />
         <label htmlFor="startLocation">Start Location:</label>
         <select
+          className={"start-location"}
           id="startLocation"
           value={selectedStartLocation ? selectedStartLocation.nodeID : ""}
           onChange={handleStartLocationChange}
@@ -102,14 +104,17 @@ const LocationDropdown: React.FC = () => {
           ))}
         </select>
       </div>
+      <br />
       <div className="dropdown">
         <label htmlFor="endLocation">End Location:</label>
         <select
+          className={"end-location"}
           id="endLocation"
           value={selectedEndLocation ? selectedEndLocation.nodeID : ""}
           onChange={handleEndLocationChange}
         >
           <option value="">Select end location</option>
+          <br />
           {/* Render options for end location */}
           {endLocations.map((node) => (
             <option key={node.nodeID} value={node.nodeID}>
