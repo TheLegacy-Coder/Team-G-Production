@@ -31,6 +31,7 @@ export const ViewEmployees = () => {
               <td>{employee.employeeID}</td>
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
+              <td>{employee.email}</td>
               <td>{employee.job}</td>
               <td>{employee.accessLevel}</td>
             </tr>,
@@ -58,6 +59,9 @@ export const ViewEmployees = () => {
               </td>
               <td>
                 <input name={"lastName"} form={"newEmployee"} required={true} />
+              </td>
+              <td>
+                <input name={"email"} form={"newEmployee"} required={true} />
               </td>
               <td>
                 <input name={"job"} form={"newEmployee"} required={true} />
@@ -94,11 +98,9 @@ export const ViewEmployees = () => {
       employeeID: formData.get("employeeID") as string,
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
       job: formData.get("job") as string,
       accessLevel: formData.get("accessLevel") as string,
-
-      username: "",
-      password: "",
     };
     console.log(data);
     try {
@@ -123,6 +125,7 @@ export const ViewEmployees = () => {
             <th>employeeID</th>
             <th>firstName</th>
             <th>lastName</th>
+            <th>email</th>
             <th>job</th>
             <th>accessLevel</th>
           </tr>
