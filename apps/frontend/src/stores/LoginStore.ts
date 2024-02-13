@@ -25,7 +25,17 @@ export const lock = new Auth0Lock(
   },
 );
 
-export let currentProfile = undefined;
+export interface Profile {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  nickname: string;
+  picture: string;
+  sub: string;
+  updated_at: string;
+}
+
+export let currentProfile: Profile | undefined = undefined;
 export let currentEmployee: undefined | Employee = undefined;
 export let currentToken = undefined;
 // @ts-expect-error this will complain about no import but it runs due to index.html includes
@@ -40,7 +50,7 @@ lock.on("authenticated", function (authResult) {
       }
       currentToken = authResult.accessToken;
       console.log(profile);
-      currentProfile = profile;
+      currentProfile = profile as Profile;
       axios
         .get("http://localhost:3000/api/employees/?getID=" + profile.sub)
         .then((response: AxiosResponse<Employee>) => {
