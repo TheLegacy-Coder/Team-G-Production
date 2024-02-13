@@ -204,3 +204,52 @@ RUN yarn run build
 
 # Run with CMD, since dev may want to use other commands
 CMD ["yarn", "run", "vitest", "--ui", "--open=false"]
+
+
+
+
+
+# Development of the backend portion
+FROM installer as public-backend
+WORKDIR /$WORKDIR
+
+ENV PORT=$BACKEND_PORT
+
+# Expose the port
+EXPOSE $PORT
+
+# Expose the default DEBUGGER port
+EXPOSE 9229
+
+# PG User Info
+ENV POSTGRES_USER=$POSTGRES_USER
+ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV POSTGRES_DB=$POSTGRES_DB
+ENV POSTGRES_CONTAINER=$POSTGRES_CONTAINER
+ENV POSTGRES_PORT=$POSTGRES_PORT
+ENV POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_CONTAINER}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=dev"
+
+# Run with CMD, since dev may want to use other commands
+CMD ["yarn", "turbo", "run", "dev", "--filter=backend"]
+
+
+
+# Development of the frontend portion
+FROM installer as public-frontend
+WORKDIR /$WORKDIR
+
+ARG FRONTEND_PORT
+
+# Port is frontend
+ENV PORT=$FRONTEND_PORT
+
+# Expose the port
+EXPOSE $PORT
+
+# backend information
+ENV BACKEND_PORT=$BACKEND_PORT
+ARG BACKEND_SOURCE
+ENV BACKEND_SOURCE=$BACKEND_SOURCE
+
+# Run with CMD, since dev may want to use other commands
+CMD ["yarn", "turbo", "run", "dev", "--filter=frontend"]

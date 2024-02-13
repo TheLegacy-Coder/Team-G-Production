@@ -24,3 +24,21 @@ th {
   background-color: #00284f;
   color: white;
 }
+
+.edit-delete-buttons {
+}
+
+.edit-button {
+  position: absolute;
+  right: 100px;
+}
+
+.delete-button {
+  position: absolute;
+  right: 25px;
+}
+
+.inputField {
+  width: 100%;
+  text-align: center;
+}

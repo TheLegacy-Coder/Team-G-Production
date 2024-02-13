@@ -196,8 +196,8 @@ export const InteractableMap = () => {
   const poll = useCallback(() => {
     startNode = getStartNode();
     endNode = getEndNode();
+    nodeStore.setSelectedNode(startNode);
     if (startNode !== undefined && endNode !== undefined) {
-      nodeStore.setSelectedNode(startNode);
       path = [];
       frames = [[[]]];
       aStar();
@@ -337,7 +337,6 @@ export const InteractableMap = () => {
       if (dist < 10) {
         emptyClick = false;
         if (startNode != undefined && path.length == 0) {
-          nodeStore.setSelectedNode(startNode);
           setEndNode(node);
           aStar();
         } else {
@@ -345,14 +344,12 @@ export const InteractableMap = () => {
           frames = [[[]]];
           setStartNode(node);
           //sl = node;
-          nodeStore.setSelectedNode(startNode);
         }
       }
     });
     if (emptyClick && delta.x == 0 && delta.y == 0) {
       setStartNode(undefined);
       setEndNode(undefined);
-      nodeStore.setSelectedNode(startNode);
       path = [];
       frames = [[[]]];
     }
