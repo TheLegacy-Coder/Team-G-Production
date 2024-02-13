@@ -8,8 +8,7 @@ import {
 } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
 import axios from "axios";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import { TabSwitcher } from "../components/TabSwitcher.tsx";
 
 const Nodes = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -231,14 +230,10 @@ const Edges = () => {
 export const Csvs = () => {
   return (
     <div className={"csvs-page"}>
-      <Tabs>
-        <Tab eventKey="nodes" title="Nodes">
-          <Nodes />
-        </Tab>
-        <Tab eventKey="edges" title="Edges">
-          <Edges />
-        </Tab>
-      </Tabs>
+      <TabSwitcher
+        titles={["Nodes", "Edges"]}
+        components={[<Nodes />, <Edges />]}
+      />
     </div>
   );
 };
