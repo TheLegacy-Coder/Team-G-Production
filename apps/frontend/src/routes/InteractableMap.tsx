@@ -507,12 +507,18 @@ export const InteractableMap = () => {
   function setMap(floor: string, imageSrc: string) {
     if (newMap) {
       newMap = false;
+      const tempScalar = scalar;
+      ctx!.save();
       resetMap();
       currentFloor = floor;
       image = new Image();
       image.src = imageSrc;
       homePosition();
       newMap = true;
+      ctx!.restore();
+      scalar = tempScalar;
+      const scaleID = document.querySelector("#scalar");
+      scaleID!.textContent = scalar.toFixed(2).toString();
     }
   }
 
