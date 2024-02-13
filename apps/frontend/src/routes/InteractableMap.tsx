@@ -221,11 +221,19 @@ export const InteractableMap = () => {
   const aStar = useCallback(() => {
     // filters path not on floor
     const unfilteredPath = AStarSearch(startNode, endNode);
+
+    const floors: string[] = [];
+
     unfilteredPath.forEach((node) => {
-      if (node.floor === currentFloor) {
-        path.push(node);
-      }
+      if (node.floor === currentFloor) path.push(node);
+      if (!floors.includes(node.floor)) floors.push(node.floor);
     });
+
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
+    }
 
     totalDistance = 0;
     steps = [0];
@@ -278,6 +286,12 @@ export const InteractableMap = () => {
       path = [];
       frames = [[[]]];
       aStar();
+    } else {
+      const floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
+      for (let i = 0; i < floors.length; i++) {
+        const scaleID = document.querySelector("#" + floors[i]);
+        if (scaleID !== null) scaleID!.classList.remove("path-floor");
+      }
     }
   }, [aStar]);
 
@@ -545,6 +559,7 @@ export const InteractableMap = () => {
         O
       </button>
       <button
+        id={"F3"}
         className={"zoom-button third-floor"}
         onClick={() => {
           setMap("3", "03_thethirdfloor.png");
@@ -553,6 +568,7 @@ export const InteractableMap = () => {
         F3
       </button>
       <button
+        id={"F2"}
         className={"zoom-button second-floor"}
         onClick={() => {
           setMap("2", "02_thesecondfloor.png");
@@ -561,6 +577,7 @@ export const InteractableMap = () => {
         F2
       </button>
       <button
+        id={"F1"}
         className={"zoom-button first-floor"}
         onClick={() => {
           setMap("1", "01_thefirstfloor.png");
@@ -569,6 +586,7 @@ export const InteractableMap = () => {
         F1
       </button>
       <button
+        id={"L1"}
         className={"zoom-button lower-floor"}
         onClick={() => {
           setMap("L1", "00_thelowerlevel1.png");
@@ -577,6 +595,7 @@ export const InteractableMap = () => {
         L1
       </button>
       <button
+        id={"L2"}
         className={"zoom-button lowest-floor"}
         onClick={() => {
           setMap("L2", "00_thelowerlevel2.png");

@@ -60,3 +60,7 @@
 .lowest-floor {
   transform: translate(10px, 360px);
 }
+
+.path-floor {
+  background-color: blue;
+}
