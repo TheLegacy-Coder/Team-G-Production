@@ -342,22 +342,24 @@ export const InteractableMap = () => {
     evt.pageX;
     let emptyClick = true;
     mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        emptyClick = false;
-        if (startNode != undefined && path.length == 0) {
-          nodeStore.setSelectedNode(startNode);
-          setEndNode(node);
-          aStar();
-        } else {
-          path = [];
-          frames = [[[]]];
-          setStartNode(node);
-          //sl = node;
-          nodeStore.setSelectedNode(startNode);
+      if (node.floor === currenFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          emptyClick = false;
+          if (startNode != undefined && path.length == 0) {
+            nodeStore.setSelectedNode(startNode);
+            setEndNode(node);
+            aStar();
+          } else {
+            path = [];
+            frames = [[[]]];
+            setStartNode(node);
+            //sl = node;
+            nodeStore.setSelectedNode(startNode);
+          }
         }
       }
     });
@@ -406,17 +408,19 @@ export const InteractableMap = () => {
       );
     }
     mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        hoverNode = node;
-        //changed = true;
-      } else {
-        if (hoverNode == node) {
+      if (node.floor === currenFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          hoverNode = node;
           //changed = true;
-          hoverNode = undefined;
+        } else {
+          if (hoverNode == node) {
+            //changed = true;
+            hoverNode = undefined;
+          }
         }
       }
     });
