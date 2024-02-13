@@ -3,17 +3,17 @@
   width: 30px;
   height: 30px;
   border-radius: 25px;
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: #00284f;
   border: 2px solid black;
 }
 
 .zoom-button:hover {
-  background-color: lightgray;
+  background-color: #4c6883;
 }
 
 .zoom-button:active {
-  background-color: gray;
+  background-color: #99a9b8;
 }
 
 .plus-button {

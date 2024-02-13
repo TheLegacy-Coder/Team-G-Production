@@ -1,7 +1,7 @@
 .employees-page {
-  overflow: scroll;
-  max-height: 100%;
-  min-height: 100%;
+  overflow-y: scroll;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
 }
 
 table {
@@ -21,6 +21,24 @@ th {
   padding: 0.5rem;
   border: 1px solid;
   text-align: center;
-  background-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  background-color: #00284f;
   color: white;
+}
+
+.edit-delete-buttons {
+}
+
+.edit-button {
+  position: absolute;
+  right: 100px;
+}
+
+.delete-button {
+  position: absolute;
+  right: 25px;
+}
+
+.inputField {
+  width: 100%;
+  text-align: center;
 }

@@ -157,6 +157,7 @@
 
 .context-menu-title-box {
   position: relative;
+  padding-top: 5px;
   top: 0px;
   background: #00284f;
   color: white;

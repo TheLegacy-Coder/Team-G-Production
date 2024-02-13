@@ -26,28 +26,58 @@ SET default_table_access_method = heap;
 -- Drop: Announcement
 --
 
-DROP TABLE public."Announcement";
+DROP TABLE dev."Announcement";
+
+--
+-- Drop: ServiceRequestFlowers
+--
+
+DROP TABLE dev."ServiceRequestFlowers";
+
+--
+-- Drop: ServiceRequestReligious
+--
+
+DROP TABLE dev."ServiceRequestReligious";
+
+--
+-- Drop: ServiceRequestSanitation
+--
+
+DROP TABLE dev."ServiceRequestSanitation";
+
+--
+-- Drop: ServiceRequestInterpreter
+--
+
+DROP TABLE dev."ServiceRequestInterpreter";
+
+--
+-- Drop: ServiceRequestExternalTransport
+--
+
+DROP TABLE dev."ServiceRequestExternalTransport";
 
 --
 -- Drop: ServiceRequest
 --
 
-DROP TABLE public."ServiceRequest";
+DROP TABLE dev."ServiceRequest";
 
 --
 -- Drop: Employee
 --
 
-DROP TABLE public."Employee";
+DROP TABLE dev."Employee";
 
 --
 -- Drop: Edge
 --
 
-DROP TABLE public."Edge";
+DROP TABLE dev."Edge";
 
 --
 -- Drop: Node
 --
 
-DROP TABLE public."Node";
+DROP TABLE dev."Node";

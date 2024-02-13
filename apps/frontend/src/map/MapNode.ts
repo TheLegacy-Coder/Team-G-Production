@@ -28,7 +28,6 @@ class NodeStore {
   public currentRefresh: DispatchWithoutAction | undefined;
   setSelectedNode(node: MapNode | undefined) {
     this.selectedNode = node;
-    // console.log(node);
     // console.log(this.currentRefresh);
     if (this.currentRefresh !== undefined) {
       // console.log("refreshing");

@@ -1,6 +1,14 @@
 import express, { Router, Request, Response } from "express";
 import PrismaClient from "../bin/database-connection.ts";
 import { Prisma } from "database";
+import {
+  ServiceRequestFlowers,
+  ServiceRequest,
+  ServiceRequestReligious,
+  ServiceRequestSanitation,
+  ServiceRequestInterpreter,
+  ServiceRequestExternalTransport,
+} from "common/src/ServiceRequests.ts";
 
 const router: Router = express.Router();
 
@@ -61,6 +69,217 @@ router.get("/requests", async function (req: Request, res: Response) {
     }
   }
 });
+
+//SERVICE REQUEST POSTS
+router.post("/requests/flowers", async function (req: Request, res: Response) {
+  console.log("req");
+
+  try {
+    const requestFull = req.body as ServiceRequestFlowers;
+    const coreRequest: ServiceRequest = {
+      desc: requestFull.desc,
+      helpingEmployee:
+        requestFull.helpingEmployee === undefined
+          ? null
+          : requestFull.helpingEmployee,
+      location: requestFull.location,
+      requestID: requestFull.requestID,
+      requestType: requestFull.requestType,
+      requester: requestFull.requester,
+      status: requestFull.status,
+      priority: requestFull.priority,
+    };
+    await PrismaClient.serviceRequest.create({
+      data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+    });
+    await PrismaClient.serviceRequestFlowers.create({
+      data: {
+        requestID: coreRequest.requestID,
+        amount: requestFull.amount,
+        flowerType: requestFull.flowerType,
+      } as Prisma.ServiceRequestFlowersUncheckedCreateInput,
+    });
+
+    console.log("Successfully created Service Request");
+  } catch (error) {
+    console.error("Unable to create Service Request");
+    console.log(error);
+    res.sendStatus(204);
+    return;
+  }
+
+  res.sendStatus(200);
+});
+
+router.post(
+  "/requests/religious",
+  async function (req: Request, res: Response) {
+    console.log("req");
+
+    try {
+      const requestFull = req.body as ServiceRequestReligious;
+      const coreRequest: ServiceRequest = {
+        desc: requestFull.desc,
+        helpingEmployee:
+          requestFull.helpingEmployee === undefined
+            ? null
+            : requestFull.helpingEmployee,
+        location: requestFull.location,
+        requestID: requestFull.requestID,
+        requestType: requestFull.requestType,
+        requester: requestFull.requester,
+        status: requestFull.status,
+        priority: requestFull.priority,
+      };
+      await PrismaClient.serviceRequest.create({
+        data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+      });
+      await PrismaClient.serviceRequestReligious.create({
+        data: {
+          requestID: coreRequest.requestID,
+          faith: requestFull.faith,
+        } as Prisma.ServiceRequestReligiousUncheckedCreateInput,
+      });
+
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+
+    res.sendStatus(200);
+  },
+);
+
+router.post(
+  "/requests/sanitation",
+  async function (req: Request, res: Response) {
+    console.log("req");
+
+    try {
+      const requestFull = req.body as ServiceRequestSanitation;
+      const coreRequest: ServiceRequest = {
+        desc: requestFull.desc,
+        helpingEmployee:
+          requestFull.helpingEmployee === undefined
+            ? null
+            : requestFull.helpingEmployee,
+        location: requestFull.location,
+        requestID: requestFull.requestID,
+        requestType: requestFull.requestType,
+        requester: requestFull.requester,
+        status: requestFull.status,
+        priority: requestFull.priority,
+      };
+      await PrismaClient.serviceRequest.create({
+        data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+      });
+      await PrismaClient.serviceRequestSanitation.create({
+        data: {
+          requestID: coreRequest.requestID,
+          hazardous: requestFull.hazardous,
+          messType: requestFull.messType,
+        } as Prisma.ServiceRequestSanitationUncheckedCreateInput,
+      });
+
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+
+    res.sendStatus(200);
+  },
+);
+
+router.post(
+  "/requests/interpreter",
+  async function (req: Request, res: Response) {
+    console.log("req");
+
+    try {
+      const requestFull = req.body as ServiceRequestInterpreter;
+      const coreRequest: ServiceRequest = {
+        desc: requestFull.desc,
+        helpingEmployee:
+          requestFull.helpingEmployee === undefined
+            ? null
+            : requestFull.helpingEmployee,
+        location: requestFull.location,
+        requestID: requestFull.requestID,
+        requestType: requestFull.requestType,
+        requester: requestFull.requester,
+        status: requestFull.status,
+        priority: requestFull.priority,
+      };
+      await PrismaClient.serviceRequest.create({
+        data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+      });
+      await PrismaClient.serviceRequestInterpreter.create({
+        data: {
+          requestID: coreRequest.requestID,
+          language: requestFull.language,
+        } as Prisma.ServiceRequestInterpreterUncheckedCreateInput,
+      });
+
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+
+    res.sendStatus(200);
+  },
+);
+
+router.post(
+  "/requests/transport",
+  async function (req: Request, res: Response) {
+    console.log("req");
+
+    try {
+      const requestFull = req.body as ServiceRequestExternalTransport;
+      const coreRequest: ServiceRequest = {
+        desc: requestFull.desc,
+        helpingEmployee:
+          requestFull.helpingEmployee === undefined
+            ? null
+            : requestFull.helpingEmployee,
+        location: requestFull.location,
+        requestID: requestFull.requestID,
+        requestType: requestFull.requestType,
+        requester: requestFull.requester,
+        status: requestFull.status,
+        priority: requestFull.priority,
+      };
+      await PrismaClient.serviceRequest.create({
+        data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+      });
+      await PrismaClient.serviceRequestExternalTransport.create({
+        data: {
+          requestID: coreRequest.requestID,
+          vehicle: requestFull.vehicle,
+          destination: requestFull.destination,
+        } as Prisma.ServiceRequestExternalTransportUncheckedCreateInput,
+      });
+
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+
+    res.sendStatus(200);
+  },
+);
 
 router.post("/requests", async function (req: Request, res: Response) {
   console.log("req");
