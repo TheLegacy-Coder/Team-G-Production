@@ -4,6 +4,7 @@ import "./styles/Login.css";
 
 export const Login = () => {
   useEffect(() => {
+    lock.hide();
     lock.show();
   });
 
