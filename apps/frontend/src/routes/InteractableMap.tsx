@@ -8,6 +8,7 @@ import {
   MapNode,
   mapNodes,
   nodeStore,
+  mapEdges,
 } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
@@ -26,8 +27,6 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
-
-let showDetail = false;
 
 //Stores scaled map amount
 let scalar = 1;
@@ -126,24 +125,6 @@ export const InteractableMap = () => {
     }
 
     mapNodes.forEach((node) => {
-      if (
-        node !== startNode &&
-        node !== endNode &&
-        node !== hoverNode &&
-        showDetail
-      ) {
-        drawNodeDetails(node);
-      }
-    });
-
-    for (let i = 0; i < 2; i++) {
-      let node: MapNode | undefined = undefined;
-      if (i === 0 && startNode !== undefined) node = startNode;
-      else if (i === 1 && endNode !== undefined) node = endNode;
-      if (node !== undefined) drawNodeDetails(node);
-    }
-
-    mapNodes.forEach((node) => {
       ctx!.beginPath();
       ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
       ctx!.fillStyle =
@@ -169,22 +150,59 @@ export const InteractableMap = () => {
     ctx!.fillStyle = "#FFFFFF";
     ctx!.strokeStyle = "#000000";
     ctx!.lineWidth = 5 / scalar;
+    //let content = node.shortName + "\nAdjacent Nodes and Edge ID:\n";
+    const content: string[] = [];
+    content.push(node.shortName);
+    content.push(
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push("Adjacent Nodes:");
+    let lineCount = 3;
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      content.push(node.edges[i].shortName);
+    }
+    content.push("Adjacent Edges:");
+    lineCount++;
+
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      let lineContent = "";
+      mapEdges.forEach((edge) => {
+        if (
+          (edge.startNode === node.nodeID &&
+            edge.endNode === node.edges[i].nodeID) ||
+          (edge.endNode === node.nodeID &&
+            edge.startNode === node.edges[i].nodeID)
+        ) {
+          lineContent = edge.edgeID;
+        }
+      });
+      content.push(lineContent);
+    }
+
     ctx!.fillRect(
-      node.xcoord - 80 / scalar,
+      node.xcoord - 100 / scalar,
       node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
+      200 / scalar,
+      5 + (15 / scalar) * lineCount,
     );
     ctx!.strokeRect(
-      node.xcoord - 80 / scalar,
+      node.xcoord - 100 / scalar,
       node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
+      200 / scalar,
+      5 + (15 / scalar) * lineCount,
     );
     ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
     ctx!.textAlign = "center";
     ctx!.fillStyle = "#550000";
-    ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 15 + 13 / scalar);
+    for (let i = 0; i < lineCount; i++) {
+      ctx!.fillText(
+        content[i],
+        node.xcoord,
+        node.ycoord + 14 + (14 / scalar) * (i + 1),
+      );
+    }
   }
 
   //Draws on canvas when map image loaded
@@ -492,14 +510,6 @@ export const InteractableMap = () => {
         }}
       >
         O
-      </button>
-      <button
-        className={"zoom-button show-detail-button"}
-        onClick={() => {
-          showDetail = !showDetail;
-        }}
-      >
-        X
       </button>
       <canvas
         onMouseMove={mouseMove}
