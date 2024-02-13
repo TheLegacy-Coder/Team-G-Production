@@ -54,6 +54,7 @@ export const InteractableMap = () => {
 
   const image = new Image();
   image.src = "00_thelowerlevel1.png";
+  let currenFloor = "L1";
 
   function getWidth(): number {
     const width =
@@ -101,17 +102,18 @@ export const InteractableMap = () => {
     //if draw edges
     if (showEdges) {
       mapNodes.forEach((node) => {
-        // wrap in if
-        ctx!.lineWidth = 3;
-        ctx!.strokeStyle = "#AAAAAA";
-        node.edges.forEach((edge) => {
-          // Start a new Path
-          ctx!.beginPath();
-          ctx!.moveTo(node.xcoord, node.ycoord);
-          ctx!.lineTo(edge.xcoord, edge.ycoord);
-          // Draw the Path
-          ctx!.stroke();
-        });
+        if (node.floor === currenFloor) {
+          ctx!.lineWidth = 3;
+          ctx!.strokeStyle = "#AAAAAA";
+          node.edges.forEach((edge) => {
+            // Start a new Path
+            ctx!.beginPath();
+            ctx!.moveTo(node.xcoord, node.ycoord);
+            ctx!.lineTo(edge.xcoord, edge.ycoord);
+            // Draw the Path
+            ctx!.stroke();
+          });
+        }
       });
     }
 
@@ -126,13 +128,15 @@ export const InteractableMap = () => {
     }
 
     mapNodes.forEach((node) => {
-      if (
-        node !== startNode &&
-        node !== endNode &&
-        node !== hoverNode &&
-        showDetail
-      ) {
-        drawNodeDetails(node);
+      if (node.floor === currenFloor) {
+        if (
+          node !== startNode &&
+          node !== endNode &&
+          node !== hoverNode &&
+          showDetail
+        ) {
+          drawNodeDetails(node);
+        }
       }
     });
 
@@ -144,20 +148,22 @@ export const InteractableMap = () => {
     }
 
     mapNodes.forEach((node) => {
-      ctx!.beginPath();
-      ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-      ctx!.fillStyle =
-        startNode == node
-          ? "#00FF00"
-          : endNode == node
-            ? "#00ffff"
-            : hoverNode == node
-              ? "#0000FF"
-              : "#FF0000";
-      ctx!.fill();
-      ctx!.lineWidth = 5;
-      ctx!.strokeStyle = "#330000";
-      ctx!.stroke();
+      if (node.floor === currenFloor) {
+        ctx!.beginPath();
+        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+        ctx!.fillStyle =
+          startNode == node
+            ? "#00FF00"
+            : endNode == node
+              ? "#00ffff"
+              : hoverNode == node
+                ? "#0000FF"
+                : "#FF0000";
+        ctx!.fill();
+        ctx!.lineWidth = 5;
+        ctx!.strokeStyle = "#330000";
+        ctx!.stroke();
+      }
     });
 
     if (hoverNode !== undefined) drawNodeDetails(hoverNode);
@@ -166,25 +172,31 @@ export const InteractableMap = () => {
   }
 
   function drawNodeDetails(node: MapNode) {
-    ctx!.fillStyle = "#FFFFFF";
-    ctx!.strokeStyle = "#000000";
-    ctx!.lineWidth = 5 / scalar;
-    ctx!.fillRect(
-      node.xcoord - 80 / scalar,
-      node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
-    );
-    ctx!.strokeRect(
-      node.xcoord - 80 / scalar,
-      node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
-    );
-    ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
-    ctx!.textAlign = "center";
-    ctx!.fillStyle = "#550000";
-    ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 15 + 13 / scalar);
+    if (node.floor === currenFloor) {
+      ctx!.fillStyle = "#FFFFFF";
+      ctx!.strokeStyle = "#000000";
+      ctx!.lineWidth = 5 / scalar;
+      ctx!.fillRect(
+        node.xcoord - 80 / scalar,
+        node.ycoord + 15,
+        160 / scalar,
+        20 / scalar,
+      );
+      ctx!.strokeRect(
+        node.xcoord - 80 / scalar,
+        node.ycoord + 15,
+        160 / scalar,
+        20 / scalar,
+      );
+      ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
+      ctx!.textAlign = "center";
+      ctx!.fillStyle = "#550000";
+      ctx!.fillText(
+        node.shortName,
+        node.xcoord,
+        node.ycoord + 15 + 13 / scalar,
+      );
+    }
   }
 
   //Draws on canvas when map image loaded
@@ -447,6 +459,14 @@ export const InteractableMap = () => {
     }
   }, [ctx]);
 
+  function resetMap() {
+    ctx!.scale(1 / scalar, 1 / scalar);
+    scalar *= 1 / scalar;
+    updateCoords();
+    ctx!.translate(upleftCorner!.x, upleftCorner!.y);
+    updateCoords();
+  }
+
   return (
     <div
       style={
@@ -475,11 +495,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          ctx!.scale(1 / scalar, 1 / scalar);
-          scalar *= 1 / scalar;
-          updateCoords();
-          ctx!.translate(upleftCorner!.x, upleftCorner!.y);
-          updateCoords();
+          resetMap();
           homePosition();
         }}
       >
@@ -500,6 +516,56 @@ export const InteractableMap = () => {
         }}
       >
         X
+      </button>
+      <button
+        className={"zoom-button third-floor"}
+        onClick={() => {
+          resetMap();
+          currenFloor = "3";
+          image.src = "03_thethirdfloor.png";
+        }}
+      >
+        F3
+      </button>
+      <button
+        className={"zoom-button second-floor"}
+        onClick={() => {
+          resetMap();
+          currenFloor = "2";
+          image.src = "02_thesecondfloor.png";
+        }}
+      >
+        F2
+      </button>
+      <button
+        className={"zoom-button first-floor"}
+        onClick={() => {
+          resetMap();
+          currenFloor = "1";
+          image.src = "01_thefirstfloor.png";
+        }}
+      >
+        F1
+      </button>
+      <button
+        className={"zoom-button lower-floor"}
+        onClick={() => {
+          resetMap();
+          currenFloor = "L1";
+          image.src = "00_thelowerlevel1.png";
+        }}
+      >
+        L1
+      </button>
+      <button
+        className={"zoom-button lowest-floor"}
+        onClick={() => {
+          resetMap();
+          currenFloor = "L2";
+          image.src = "00_thelowerlevel2.png";
+        }}
+      >
+        L2
       </button>
       <canvas
         onMouseMove={mouseMove}

@@ -40,3 +40,23 @@
 .show-detail-button {
   transform: translate(230px, 10px);
 }
+
+.third-floor {
+  transform: translate(10px, 200px);
+}
+
+.second-floor {
+  transform: translate(10px, 240px);
+}
+
+.first-floor {
+  transform: translate(10px, 280px);
+}
+
+.lower-floor {
+  transform: translate(10px, 320px);
+}
+
+.lowest-floor {
+  transform: translate(10px, 360px);
+}
