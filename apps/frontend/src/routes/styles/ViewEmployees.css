@@ -24,3 +24,16 @@ th {
   background-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
   color: white;
 }
+
+.edit-delete-buttons {
+}
+
+.edit-button {
+  position: absolute;
+  right: 100px;
+}
+
+.delete-button {
+  position: absolute;
+  right: 25px;
+}

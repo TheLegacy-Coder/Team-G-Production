@@ -18,16 +18,34 @@ async function getEmployees(): Promise<EmployeeWrapper> {
 export const ViewEmployees = () => {
   const [rows, setRows] = useState<React.ReactElement[]>([]);
   const [state, setState] = useState<State>("none");
-  const [editingID, setEditingID] = useState<string>();
+  const [hoveringID, setHoveringID] = useState<string>();
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleMouseLeave = () => {
-    if (state === "none") setEditingID(undefined);
+    if (state === "none") setHoveringID(undefined);
   };
 
   useEffect(() => {
     const handleMouseEnter = (employeeID: string) => {
-      if (state === "none") setEditingID(employeeID);
+      if (state === "none") setHoveringID(employeeID);
+    };
+
+    const deleteEmployee = (employeeID: string) => {
+      if (
+        window.confirm(
+          `Are you sure you want to delete employee ${employeeID}?`,
+        )
+      ) {
+        try {
+          axios
+            .delete("http://localhost:3000/api/employees", {
+              data: { employeeID: employeeID },
+            })
+            .then(() => setState("none"));
+        } catch (error) {
+          console.error("Error deleting employee:", error);
+        }
+      }
     };
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +55,7 @@ export const ViewEmployees = () => {
       const data: Employee = {
         employeeID:
           state === "edit"
-            ? (editingID as string)
+            ? (hoveringID as string)
             : (formData.get("employeeID") as string),
         firstName: formData.get("firstName") as string,
         lastName: formData.get("lastName") as string,
@@ -45,7 +63,6 @@ export const ViewEmployees = () => {
         job: formData.get("job") as string,
         accessLevel: formData.get("accessLevel") as string,
       };
-      console.log(data);
       if (state === "edit") {
         try {
           axios
@@ -69,17 +86,25 @@ export const ViewEmployees = () => {
       const newRows: React.ReactElement[] = [];
       if (list !== undefined) {
         list.data.forEach((employee) => {
-          const editButton =
-            employee.employeeID === editingID && state === "none" ? (
-              <button
-                style={{ position: "absolute", right: "25px" }}
-                onClick={() => setState("edit")}
-              >
-                Edit
-              </button>
+          const buttons =
+            employee.employeeID === hoveringID && state === "none" ? (
+              <>
+                <button
+                  className="edit-button"
+                  onClick={() => setState("edit")}
+                >
+                  Edit
+                </button>
+                <button
+                  className="delete-button"
+                  onClick={() => deleteEmployee(employee.employeeID)}
+                >
+                  Delete
+                </button>
+              </>
             ) : null;
 
-          if (state === "edit" && employee.employeeID === editingID) {
+          if (state === "edit" && employee.employeeID === hoveringID) {
             newRows.push(
               <>
                 <form id={"empForm"} onSubmit={submit}></form>
@@ -141,7 +166,7 @@ export const ViewEmployees = () => {
                 <td>{employee.job}</td>
                 <td>
                   {employee.accessLevel}
-                  {editButton}
+                  {buttons}
                 </td>
               </tr>,
             );
@@ -178,14 +203,14 @@ export const ViewEmployees = () => {
       setRows(newRows);
       forceUpdate();
     });
-  }, [state, editingID]);
+  }, [state, hoveringID]);
 
   const addEmployee = () => {
     setState("add");
   };
   const cancel = () => {
     setState("none");
-    setEditingID(undefined);
+    setHoveringID(undefined);
   };
 
   return (
