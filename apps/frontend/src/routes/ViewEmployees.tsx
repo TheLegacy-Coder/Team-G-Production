@@ -110,46 +110,28 @@ export const ViewEmployees = () => {
                 <form id={"empForm"} onSubmit={submit}></form>
                 <tr>
                   <td>{employee.employeeID}</td>
-                  <td>
-                    <input
-                      name="firstName"
-                      form="empForm"
-                      required={true}
-                      defaultValue={employee.firstName}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="lastName"
-                      form="empForm"
-                      required={true}
-                      defaultValue={employee.lastName}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="email"
-                      form="empForm"
-                      required={true}
-                      defaultValue={employee.email}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="job"
-                      form="empForm"
-                      required={true}
-                      defaultValue={employee.job}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="accessLevel"
-                      form="empForm"
-                      required={true}
-                      defaultValue={employee.accessLevel}
-                    />
-                  </td>
+                  {["firstName", "lastName", "email", "job", "accessLevel"].map(
+                    (field) => (
+                      <td key={field}>
+                        <input
+                          className="inputField"
+                          name={field}
+                          form="empForm"
+                          required={true}
+                          defaultValue={
+                            employee[
+                              field as
+                                | "firstName"
+                                | "lastName"
+                                | "email"
+                                | "job"
+                                | "accessLevel"
+                            ]
+                          }
+                        />
+                      </td>
+                    ),
+                  )}
                 </tr>
               </>,
             );
@@ -178,24 +160,23 @@ export const ViewEmployees = () => {
           <>
             <form id={"empForm"} onSubmit={submit}></form>
             <tr>
-              <td>
-                <input name={"employeeID"} form={"empForm"} required={true} />
-              </td>
-              <td>
-                <input name={"firstName"} form={"empForm"} required={true} />
-              </td>
-              <td>
-                <input name={"lastName"} form={"empForm"} required={true} />
-              </td>
-              <td>
-                <input name={"email"} form={"empForm"} required={true} />
-              </td>
-              <td>
-                <input name={"job"} form={"empForm"} required={true} />
-              </td>
-              <td>
-                <input name={"accessLevel"} form={"empForm"} required={true} />
-              </td>
+              {[
+                "employeeID",
+                "firstName",
+                "lastName",
+                "email",
+                "job",
+                "accessLevel",
+              ].map((field) => (
+                <td key={field}>
+                  <input
+                    className="inputField"
+                    name={field}
+                    form={"empForm"}
+                    required={true}
+                  />
+                </td>
+              ))}
             </tr>
           </>,
         );

@@ -37,3 +37,8 @@ th {
   position: absolute;
   right: 25px;
 }
+
+.inputField {
+  width: 100%;
+  text-align: center;
+}
