@@ -24,6 +24,7 @@ model Employee {
 model ServiceRequest {
   requestID                                         String                           @id
   requestType                                       String
+  priority                                          String
   location                                          String
   status                                            String
   requester                                         String?

@@ -216,6 +216,7 @@ CREATE TABLE dev."Employee"(
 CREATE TABLE dev."ServiceRequest"(
     "requestID" text NOT NULL, --Primary Key
     "requestType" text NOT NULL,
+    "priority" text NOT NULL,
     "location" text NOT NULL,
     "status" text NOT NULL,
     "requester" text, --Foreign Key -> Employee
@@ -282,8 +283,8 @@ INSERT INTO dev."Employee" ("employeeID", "firstName", "lastName", "email", "job
 -- Data for Name: ServiceRequest; Type: TABLE DATA; Schema: dev; Owner: dev
 --
 
-INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
-INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
+INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "priority", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers1', 'Flowers', 'Low', 'CCONF001L1', 'Assigned', 'auth0|65c415e271e231c3b5f45af0', 'testStaff', 'flowers to be sent to room');
+INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "priority", "location", "status", "requester", "helpingEmployee", "desc") VALUES ('flowers2', 'Flowers', 'High', 'CCONF001L1', 'Assigned', 'testStaff', 'testStaff', 'flowers to be sent to room');
 
 
 --
