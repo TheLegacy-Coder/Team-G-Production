@@ -27,6 +27,7 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
+let newMap = true;
 
 //Stores scaled map amount
 let scalar = 1;
@@ -51,9 +52,9 @@ export const InteractableMap = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   let ctx = canvasCtxRef.current;
 
-  const image = new Image();
+  let image = new Image();
   image.src = "00_thelowerlevel1.png";
-  let currenFloor = "L1";
+  let currentFloor = "L1";
 
   function getWidth(): number {
     const width =
@@ -101,11 +102,11 @@ export const InteractableMap = () => {
     //if draw edges
     if (showEdges) {
       mapNodes.forEach((node) => {
-        if (node.floor === currenFloor) {
+        if (node.floor === currentFloor) {
           ctx!.lineWidth = 3;
           ctx!.strokeStyle = "#AAAAAA";
           node.edges.forEach((edge) => {
-            if (edge.floor === currenFloor) {
+            if (edge.floor === currentFloor) {
               // Start a new Path
               ctx!.beginPath();
               ctx!.moveTo(node.xcoord, node.ycoord);
@@ -129,7 +130,7 @@ export const InteractableMap = () => {
     }
 
     mapNodes.forEach((node) => {
-      if (node.floor === currenFloor) {
+      if (node.floor === currentFloor) {
         ctx!.beginPath();
         ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
         ctx!.fillStyle =
@@ -217,27 +218,17 @@ export const InteractableMap = () => {
     homePosition();
   };
 
-  const poll = useCallback(() => {
-    startNode = getStartNode();
-    endNode = getEndNode();
-    if (startNode !== undefined && endNode !== undefined) {
-      nodeStore.setSelectedNode(startNode);
-      path = [];
-      frames = [[[]]];
-      aStar();
-    }
-  }, []);
-
-  useEffect(() => {
-    const intervalID = setInterval(poll, 10);
-    return () => clearInterval(intervalID);
-  }, [poll]);
-
-  function aStar() {
+  const aStar = useCallback(() => {
     path = AStarSearch(startNode, endNode);
     totalDistance = 0;
     steps = [0];
     let last: MapNode | undefined = undefined;
+    path.forEach((node) => {
+      if (node.floor === currentFloor) {
+        const index = path.indexOf(node);
+        path.slice(index);
+      }
+    });
     path.forEach((node) => {
       if (last != undefined) {
         const length = Math.sqrt(
@@ -275,7 +266,23 @@ export const InteractableMap = () => {
       }
       frames.push(temp);
     }
-  }
+  }, [currentFloor]);
+
+  const poll = useCallback(() => {
+    startNode = getStartNode();
+    endNode = getEndNode();
+    nodeStore.setSelectedNode(startNode);
+    if (startNode !== undefined && endNode !== undefined) {
+      path = [];
+      frames = [[[]]];
+      aStar();
+    }
+  }, [aStar]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
 
   // resets map position to a default position
   function homePosition() {
@@ -354,7 +361,7 @@ export const InteractableMap = () => {
     evt.pageX;
     let emptyClick = true;
     mapNodes.forEach((node) => {
-      if (node.floor === currenFloor) {
+      if (node.floor === currentFloor) {
         const dist = Math.sqrt(
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
@@ -362,15 +369,12 @@ export const InteractableMap = () => {
         if (dist < 10) {
           emptyClick = false;
           if (startNode != undefined && path.length == 0) {
-            nodeStore.setSelectedNode(startNode);
             setEndNode(node);
             aStar();
           } else {
             path = [];
             frames = [[[]]];
             setStartNode(node);
-            //sl = node;
-            nodeStore.setSelectedNode(startNode);
           }
         }
       }
@@ -378,7 +382,6 @@ export const InteractableMap = () => {
     if (emptyClick && delta.x == 0 && delta.y == 0) {
       setStartNode(undefined);
       setEndNode(undefined);
-      nodeStore.setSelectedNode(startNode);
       path = [];
       frames = [[[]]];
     }
@@ -420,7 +423,7 @@ export const InteractableMap = () => {
       );
     }
     mapNodes.forEach((node) => {
-      if (node.floor === currenFloor) {
+      if (node.floor === currentFloor) {
         const dist = Math.sqrt(
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
@@ -476,11 +479,25 @@ export const InteractableMap = () => {
   }, [ctx]);
 
   function resetMap() {
+    frames = [[[]]];
+    drawStep = 0;
     ctx!.scale(1 / scalar, 1 / scalar);
     scalar *= 1 / scalar;
     updateCoords();
     ctx!.translate(upleftCorner!.x, upleftCorner!.y);
     updateCoords();
+  }
+
+  function setMap(floor: string, imageSrc: string) {
+    if (newMap) {
+      newMap = false;
+      resetMap();
+      currentFloor = floor;
+      image = new Image();
+      image.src = imageSrc;
+      homePosition();
+      newMap = true;
+    }
   }
 
   return (
@@ -528,9 +545,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button third-floor"}
         onClick={() => {
-          resetMap();
-          currenFloor = "3";
-          image.src = "03_thethirdfloor.png";
+          setMap("3", "03_thethirdfloor.png");
         }}
       >
         F3
@@ -538,9 +553,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button second-floor"}
         onClick={() => {
-          resetMap();
-          currenFloor = "2";
-          image.src = "02_thesecondfloor.png";
+          setMap("2", "02_thesecondfloor.png");
         }}
       >
         F2
@@ -548,9 +561,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button first-floor"}
         onClick={() => {
-          resetMap();
-          currenFloor = "1";
-          image.src = "01_thefirstfloor.png";
+          setMap("1", "01_thefirstfloor.png");
         }}
       >
         F1
@@ -558,9 +569,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button lower-floor"}
         onClick={() => {
-          resetMap();
-          currenFloor = "L1";
-          image.src = "00_thelowerlevel1.png";
+          setMap("L1", "00_thelowerlevel1.png");
         }}
       >
         L1
@@ -568,9 +577,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button lowest-floor"}
         onClick={() => {
-          resetMap();
-          currenFloor = "L2";
-          image.src = "00_thelowerlevel2.png";
+          setMap("L2", "00_thelowerlevel2.png");
         }}
       >
         L2
