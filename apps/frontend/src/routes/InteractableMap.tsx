@@ -281,17 +281,26 @@ export const InteractableMap = () => {
   const poll = useCallback(() => {
     startNode = getStartNode();
     endNode = getEndNode();
-    nodeStore.setSelectedNode(startNode);
+    let floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
+    for (let i = 0; i < floors.length; i++) {
+      const scaleID = document.querySelector("#" + floors[i]);
+      if (scaleID !== null) scaleID!.classList.remove("path-floor");
+    }
+
+    floors = [];
+    path.forEach((node) => {
+      if (!floors.includes(node.floor)) floors.push(node.floor);
+    });
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
+    }
+
     if (startNode !== undefined && endNode !== undefined) {
       path = [];
       frames = [[[]]];
       aStar();
-    } else {
-      const floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
-      for (let i = 0; i < floors.length; i++) {
-        const scaleID = document.querySelector("#" + floors[i]);
-        if (scaleID !== null) scaleID!.classList.remove("path-floor");
-      }
     }
   }, [aStar]);
 
@@ -392,12 +401,14 @@ export const InteractableMap = () => {
             frames = [[[]]];
             setStartNode(node);
           }
+          nodeStore.setSelectedNode(node);
         }
       }
     });
     if (emptyClick && delta.x == 0 && delta.y == 0) {
       setStartNode(undefined);
       setEndNode(undefined);
+      nodeStore.setSelectedNode(undefined);
       path = [];
       frames = [[[]]];
     }
