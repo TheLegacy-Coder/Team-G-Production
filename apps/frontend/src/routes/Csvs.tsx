@@ -101,18 +101,20 @@ const Nodes = () => {
 
   return (
     <>
-      <button className={"import-export-buttons"} onClick={handleExportNodes}>
-        Export CSV
-      </button>
-      <label className={"import-export-buttons"}>
-        <input
-          onChange={handleImportNodes}
-          type={"file"}
-          accept={".csv"}
-          hidden
-        />
-        Import CSV
-      </label>
+      <div className={"float-buttons"}>
+        <button className={"import-export-buttons"} onClick={handleExportNodes}>
+          Export CSV
+        </button>
+        <label className={"import-export-buttons"}>
+          <input
+            onChange={handleImportNodes}
+            type={"file"}
+            accept={".csv"}
+            hidden
+          />
+          Import CSV
+        </label>
+      </div>
       <table>
         <thead>
           <tr>
@@ -201,18 +203,21 @@ const Edges = () => {
 
   return (
     <>
-      <button className={"import-export-buttons"} onClick={handleExportEdges}>
-        Export CSV
-      </button>
-      <label className={"import-export-buttons"}>
-        <input
-          onChange={handleImportEdges}
-          type={"file"}
-          accept={".csv"}
-          hidden
-        />
-        Import CSV
-      </label>
+      <div className={"float-buttons"}>
+        <button className={"import-export-buttons"} onClick={handleExportEdges}>
+          Export CSV
+        </button>
+        <label className={"import-export-buttons"}>
+          <input
+            onChange={handleImportEdges}
+            type={"file"}
+            accept={".csv"}
+            hidden
+          />
+          Import CSV
+        </label>
+      </div>
+
       <table>
         <thead>
           <tr>

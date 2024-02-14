@@ -237,7 +237,8 @@ export const ViewEmployees = () => {
       </table>
       {state === "add" || state === "edit" ? (
         // If the state is "add" or "edit", render a submit button and a cancel button
-        <>
+
+        <div className={"float-buttons"}>
           <input
             className="add-button"
             type={"submit"}
@@ -246,12 +247,13 @@ export const ViewEmployees = () => {
           <button className="add-button" onClick={cancel}>
             Cancel
           </button>
-        </>
+        </div>
       ) : (
-        // Otherwise, render an add button
-        <button className="add-button" onClick={addEmployee}>
-          Add Employee
-        </button>
+        <div className={"float-buttons"}>
+          <button className="add-button" onClick={addEmployee}>
+            Add Employee
+          </button>
+        </div>
       )}
     </div>
   );
