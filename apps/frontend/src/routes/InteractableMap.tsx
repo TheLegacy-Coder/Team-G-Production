@@ -8,6 +8,7 @@ import {
   MapNode,
   mapNodes,
   nodeStore,
+  mapEdges,
 } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
@@ -26,8 +27,7 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
-
-let showDetail = false;
+let newMap = true;
 
 //Stores scaled map amount
 let scalar = 1;
@@ -52,8 +52,9 @@ export const InteractableMap = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   let ctx = canvasCtxRef.current;
 
-  const image = new Image();
+  let image = new Image();
   image.src = "00_thelowerlevel1.png";
+  let currentFloor = "L1";
 
   function getWidth(): number {
     const width =
@@ -101,17 +102,20 @@ export const InteractableMap = () => {
     //if draw edges
     if (showEdges) {
       mapNodes.forEach((node) => {
-        // wrap in if
-        ctx!.lineWidth = 3;
-        ctx!.strokeStyle = "#AAAAAA";
-        node.edges.forEach((edge) => {
-          // Start a new Path
-          ctx!.beginPath();
-          ctx!.moveTo(node.xcoord, node.ycoord);
-          ctx!.lineTo(edge.xcoord, edge.ycoord);
-          // Draw the Path
-          ctx!.stroke();
-        });
+        if (node.floor === currentFloor) {
+          ctx!.lineWidth = 3;
+          ctx!.strokeStyle = "#AAAAAA";
+          node.edges.forEach((edge) => {
+            if (edge.floor === currentFloor) {
+              // Start a new Path
+              ctx!.beginPath();
+              ctx!.moveTo(node.xcoord, node.ycoord);
+              ctx!.lineTo(edge.xcoord, edge.ycoord);
+              // Draw the Path
+              ctx!.stroke();
+            }
+          });
+        }
       });
     }
 
@@ -126,38 +130,22 @@ export const InteractableMap = () => {
     }
 
     mapNodes.forEach((node) => {
-      if (
-        node !== startNode &&
-        node !== endNode &&
-        node !== hoverNode &&
-        showDetail
-      ) {
-        drawNodeDetails(node);
+      if (node.floor === currentFloor) {
+        ctx!.beginPath();
+        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+        ctx!.fillStyle =
+          startNode == node
+            ? "#00FF00"
+            : endNode == node
+              ? "#00ffff"
+              : hoverNode == node
+                ? "#0000FF"
+                : "#FF0000";
+        ctx!.fill();
+        ctx!.lineWidth = 5;
+        ctx!.strokeStyle = "#330000";
+        ctx!.stroke();
       }
-    });
-
-    for (let i = 0; i < 2; i++) {
-      let node: MapNode | undefined = undefined;
-      if (i === 0 && startNode !== undefined) node = startNode;
-      else if (i === 1 && endNode !== undefined) node = endNode;
-      if (node !== undefined) drawNodeDetails(node);
-    }
-
-    mapNodes.forEach((node) => {
-      ctx!.beginPath();
-      ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-      ctx!.fillStyle =
-        startNode == node
-          ? "#00FF00"
-          : endNode == node
-            ? "#00ffff"
-            : hoverNode == node
-              ? "#0000FF"
-              : "#FF0000";
-      ctx!.fill();
-      ctx!.lineWidth = 5;
-      ctx!.strokeStyle = "#330000";
-      ctx!.stroke();
     });
 
     if (hoverNode !== undefined) drawNodeDetails(hoverNode);
@@ -165,26 +153,78 @@ export const InteractableMap = () => {
     setTimeout(draw, 15);
   }
 
+  function getContentWidth(prevNum: number, inString: string): number {
+    if (inString.length > prevNum) {
+      return inString.length;
+    }
+    return prevNum;
+  }
+
   function drawNodeDetails(node: MapNode) {
     ctx!.fillStyle = "#FFFFFF";
     ctx!.strokeStyle = "#000000";
     ctx!.lineWidth = 5 / scalar;
+    const content: string[] = [];
+    let contentWidth: number = node.shortName.length;
+    content.push(node.shortName);
+    contentWidth = getContentWidth(
+      contentWidth,
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push(
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push("Adjacent Nodes:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Nodes:");
+    let lineCount = 3;
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      content.push(node.edges[i].shortName);
+      contentWidth = getContentWidth(contentWidth, node.edges[i].shortName);
+    }
+    content.push("Adjacent Edges:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Edges:");
+    lineCount++;
+
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      let lineContent = "";
+      mapEdges.forEach((edge) => {
+        if (
+          (edge.startNode === node.nodeID &&
+            edge.endNode === node.edges[i].nodeID) ||
+          (edge.endNode === node.nodeID &&
+            edge.startNode === node.edges[i].nodeID)
+        ) {
+          lineContent = edge.edgeID;
+        }
+      });
+      content.push(lineContent);
+      contentWidth = getContentWidth(contentWidth, lineContent);
+    }
+
     ctx!.fillRect(
-      node.xcoord - 80 / scalar,
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
       node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
+      (contentWidth * 9) / scalar,
+      5 + (15 / scalar) * lineCount,
     );
     ctx!.strokeRect(
-      node.xcoord - 80 / scalar,
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
       node.ycoord + 15,
-      160 / scalar,
-      20 / scalar,
+      (contentWidth * 9) / scalar,
+      5 + (15 / scalar) * lineCount,
     );
     ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
     ctx!.textAlign = "center";
     ctx!.fillStyle = "#550000";
-    ctx!.fillText(node.shortName, node.xcoord, node.ycoord + 15 + 13 / scalar);
+    for (let i = 0; i < lineCount; i++) {
+      ctx!.fillText(
+        content[i],
+        node.xcoord,
+        node.ycoord + 14 + (14 / scalar) * (i + 1),
+      );
+    }
   }
 
   //Draws on canvas when map image loaded
@@ -193,29 +233,29 @@ export const InteractableMap = () => {
     homePosition();
   };
 
-  const poll = useCallback(() => {
-    startNode = getStartNode();
-    endNode = getEndNode();
-    nodeStore.setSelectedNode(startNode);
-    if (startNode !== undefined && endNode !== undefined) {
-      path = [];
-      frames = [[[]]];
-      aStar();
+  const aStar = useCallback(() => {
+    // filters path not on floor
+    const unfilteredPath = AStarSearch(startNode, endNode);
+
+    const floors: string[] = [];
+
+    unfilteredPath.forEach((node) => {
+      if (node.floor === currentFloor) path.push(node);
+      if (!floors.includes(node.floor)) floors.push(node.floor);
+    });
+
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
     }
-  }, []);
 
-  useEffect(() => {
-    const intervalID = setInterval(poll, 10);
-    return () => clearInterval(intervalID);
-  }, [poll]);
-
-  function aStar() {
-    path = AStarSearch(startNode, endNode);
     totalDistance = 0;
     steps = [0];
     let last: MapNode | undefined = undefined;
+    // gets distance based on connected nodes
     path.forEach((node) => {
-      if (last != undefined) {
+      if (last != undefined /* && node.edges.includes(last)*/) {
         const length = Math.sqrt(
           Math.pow(last.ycoord - node.ycoord, 2) +
             Math.pow(last.xcoord - node.xcoord, 2),
@@ -239,7 +279,7 @@ export const InteractableMap = () => {
         }
         s--;
         prog -= steps[s];
-        if (s + 1 < path.length) {
+        if (s + 1 < path.length && path[s + 1].edges.includes(path[s])) {
           const angleRadians = Math.atan2(
             path[s].ycoord - path[s + 1].ycoord,
             path[s].xcoord - path[s + 1].xcoord,
@@ -251,7 +291,38 @@ export const InteractableMap = () => {
       }
       frames.push(temp);
     }
-  }
+  }, [currentFloor]);
+
+  const poll = useCallback(() => {
+    startNode = getStartNode();
+    endNode = getEndNode();
+    let floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
+    for (let i = 0; i < floors.length; i++) {
+      const scaleID = document.querySelector("#" + floors[i]);
+      if (scaleID !== null) scaleID!.classList.remove("path-floor");
+    }
+
+    floors = [];
+    path.forEach((node) => {
+      if (!floors.includes(node.floor)) floors.push(node.floor);
+    });
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
+    }
+
+    if (startNode !== undefined && endNode !== undefined) {
+      path = [];
+      frames = [[[]]];
+      aStar();
+    }
+  }, [aStar]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
 
   // resets map position to a default position
   function homePosition() {
@@ -330,26 +401,29 @@ export const InteractableMap = () => {
     evt.pageX;
     let emptyClick = true;
     mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        emptyClick = false;
-        if (startNode != undefined && path.length == 0) {
-          setEndNode(node);
-          aStar();
-        } else {
-          path = [];
-          frames = [[[]]];
-          setStartNode(node);
-          //sl = node;
+      if (node.floor === currentFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          emptyClick = false;
+          if (startNode != undefined && path.length == 0) {
+            setEndNode(node);
+            aStar();
+          } else {
+            path = [];
+            frames = [[[]]];
+            setStartNode(node);
+          }
+          nodeStore.setSelectedNode(node);
         }
       }
     });
     if (emptyClick && delta.x == 0 && delta.y == 0) {
       setStartNode(undefined);
       setEndNode(undefined);
+      nodeStore.setSelectedNode(undefined);
       path = [];
       frames = [[[]]];
     }
@@ -391,17 +465,19 @@ export const InteractableMap = () => {
       );
     }
     mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        hoverNode = node;
-        //changed = true;
-      } else {
-        if (hoverNode == node) {
+      if (node.floor === currentFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          hoverNode = node;
           //changed = true;
-          hoverNode = undefined;
+        } else {
+          if (hoverNode == node) {
+            //changed = true;
+            hoverNode = undefined;
+          }
         }
       }
     });
@@ -444,6 +520,34 @@ export const InteractableMap = () => {
     }
   }, [ctx]);
 
+  function resetMap() {
+    frames = [[[]]];
+    drawStep = 0;
+    ctx!.scale(1 / scalar, 1 / scalar);
+    scalar *= 1 / scalar;
+    updateCoords();
+    ctx!.translate(upleftCorner!.x, upleftCorner!.y);
+    updateCoords();
+  }
+
+  function setMap(floor: string, imageSrc: string) {
+    if (newMap) {
+      newMap = false;
+      const tempScalar = scalar;
+      ctx!.save();
+      resetMap();
+      currentFloor = floor;
+      image = new Image();
+      image.src = imageSrc;
+      homePosition();
+      newMap = true;
+      ctx!.restore();
+      scalar = tempScalar;
+      const scaleID = document.querySelector("#scalar");
+      scaleID!.textContent = scalar.toFixed(2).toString();
+    }
+  }
+
   return (
     <div
       style={
@@ -472,11 +576,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          ctx!.scale(1 / scalar, 1 / scalar);
-          scalar *= 1 / scalar;
-          updateCoords();
-          ctx!.translate(upleftCorner!.x, upleftCorner!.y);
-          updateCoords();
+          resetMap();
           homePosition();
         }}
       >
@@ -491,12 +591,49 @@ export const InteractableMap = () => {
         O
       </button>
       <button
-        className={"zoom-button show-detail-button"}
+        id={"F3"}
+        className={"zoom-button third-floor"}
         onClick={() => {
-          showDetail = !showDetail;
+          setMap("3", "03_thethirdfloor.png");
         }}
       >
-        X
+        F3
+      </button>
+      <button
+        id={"F2"}
+        className={"zoom-button second-floor"}
+        onClick={() => {
+          setMap("2", "02_thesecondfloor.png");
+        }}
+      >
+        F2
+      </button>
+      <button
+        id={"F1"}
+        className={"zoom-button first-floor"}
+        onClick={() => {
+          setMap("1", "01_thefirstfloor.png");
+        }}
+      >
+        F1
+      </button>
+      <button
+        id={"L1"}
+        className={"zoom-button lower-floor"}
+        onClick={() => {
+          setMap("L1", "00_thelowerlevel1.png");
+        }}
+      >
+        L1
+      </button>
+      <button
+        id={"L2"}
+        className={"zoom-button lowest-floor"}
+        onClick={() => {
+          setMap("L2", "00_thelowerlevel2.png");
+        }}
+      >
+        L2
       </button>
       <canvas
         onMouseMove={mouseMove}
