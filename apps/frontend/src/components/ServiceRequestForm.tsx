@@ -85,7 +85,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Religious:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Religious",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -98,7 +98,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Sanitation:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Sanitation",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -112,7 +112,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Interpreter:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Interpreter",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -125,7 +125,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Transport:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Transport",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
