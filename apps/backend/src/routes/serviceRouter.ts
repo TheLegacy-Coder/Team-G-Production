@@ -39,213 +39,205 @@ router.get("/requests", async function (req: Request, res: Response) {
   const employeeID = req.query.employeeID;
   console.log(getAll);
   console.log(employeeID);
-  // Fetch the high score from Prisma
   console.log(getAll === "true");
-  if (getAll === "true") {
-    const serviceRequestCore = await PrismaClient.serviceRequest.findMany({
-      orderBy: { time: "desc" },
-    });
 
-    const serviceRequestFlowers =
-      await PrismaClient.serviceRequestFlowers.findMany({});
-
-    const serviceRequestInterpreter =
-      await PrismaClient.serviceRequestInterpreter.findMany({});
-
-    const serviceRequestReligious =
-      await PrismaClient.serviceRequestReligious.findMany({});
-
-    const serviceRequestSanitation =
-      await PrismaClient.serviceRequestSanitation.findMany({});
-
-    const serviceRequestExternalTransport =
-      await PrismaClient.serviceRequestExternalTransport.findMany({});
-
-    const flowers: ServiceRequestFlowers[] = [];
-    const interpreter: ServiceRequestInterpreter[] = [];
-    const religious: ServiceRequestReligious[] = [];
-    const sanitation: ServiceRequestSanitation[] = [];
-    const transport: ServiceRequestExternalTransport[] = [];
-
-    serviceRequestFlowers.forEach((req) => {
-      const core = serviceRequestCore.find((core) => {
-        return core.requestID === req.requestID;
-      });
-      if (core !== undefined) {
-        flowers.push({
-          amount: req.amount,
-          desc: core.desc,
-          flowerType: req.flowerType as
-            | "Roses"
-            | "Daisies"
-            | "Orchids"
-            | "Tulips",
-          helpingEmployee: core.helpingEmployee,
-          location: core.location,
-          priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
-          requestID: core.requestID,
-          requestType: core.requestType as
-            | "Flowers"
-            | "Religious"
-            | "Sanitation"
-            | "Interpreter"
-            | "Transport",
-          requester: core.requester as string,
-          status: core.status as "Assigned" | "In Progress" | "Completed",
-          time: core.time?.toLocaleString(),
-        });
-      }
-    });
-
-    serviceRequestInterpreter.forEach((req) => {
-      const core = serviceRequestCore.find((core) => {
-        return core.requestID === req.requestID;
-      });
-      if (core !== undefined) {
-        interpreter.push({
-          language: req.language as
-            | "Spanish"
-            | "Mandarin"
-            | "French"
-            | "ASL"
-            | "Russian"
-            | "Japanese"
-            | "Arabic",
-          desc: core.desc,
-          helpingEmployee: core.helpingEmployee,
-          location: core.location,
-          priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
-          requestID: core.requestID,
-          requestType: core.requestType as
-            | "Flowers"
-            | "Religious"
-            | "Sanitation"
-            | "Interpreter"
-            | "Transport",
-          requester: core.requester as string,
-          status: core.status as "Assigned" | "In Progress" | "Completed",
-          time: core.time?.toLocaleString(),
-        });
-      }
-    });
-
-    serviceRequestSanitation.forEach((req) => {
-      const core = serviceRequestCore.find((core) => {
-        return core.requestID === req.requestID;
-      });
-      if (core !== undefined) {
-        sanitation.push({
-          messType: req.messType as
-            | "Vomit"
-            | "Blood"
-            | "Excrement"
-            | "Spill"
-            | "Other",
-          hazardous: req.hazardous,
-          desc: core.desc,
-          helpingEmployee: core.helpingEmployee,
-          location: core.location,
-          priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
-          requestID: core.requestID,
-          requestType: core.requestType as
-            | "Flowers"
-            | "Religious"
-            | "Sanitation"
-            | "Interpreter"
-            | "Transport",
-          requester: core.requester as string,
-          status: core.status as "Assigned" | "In Progress" | "Completed",
-          time: core.time?.toLocaleString(),
-        });
-      }
-    });
-
-    serviceRequestReligious.forEach((req) => {
-      const core = serviceRequestCore.find((core) => {
-        return core.requestID === req.requestID;
-      });
-      if (core !== undefined) {
-        religious.push({
-          faith: req.faith as
-            | "Christianity"
-            | "Judaism"
-            | "Islam"
-            | "Hinduism"
-            | "Buddhism",
-          desc: core.desc,
-          helpingEmployee: core.helpingEmployee,
-          location: core.location,
-          priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
-          requestID: core.requestID,
-          requestType: core.requestType as
-            | "Flowers"
-            | "Religious"
-            | "Sanitation"
-            | "Interpreter"
-            | "Transport",
-          requester: core.requester as string,
-          status: core.status as "Assigned" | "In Progress" | "Completed",
-          time: core.time?.toLocaleString(),
-        });
-      }
-    });
-
-    serviceRequestExternalTransport.forEach((req) => {
-      const core = serviceRequestCore.find((core) => {
-        return core.requestID === req.requestID;
-      });
-      if (core !== undefined) {
-        transport.push({
-          vehicle: req.vehicle as "Helicopter" | "Ambulance" | "Car",
-          destination: req.destination,
-          desc: core.desc,
-          helpingEmployee: core.helpingEmployee,
-          location: core.location,
-          priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
-          requestID: core.requestID,
-          requestType: core.requestType as
-            | "Flowers"
-            | "Religious"
-            | "Sanitation"
-            | "Interpreter"
-            | "Transport",
-          requester: core.requester as string,
-          status: core.status as "Assigned" | "In Progress" | "Completed",
-          time: core.time?.toLocaleString(),
-        });
-      }
-    });
-
-    const payload: AllServiceRequests = {
-      flowers: flowers,
-      interpreter: interpreter,
-      religious: religious,
-      sanitation: sanitation,
-      transport: transport,
-    };
-
-    if (payload === null) {
-      // Log that (it's a problem)
-      console.error("No Service Requests found in database!");
-      res.sendStatus(204); // and send 204, no data
-    } else {
-      // Otherwise, send the score
-      res.send(payload);
-    }
-  } else {
-    const serviceRequest = await PrismaClient.serviceRequest.findMany({
+  // Get all service reqs by default, assume getAll is true
+  let serviceRequestCore = await PrismaClient.serviceRequest.findMany({
+    orderBy: { time: "desc" },
+  });
+  // If getAll is false, get only the service reqs for the employee
+  if (getAll !== "true" && employeeID !== undefined) {
+    serviceRequestCore = await PrismaClient.serviceRequest.findMany({
       orderBy: { time: "desc" },
       where: { helpingEmployee: employeeID as string },
     });
-    // If the high score doesn't exist
-    if (serviceRequest === null) {
-      // Log that (it's a problem)
-      console.error("No Service Requests found!");
-      res.sendStatus(204); // and send 204, no data
-    } else {
-      // Otherwise, send the score
-      res.send(serviceRequest);
+  }
+
+  const serviceRequestFlowers =
+    await PrismaClient.serviceRequestFlowers.findMany({});
+
+  const serviceRequestInterpreter =
+    await PrismaClient.serviceRequestInterpreter.findMany({});
+
+  const serviceRequestReligious =
+    await PrismaClient.serviceRequestReligious.findMany({});
+
+  const serviceRequestSanitation =
+    await PrismaClient.serviceRequestSanitation.findMany({});
+
+  const serviceRequestExternalTransport =
+    await PrismaClient.serviceRequestExternalTransport.findMany({});
+
+  const flowers: ServiceRequestFlowers[] = [];
+  const interpreter: ServiceRequestInterpreter[] = [];
+  const religious: ServiceRequestReligious[] = [];
+  const sanitation: ServiceRequestSanitation[] = [];
+  const transport: ServiceRequestExternalTransport[] = [];
+
+  serviceRequestFlowers.forEach((req) => {
+    const core = serviceRequestCore.find((core) => {
+      return core.requestID === req.requestID;
+    });
+    if (core !== undefined) {
+      flowers.push({
+        amount: req.amount,
+        desc: core.desc,
+        flowerType: req.flowerType as
+          | "Roses"
+          | "Daisies"
+          | "Orchids"
+          | "Tulips",
+        helpingEmployee: core.helpingEmployee,
+        location: core.location,
+        priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
+        requestID: core.requestID,
+        requestType: core.requestType as
+          | "Flowers"
+          | "Religious"
+          | "Sanitation"
+          | "Interpreter"
+          | "Transport",
+        requester: core.requester as string,
+        status: core.status as "Assigned" | "In Progress" | "Completed",
+        time: core.time?.toLocaleString(),
+      });
     }
+  });
+
+  serviceRequestInterpreter.forEach((req) => {
+    const core = serviceRequestCore.find((core) => {
+      return core.requestID === req.requestID;
+    });
+    if (core !== undefined) {
+      interpreter.push({
+        language: req.language as
+          | "Spanish"
+          | "Mandarin"
+          | "French"
+          | "ASL"
+          | "Russian"
+          | "Japanese"
+          | "Arabic",
+        desc: core.desc,
+        helpingEmployee: core.helpingEmployee,
+        location: core.location,
+        priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
+        requestID: core.requestID,
+        requestType: core.requestType as
+          | "Flowers"
+          | "Religious"
+          | "Sanitation"
+          | "Interpreter"
+          | "Transport",
+        requester: core.requester as string,
+        status: core.status as "Assigned" | "In Progress" | "Completed",
+        time: core.time?.toLocaleString(),
+      });
+    }
+  });
+
+  serviceRequestSanitation.forEach((req) => {
+    const core = serviceRequestCore.find((core) => {
+      return core.requestID === req.requestID;
+    });
+    if (core !== undefined) {
+      sanitation.push({
+        messType: req.messType as
+          | "Vomit"
+          | "Blood"
+          | "Excrement"
+          | "Spill"
+          | "Other",
+        hazardous: req.hazardous,
+        desc: core.desc,
+        helpingEmployee: core.helpingEmployee,
+        location: core.location,
+        priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
+        requestID: core.requestID,
+        requestType: core.requestType as
+          | "Flowers"
+          | "Religious"
+          | "Sanitation"
+          | "Interpreter"
+          | "Transport",
+        requester: core.requester as string,
+        status: core.status as "Assigned" | "In Progress" | "Completed",
+        time: core.time?.toLocaleString(),
+      });
+    }
+  });
+
+  serviceRequestReligious.forEach((req) => {
+    const core = serviceRequestCore.find((core) => {
+      return core.requestID === req.requestID;
+    });
+    if (core !== undefined) {
+      religious.push({
+        faith: req.faith as
+          | "Christianity"
+          | "Judaism"
+          | "Islam"
+          | "Hinduism"
+          | "Buddhism",
+        desc: core.desc,
+        helpingEmployee: core.helpingEmployee,
+        location: core.location,
+        priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
+        requestID: core.requestID,
+        requestType: core.requestType as
+          | "Flowers"
+          | "Religious"
+          | "Sanitation"
+          | "Interpreter"
+          | "Transport",
+        requester: core.requester as string,
+        status: core.status as "Assigned" | "In Progress" | "Completed",
+        time: core.time?.toLocaleString(),
+      });
+    }
+  });
+
+  serviceRequestExternalTransport.forEach((req) => {
+    const core = serviceRequestCore.find((core) => {
+      return core.requestID === req.requestID;
+    });
+    if (core !== undefined) {
+      transport.push({
+        vehicle: req.vehicle as "Helicopter" | "Ambulance" | "Car",
+        destination: req.destination,
+        desc: core.desc,
+        helpingEmployee: core.helpingEmployee,
+        location: core.location,
+        priority: core.priority as "Low" | "Medium" | "High" | "Emergency",
+        requestID: core.requestID,
+        requestType: core.requestType as
+          | "Flowers"
+          | "Religious"
+          | "Sanitation"
+          | "Interpreter"
+          | "Transport",
+        requester: core.requester as string,
+        status: core.status as "Assigned" | "In Progress" | "Completed",
+        time: core.time?.toLocaleString(),
+      });
+    }
+  });
+
+  const payload: AllServiceRequests = {
+    flowers: flowers,
+    interpreter: interpreter,
+    religious: religious,
+    sanitation: sanitation,
+    transport: transport,
+  };
+
+  if (payload === null) {
+    // Log that (it's a problem)
+    console.error("No Service Requests found in database!");
+    res.sendStatus(204); // and send 204, no data
+  } else {
+    // Otherwise, send the score
+    res.send(payload);
   }
 });
 

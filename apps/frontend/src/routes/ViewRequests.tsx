@@ -11,6 +11,7 @@ import {
   ServiceRequestReligious,
   ServiceRequestSanitation,
 } from "common/src/ServiceRequests.ts";
+import { currentEmployee } from "../stores/LoginStore.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -179,13 +180,23 @@ export const ViewRequests = () => {
 
   // Get requests from DB and store them in state
   const updateRequests = () => {
-    axios
-      .get("http://localhost:3000/api/services/requests", {
-        params: { getAll: true },
-      })
-      .then((res: AxiosResponse<AllServiceRequests>) => {
-        setRequests(res.data);
-      });
+    if (currentEmployee?.accessLevel === "admin") {
+      axios
+        .get("http://localhost:3000/api/services/requests", {
+          params: { getAll: true },
+        })
+        .then((res: AxiosResponse<AllServiceRequests>) => {
+          setRequests(res.data);
+        });
+    } else {
+      axios
+        .get("http://localhost:3000/api/services/requests", {
+          params: { employeeID: currentEmployee?.employeeID },
+        })
+        .then((res: AxiosResponse<AllServiceRequests>) => {
+          setRequests(res.data);
+        });
+    }
   };
 
   // Fetch the requests from the server on load
