@@ -2,6 +2,14 @@
   overflow-y: scroll;
   min-height: calc(100% - 90px);
   max-height: calc(100% - 90px);
+  height: 100%;
+  background: #e9d3b7;
+}
+
+.float-buttons {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
 }
 
 table {
@@ -9,17 +17,26 @@ table {
   border-collapse: collapse;
   margin-bottom: 1rem;
   border: 1px solid;
+  background: #e9d3b7;
+  color: black;
+  font-weight: bold;
 }
 
 td {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
+  text-align: center;
+}
+
+tr {
+  padding: 0.5rem;
+  border: 2px solid;
   text-align: center;
 }
 
 th {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
   text-align: center;
   background-color: #00284f;
   color: white;
@@ -31,11 +48,28 @@ th {
 .edit-button {
   position: absolute;
   right: 100px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
 }
 
 .delete-button {
   position: absolute;
   right: 25px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+}
+
+.add-button {
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .inputField {

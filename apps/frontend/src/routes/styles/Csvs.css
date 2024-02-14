@@ -4,22 +4,37 @@
   max-height: calc(100% - 90px);
 }
 
+.float-buttons {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
   border: 1px solid;
+  background: #e9d3b7;
+  color: black;
+  font-weight: bold;
 }
 
 td {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
+  text-align: center;
+}
+
+tr {
+  padding: 0.5rem;
+  border: 2px solid;
   text-align: center;
 }
 
 th {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
   text-align: center;
   background-color: #00284f;
   color: white;

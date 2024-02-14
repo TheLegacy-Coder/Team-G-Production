@@ -237,13 +237,23 @@ export const ViewEmployees = () => {
       </table>
       {state === "add" || state === "edit" ? (
         // If the state is "add" or "edit", render a submit button and a cancel button
-        <>
-          <input type={"submit"} form={"empForm"}></input>
-          <button onClick={cancel}>Cancel</button>
-        </>
+
+        <div className={"float-buttons"}>
+          <input
+            className="add-button"
+            type={"submit"}
+            form={"empForm"}
+          ></input>
+          <button className="add-button" onClick={cancel}>
+            Cancel
+          </button>
+        </div>
       ) : (
-        // Otherwise, render an add button
-        <button onClick={addEmployee}>Add</button>
+        <div className={"float-buttons"}>
+          <button className="add-button" onClick={addEmployee}>
+            Add Employee
+          </button>
+        </div>
       )}
     </div>
   );
