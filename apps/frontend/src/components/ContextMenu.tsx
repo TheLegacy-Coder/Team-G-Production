@@ -35,6 +35,13 @@ export function ContextMenu() {
           style={"context-menu-tab"}
         />
 
+        <ContextMenuRouterButton
+          content={<Profile />}
+          lable={"Help"}
+          protected={false}
+          style={"context-menu-tab"}
+        />
+
         {loginStore.loggedIn ? (
           // Render Profile button when logged in
           <ContextMenuRouterButton

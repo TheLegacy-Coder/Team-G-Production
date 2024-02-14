@@ -30,23 +30,30 @@ const EditProfileButton = () => {
 };
 
 export const Profile = () => {
-  // const { user, isAuthenticated } = useAuth0(); //user an isAuthenticated dont change to true
-  console.log(currentProfile);
   return (
-    /*isAuthenticated && user ? */ <div className={"profile-buttons"}>
-      {/*<img src={user.picture} alt={user.name} />*/}
-      {/*<h2>{user.name}</h2>*/}
-      {/*<p>{user.email}</p>*/}
-
+    <div className={"profile"}>
       <img
         src={
           currentProfile === undefined
             ? "https://t3.ftcdn.net/jpg/03/53/11/00/360_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
             : currentProfile.picture
         }
+        alt={"profile picture"}
+        style={{ width: "250px", height: "250px" }}
       />
-      <EditProfileButton />
-      <LogoutButton />
-    </div> /*: null*/
+
+      <h2>{currentProfile === undefined ? "John Doe" : currentProfile.name}</h2>
+
+      <h3>
+        {currentProfile === undefined
+          ? "asdfasdf@asdfasdf.asdfasdf"
+          : currentProfile.email}
+      </h3>
+
+      <div className={"profile-buttons"}>
+        <EditProfileButton />
+        <LogoutButton />
+      </div>
+    </div>
   );
 };
