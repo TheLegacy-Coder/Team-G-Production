@@ -92,6 +92,7 @@ router.get("/requests", async function (req: Request, res: Response) {
             | "Transport",
           requester: core.requester as string,
           status: core.status as "Assigned" | "In Progress" | "Completed",
+          time: core.time?.toLocaleString(),
         });
       }
     });
@@ -123,6 +124,7 @@ router.get("/requests", async function (req: Request, res: Response) {
             | "Transport",
           requester: core.requester as string,
           status: core.status as "Assigned" | "In Progress" | "Completed",
+          time: core.time?.toLocaleString(),
         });
       }
     });
@@ -153,6 +155,7 @@ router.get("/requests", async function (req: Request, res: Response) {
             | "Transport",
           requester: core.requester as string,
           status: core.status as "Assigned" | "In Progress" | "Completed",
+          time: core.time?.toLocaleString(),
         });
       }
     });
@@ -182,6 +185,7 @@ router.get("/requests", async function (req: Request, res: Response) {
             | "Transport",
           requester: core.requester as string,
           status: core.status as "Assigned" | "In Progress" | "Completed",
+          time: core.time?.toLocaleString(),
         });
       }
     });
@@ -207,6 +211,7 @@ router.get("/requests", async function (req: Request, res: Response) {
             | "Transport",
           requester: core.requester as string,
           status: core.status as "Assigned" | "In Progress" | "Completed",
+          time: core.time?.toLocaleString(),
         });
       }
     });
