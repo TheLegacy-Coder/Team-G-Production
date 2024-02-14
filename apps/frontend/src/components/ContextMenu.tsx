@@ -8,6 +8,7 @@ import "./styles/ContextMenu.css";
 import { Csvs } from "../routes/Csvs.tsx";
 import { ViewRequests } from "../routes/ViewRequests.tsx";
 import { ViewEmployees } from "../routes/ViewEmployees.tsx";
+import { HelpPage } from "./HelpPage.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
 
 export function ContextMenu() {
@@ -27,7 +28,7 @@ export function ContextMenu() {
           {contextMenuState.showing ? "→" : "←"}
         </div>
         <ContextMenuRouterButton
-          content={<div>placeholder</div>}
+          content={<HelpPage />}
           lable={"Help"}
           protected={false}
           style={"context-menu-tab"}
@@ -41,7 +42,7 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<LocationDropdown />}
-          lable={"Dropdown"}
+          lable={"Location Dropdown"}
           style={"context-menu-tab"}
         />
 
