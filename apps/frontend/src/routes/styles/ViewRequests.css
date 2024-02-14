@@ -1,4 +1,4 @@
-.csvs-page {
+.view-requests-page {
   overflow-y: scroll;
   min-height: calc(100% - 90px);
   max-height: calc(100% - 90px);
@@ -29,6 +29,7 @@ th {
 }
 
 .status {
+  width: 100%;
   background-color: #b8c4d1;
   padding: 2px;
   border-radius: 5px;
