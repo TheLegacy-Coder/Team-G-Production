@@ -5,6 +5,11 @@
   max-height: calc(100% - 90px);
 }
 
+.service-request-container {
+  overflow-y: scroll;
+  height: 100%;
+}
+
 .service-request-form-label {
   font-size: 20px;
 }
@@ -49,7 +54,7 @@
   width: 150px;
   margin-bottom: 10px;
   font-size: 18px;
-  margin-right: 16px;
+  margin-left: 16px;
 }
 
 .service-request-form-credit {
@@ -66,7 +71,7 @@
   width: 150px;
   margin-bottom: 10px;
   font-size: 18px;
-  margin-left: 16px;
+  margin-right: 16px;
 }
 
 .checkmark__circle {

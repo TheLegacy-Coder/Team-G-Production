@@ -449,12 +449,6 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
             <></>
           )}
           <br />
-          <button
-            className={"service-request-form-submit"}
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
 
           <ContextMenuRouterButton
             content={<ServiceRequests />}
@@ -463,6 +457,13 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
             style={"service-request-form-cancel"}
             button={true}
           ></ContextMenuRouterButton>
+
+          <button
+            className={"service-request-form-submit"}
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       )}
       <div className={"service-request-form-credit"}>{credit}</div>
