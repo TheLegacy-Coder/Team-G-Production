@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
-import {
-  getServiceRequests,
-  ServiceRequest,
-  ServiceRequestList,
-} from "../servicereqs/ServiceRequestNodes.ts";
-import axios from "axios";
+import { ServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
+import axios, { AxiosResponse } from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
+  AllServiceRequests,
   ServiceRequestExternalTransport,
   ServiceRequestFlowers,
   ServiceRequestInterpreter,
@@ -178,15 +175,17 @@ export const RequestsTable = ({
 };
 
 export const ViewRequests = () => {
-  const [requests, setRequests] = useState<ServiceRequestList>();
+  const [requests, setRequests] = useState<AllServiceRequests>();
 
   // Get requests from DB and store them in state
   const updateRequests = () => {
-    getServiceRequests().then((list) => {
-      if (list !== undefined) {
-        setRequests(list.data);
-      }
-    });
+    axios
+      .get("http://localhost:3000/api/services/requests", {
+        params: { getAll: true },
+      })
+      .then((res: AxiosResponse<AllServiceRequests>) => {
+        setRequests(res.data);
+      });
   };
 
   // Fetch the requests from the server on load
@@ -205,27 +204,27 @@ export const ViewRequests = () => {
         components={[
           <RequestsTable
             updateRequests={updateRequests}
-            requests={requests?.Flowers}
+            requests={requests?.flowers}
             type={"Flowers"}
           />,
           <RequestsTable
             updateRequests={updateRequests}
-            requests={requests?.Religious}
+            requests={requests?.religious}
             type={"Religious"}
           />,
           <RequestsTable
             updateRequests={updateRequests}
-            requests={requests?.Sanitation}
+            requests={requests?.sanitation}
             type={"Sanitation"}
           />,
           <RequestsTable
             updateRequests={updateRequests}
-            requests={requests?.Interpreter}
+            requests={requests?.interpreter}
             type={"Interpreter"}
           />,
           <RequestsTable
             updateRequests={updateRequests}
-            requests={requests?.Transport}
+            requests={requests?.transport}
             type={"Transport"}
           />,
         ]}

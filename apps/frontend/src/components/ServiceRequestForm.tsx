@@ -53,6 +53,25 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   const [vehicle, setVehicle] = useState("");
   const [destination, setDestination] = useState("");
 
+  //For submission requirement
+  let credit = "";
+  switch (props.requestType) {
+    case RequestType.Flowers:
+      credit = "Klaudio Fusha";
+      break;
+    case RequestType.Religious:
+      credit = "Dimitri Saliba";
+      break;
+    case RequestType.Sanitation:
+      credit = "Tyler Giroux";
+      break;
+    case RequestType.Interpreter:
+      credit = "Jason Zhang";
+      break;
+    case RequestType.Transport:
+      credit = "Istan Slamet";
+      break;
+  }
   function handleSubmit() {
     let req: ServiceRequest = {
       desc: "",
@@ -438,6 +457,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
           </button>
         </div>
       )}
+      <div className={"service-request-form-credit"}>{credit}</div>
     </div>
   );
 }
