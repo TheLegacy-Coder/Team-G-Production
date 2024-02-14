@@ -455,6 +455,14 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
           >
             Submit
           </button>
+
+          <ContextMenuRouterButton
+            content={<ServiceRequests />}
+            customText={"Cancel"}
+            lable={"Service Request"}
+            style={"service-request-form-cancel"}
+            button={true}
+          ></ContextMenuRouterButton>
         </div>
       )}
       <div className={"service-request-form-credit"}>{credit}</div>

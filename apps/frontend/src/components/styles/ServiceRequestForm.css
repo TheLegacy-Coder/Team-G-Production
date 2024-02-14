@@ -1,6 +1,8 @@
 .service-request-form {
   margin-top: 16px;
   width: 100%;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
 }
 
 .service-request-form-label {
@@ -47,11 +49,24 @@
   width: 150px;
   margin-bottom: 10px;
   font-size: 18px;
+  margin-right: 16px;
 }
 
 .service-request-form-credit {
   color: black;
   font-size: 9px;
+}
+
+.service-request-form-cancel {
+  border-color: black;
+  border-width: 3px;
+  border-radius: 5px;
+  background: #00284f;
+  color: white;
+  width: 150px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  margin-left: 16px;
 }
 
 .checkmark__circle {
