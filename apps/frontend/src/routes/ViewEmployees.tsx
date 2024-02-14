@@ -222,8 +222,6 @@ export const ViewEmployees = () => {
 
   return (
     <div className={"employees-page"}>
-      <h1>Employees</h1>
-
       <table>
         <thead>
           <tr>
@@ -240,12 +238,20 @@ export const ViewEmployees = () => {
       {state === "add" || state === "edit" ? (
         // If the state is "add" or "edit", render a submit button and a cancel button
         <>
-          <input type={"submit"} form={"empForm"}></input>
-          <button onClick={cancel}>Cancel</button>
+          <input
+            className="add-button"
+            type={"submit"}
+            form={"empForm"}
+          ></input>
+          <button className="add-button" onClick={cancel}>
+            Cancel
+          </button>
         </>
       ) : (
         // Otherwise, render an add button
-        <button onClick={addEmployee}>Add</button>
+        <button className="add-button" onClick={addEmployee}>
+          Add Employee
+        </button>
       )}
     </div>
   );

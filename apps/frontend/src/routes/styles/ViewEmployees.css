@@ -31,11 +31,28 @@ th {
 .edit-button {
   position: absolute;
   right: 100px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
 }
 
 .delete-button {
   position: absolute;
   right: 25px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+}
+
+.add-button {
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .inputField {

@@ -125,9 +125,12 @@ export const RequestsTable = ({
   return (
     <>
       <div className="filter">
-        <label htmlFor="statusFilter">Filter by Status:</label>
+        <label htmlFor="statusFilter" className="filterText">
+          Filter by Status:
+        </label>
         <select
           name="statusFilter"
+          className="statusFilter"
           id="statusFilter"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
