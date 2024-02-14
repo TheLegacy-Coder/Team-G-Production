@@ -53,6 +53,25 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   const [vehicle, setVehicle] = useState("");
   const [destination, setDestination] = useState("");
 
+  //For submission requirement
+  let credit = "";
+  switch (props.requestType) {
+    case RequestType.Flowers:
+      credit = "Klaudio Fusha";
+      break;
+    case RequestType.Religious:
+      credit = "Dimitri Saliba";
+      break;
+    case RequestType.Sanitation:
+      credit = "Tyler Giroux";
+      break;
+    case RequestType.Interpreter:
+      credit = "Jason Zhang";
+      break;
+    case RequestType.Transport:
+      credit = "Istan Slamet";
+      break;
+  }
   function handleSubmit() {
     let req: ServiceRequest = {
       desc: "",
@@ -66,7 +85,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Religious:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Religious",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -79,7 +98,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Sanitation:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Sanitation",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -93,7 +112,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Interpreter:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Interpreter",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -106,7 +125,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       case RequestType.Transport:
         req = {
           requestID: crypto.randomUUID(),
-          requestType: "Flowers",
+          requestType: "Transport",
           location: nodeStore.selectedNode?.nodeID,
           status: "Assigned",
           priority: priority,
@@ -436,8 +455,17 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
           >
             Submit
           </button>
+
+          <ContextMenuRouterButton
+            content={<ServiceRequests />}
+            customText={"Cancel"}
+            lable={"Service Request"}
+            style={"service-request-form-cancel"}
+            button={true}
+          ></ContextMenuRouterButton>
         </div>
       )}
+      <div className={"service-request-form-credit"}>{credit}</div>
     </div>
   );
 }

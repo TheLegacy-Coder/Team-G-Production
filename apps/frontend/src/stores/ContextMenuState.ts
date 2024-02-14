@@ -24,6 +24,7 @@ class ContextMenuState {
     if (this.intendedPage !== undefined && this.intendedPageTitle !== "") {
       this.update(this.intendedPage, this.intendedPageTitle, false);
     }
+
     this.intendedPage = undefined;
     this.intendedPageTitle = "";
   }

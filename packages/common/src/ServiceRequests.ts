@@ -22,6 +22,14 @@ export const ServiceRequestEndpoints = new Map<RequestType, string>([
   [RequestType.Transport, "services/requests/transport"],
 ]);
 
+export interface AllServiceRequests {
+  flowers: ServiceRequestFlowers[];
+  religious: ServiceRequestReligious[];
+  sanitation: ServiceRequestSanitation[];
+  interpreter: ServiceRequestInterpreter[];
+  transport: ServiceRequestExternalTransport[];
+}
+
 export interface ServiceRequest {
   requestID: string;
   requestType:
