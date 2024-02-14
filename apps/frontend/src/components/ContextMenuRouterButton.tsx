@@ -10,6 +10,7 @@ export interface ContextMenuRouterButtonProps {
   style: string;
   customText?: string;
   admin?: boolean;
+  button?: boolean;
 }
 
 export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
@@ -26,14 +27,29 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
     );
   }
 
-  return (
-    <div
-      className={
-        props.style + (props.lable == contextMenuState.title ? "-selected" : "")
-      }
-      onClick={route}
-    >
-      {props.customText !== undefined ? props.customText : props.lable}
-    </div>
-  );
+  if (props.button === true) {
+    return (
+      <button
+        className={
+          props.style +
+          (props.lable == contextMenuState.title ? "-selected" : "")
+        }
+        onClick={route}
+      >
+        {props.customText !== undefined ? props.customText : props.lable}
+      </button>
+    );
+  } else {
+    return (
+      <div
+        className={
+          props.style +
+          (props.lable == contextMenuState.title ? "-selected" : "")
+        }
+        onClick={route}
+      >
+        {props.customText !== undefined ? props.customText : props.lable}
+      </div>
+    );
+  }
 }

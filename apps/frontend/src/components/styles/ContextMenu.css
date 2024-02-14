@@ -2,7 +2,7 @@
   position: fixed;
   top: 10%;
   right: 0;
-  width: 650px;
+  width: 850px;
   height: 80%;
   animation: slide-in 1s;
 }
@@ -11,7 +11,7 @@
   position: fixed;
   top: 10%;
   right: 0;
-  width: 650px;
+  width: 850px;
   height: 80%;
   animation: slide-long-to-in 1s;
 }
@@ -88,6 +88,7 @@
   flex-direction: column;
   cursor: pointer;
   flex: 1;
+  max-height: calc(100% / 7);
 }
 
 .context-menu-tab-admin {
@@ -101,6 +102,7 @@
   flex-direction: column;
   cursor: pointer;
   flex: 1;
+  max-height: calc(100% / 7);
 }
 
 .context-menu-tab-admin-selected {
@@ -114,6 +116,7 @@
   flex-direction: column;
   cursor: pointer;
   flex: 1;
+  max-height: calc(100% / 7);
 }
 
 .context-menu-tab-selected {
@@ -127,13 +130,14 @@
   flex-direction: column;
   cursor: pointer;
   flex: 1;
+  max-height: calc(100% / 7);
 }
 
 .context-menu-in-to-out {
   position: fixed;
   top: 10%;
-  right: -500px;
-  width: 650px;
+  right: -700px;
+  width: 850px;
   height: 80%;
   animation: slide-in-to-out 1s;
 }
@@ -141,8 +145,8 @@
 .context-menu-start {
   position: fixed;
   top: 10%;
-  right: -500px;
-  width: 650px;
+  right: -700px;
+  width: 850px;
   height: 80%;
 }
 
@@ -172,7 +176,7 @@
 
 @keyframes slide-in {
   0% {
-    right: -500px;
+    right: -700px;
   }
   100% {
     right: 0;
@@ -184,13 +188,13 @@
     right: 0;
   }
   100% {
-    right: -500px;
+    right: -700px;
   }
 }
 
 @keyframes slide-in-to-long {
   0% {
-    width: 650px;
+    width: 850px;
   }
   100% {
     width: 1200px;
@@ -202,7 +206,7 @@
     width: 1200px;
   }
   100% {
-    width: 650px;
+    width: 850px;
   }
 }
 

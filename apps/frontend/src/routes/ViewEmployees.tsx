@@ -222,8 +222,6 @@ export const ViewEmployees = () => {
 
   return (
     <div className={"employees-page"}>
-      <h1>Employees</h1>
-
       <table>
         <thead>
           <tr>
