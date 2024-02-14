@@ -49,6 +49,11 @@
   font-size: 18px;
 }
 
+.service-request-form-credit {
+  color: black;
+  font-size: 9px;
+}
+
 .checkmark__circle {
   stroke-dasharray: 166;
   stroke-dashoffset: 166;

@@ -40,3 +40,32 @@
 .show-detail-button {
   transform: translate(230px, 10px);
 }
+
+.third-floor {
+  transform: translateX(10px);
+  bottom: 240px;
+}
+
+.second-floor {
+  transform: translateX(10px);
+  bottom: 200px;
+}
+
+.first-floor {
+  transform: translateX(10px);
+  bottom: 160px;
+}
+
+.lower-floor {
+  transform: translateX(10px);
+  bottom: 120px;
+}
+
+.lowest-floor {
+  transform: translateX(10px);
+  bottom: 80px;
+}
+
+.path-floor {
+  background-color: lightblue;
+}

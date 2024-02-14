@@ -1,6 +1,12 @@
 import axios from "axios";
-import { currentEmployee, loginStore } from "../stores/LoginStore.ts";
 import { Prisma } from "database";
+import {
+  ServiceRequestExternalTransport,
+  ServiceRequestFlowers,
+  ServiceRequestInterpreter,
+  ServiceRequestReligious,
+  ServiceRequestSanitation,
+} from "common/src/ServiceRequests.ts";
 
 export type ServiceRequest = {
   requestID: string;
@@ -13,23 +19,19 @@ export type ServiceRequest = {
   time?: string;
 };
 
+export type ServiceRequestList = {
+  Flowers: ServiceRequestFlowers[];
+  Religious: ServiceRequestReligious[];
+  Sanitation: ServiceRequestSanitation[];
+  Interpreter: ServiceRequestInterpreter[];
+  Transport: ServiceRequestExternalTransport[];
+};
+
 export type ServiceRequestsWrapper = {
-  data: ServiceRequest[];
+  data: ServiceRequestList;
 };
 
 export const serviceRequests: Map<string, ServiceRequest> = new Map([]);
-
-export async function getServiceRequests(): Promise<ServiceRequestsWrapper> {
-  if (loginStore.loginType === "admin" && loginStore.loggedIn) {
-    return axios.get("http://localhost:3000/api/services/requests", {
-      params: { getAll: true },
-    }); // REPLACE WITH ACTUAL URL
-  } else {
-    return axios.get("http://localhost:3000/api/services/requests", {
-      params: { employeeID: currentEmployee?.employeeID },
-    }); // REPLACE WITH ACTUAL URL
-  }
-}
 
 export function postServiceRequest(
   request: Prisma.ServiceRequestUncheckedCreateInput,
