@@ -153,23 +153,37 @@ export const InteractableMap = () => {
     setTimeout(draw, 15);
   }
 
+  function getContentWidth(prevNum: number, inString: string): number {
+    if (inString.length > prevNum) {
+      return inString.length;
+    }
+    return prevNum;
+  }
+
   function drawNodeDetails(node: MapNode) {
     ctx!.fillStyle = "#FFFFFF";
     ctx!.strokeStyle = "#000000";
     ctx!.lineWidth = 5 / scalar;
-    //let content = node.shortName + "\nAdjacent Nodes and Edge ID:\n";
     const content: string[] = [];
+    let contentWidth: number = node.shortName.length;
     content.push(node.shortName);
+    contentWidth = getContentWidth(
+      contentWidth,
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
     content.push(
       "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
     );
     content.push("Adjacent Nodes:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Nodes:");
     let lineCount = 3;
     for (let i = 0; i < node.edges.length; i++) {
       lineCount++;
       content.push(node.edges[i].shortName);
+      contentWidth = getContentWidth(contentWidth, node.edges[i].shortName);
     }
     content.push("Adjacent Edges:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Edges:");
     lineCount++;
 
     for (let i = 0; i < node.edges.length; i++) {
@@ -186,18 +200,19 @@ export const InteractableMap = () => {
         }
       });
       content.push(lineContent);
+      contentWidth = getContentWidth(contentWidth, lineContent);
     }
 
     ctx!.fillRect(
-      node.xcoord - 100 / scalar,
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
       node.ycoord + 15,
-      200 / scalar,
+      (contentWidth * 9) / scalar,
       5 + (15 / scalar) * lineCount,
     );
     ctx!.strokeRect(
-      node.xcoord - 100 / scalar,
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
       node.ycoord + 15,
-      200 / scalar,
+      (contentWidth * 9) / scalar,
       5 + (15 / scalar) * lineCount,
     );
     ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
