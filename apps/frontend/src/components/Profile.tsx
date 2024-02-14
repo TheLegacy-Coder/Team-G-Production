@@ -17,17 +17,17 @@ const LogoutButton = () => {
   );
 };
 
-const EditProfileButton = () => {
-  return (
-    <button
-      onClick={() => {
-        window.location; //change to actual edit profile options
-      }}
-    >
-      Edit Profile
-    </button>
-  );
-};
+// const EditProfileButton = () => {
+//   return (
+//     <button
+//       onClick={() => {
+//         window.location; //change to actual edit profile options
+//       }}
+//     >
+//       Edit Profile
+//     </button>
+//   );
+// };
 
 export const Profile = () => {
   return (
@@ -42,16 +42,12 @@ export const Profile = () => {
         style={{ width: "250px", height: "250px" }}
       />
 
-      <h2>{currentProfile === undefined ? "John Doe" : currentProfile.name}</h2>
+      <h2>{currentProfile === undefined ? "" : currentProfile.name}</h2>
 
-      <h3>
-        {currentProfile === undefined
-          ? "asdfasdf@asdfasdf.asdfasdf"
-          : currentProfile.email}
-      </h3>
+      <h3>{currentProfile === undefined ? "" : currentProfile.email}</h3>
 
       <div className={"profile-buttons"}>
-        <EditProfileButton />
+        {/*<EditProfileButton />*/}
         <LogoutButton />
       </div>
     </div>
