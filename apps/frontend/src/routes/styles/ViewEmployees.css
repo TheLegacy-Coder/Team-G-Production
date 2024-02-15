@@ -43,9 +43,11 @@ th {
 }
 
 .edit-delete-buttons {
+  position: relative;
 }
 
 .edit-button {
+  transform: translateY(-100%);
   position: absolute;
   right: 100px;
   border: 2px solid white;
@@ -55,6 +57,7 @@ th {
 }
 
 .delete-button {
+  transform: translateY(-100%);
   position: absolute;
   right: 25px;
   border: 2px solid white;

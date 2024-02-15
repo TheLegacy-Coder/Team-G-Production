@@ -160,7 +160,7 @@ export const ViewEmployees = () => {
       // With buttons for editing and deleting if the row is being hovered over
       const buttons =
         employee.employeeID === hoveringID && state === "none" ? (
-          <>
+          <div className="edit-delete-buttons">
             <button className="edit-button" onClick={editEmployee}>
               Edit
             </button>
@@ -170,7 +170,7 @@ export const ViewEmployees = () => {
             >
               Delete
             </button>
-          </>
+          </div>
         ) : null;
 
       rows.push(
