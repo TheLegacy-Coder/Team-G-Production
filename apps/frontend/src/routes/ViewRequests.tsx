@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
-import { ServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import axios, { AxiosResponse } from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
@@ -10,6 +9,7 @@ import {
   ServiceRequestInterpreter,
   ServiceRequestReligious,
   ServiceRequestSanitation,
+  ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 
