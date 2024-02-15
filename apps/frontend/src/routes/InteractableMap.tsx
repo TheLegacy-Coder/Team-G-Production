@@ -12,11 +12,6 @@ import {
 } from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
-/**
- * Issues to fix
- * redrawing when path offscreen
- */
-
 const canvasSize = { x: 0, y: 0 };
 const offset = { x: 0, y: 0 };
 
@@ -138,7 +133,6 @@ export const InteractableMap = () => {
           ctx!.fillStyle = "#0000FF";
           ctx!.fill();
         });
-        console.log(frames);
       }
 
       mapNodes.forEach((node) => {
@@ -161,14 +155,6 @@ export const InteractableMap = () => {
       });
 
       if (hoverNode !== undefined) drawNodeDetails(hoverNode);
-      console.log(
-        "Here are the floors: " +
-          floors +
-          " here is the current floor: " +
-          currentFloor +
-          " evaluation: " +
-          floors.includes(currentFloor),
-      );
 
       let pathInView = false;
       if (
@@ -191,7 +177,6 @@ export const InteractableMap = () => {
         !pathInView
       )
         redraw = false;
-      console.log("redraw map");
     }
     setTimeout(draw, 16);
   }
@@ -275,7 +260,6 @@ export const InteractableMap = () => {
     draw();
     homePosition();
     setTimeout(() => {
-      console.log("on load calling redrawing");
       redraw = true;
     }, 25);
   };
@@ -345,7 +329,6 @@ export const InteractableMap = () => {
       }
       frames.push(temp);
     }
-    console.log("astar calling redrawing");
     redraw = true;
   }, [currentFloor, image.width, image.height]);
 
@@ -504,7 +487,6 @@ export const InteractableMap = () => {
     delta.y = 0;
     boundCoords();
     redraw = true;
-    console.log("mouse up calling redrawing");
   }
 
   //Starts moving map according to mouse drag
@@ -562,7 +544,6 @@ export const InteractableMap = () => {
     updateCoords();
     boundCoords();
     if (moveRedraw) {
-      console.log("move redrawing calling redrawing");
       redraw = true;
     }
   }
@@ -580,7 +561,6 @@ export const InteractableMap = () => {
     }
     updateCoords();
     boundCoords();
-    console.log("zoom calling redrawing");
     redraw = true;
   }
 
@@ -591,7 +571,6 @@ export const InteractableMap = () => {
     }
     const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
     zoom(zoomDelta, tfCursor.x, tfCursor.y);
-    console.log("scrolling calling redrawing");
     redraw = true;
   }
 
@@ -615,7 +594,6 @@ export const InteractableMap = () => {
     ctx!.translate(upleftCorner!.x, upleftCorner!.y);
     updateCoords();
     redraw = true;
-    console.log("reset map calling redrawing");
   }
 
   function setMap(floor: string, imageSrc: string) {
@@ -638,7 +616,6 @@ export const InteractableMap = () => {
       aStar();
     }
     setTimeout(() => {
-      console.log("set map calling redrawing");
       redraw = true;
     }, 25);
   }
@@ -681,7 +658,6 @@ export const InteractableMap = () => {
         className={"zoom-button whole-graph-button"}
         onClick={() => {
           showEdges = !showEdges;
-          console.log("edges calling redrawing");
           redraw = true;
         }}
       >
