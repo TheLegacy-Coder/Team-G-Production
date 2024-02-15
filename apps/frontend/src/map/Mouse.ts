@@ -4,20 +4,19 @@ import {
   scalar,
   ctx,
   setScalar,
-  updateCoords,
-  boundCoords,
   zoomAmount,
   setRedraw,
   tfPoint,
   offset,
-  currentFloor,
   hoverNode,
   setHover,
   resetPath,
   startNode,
   path,
   searchAlg,
+  canvasSize,
 } from "./Draw.ts";
+import { currentFloor, boundCoords } from "./BoundMap.ts";
 
 //Stores map delta xy coordinates while panning
 const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
@@ -29,6 +28,13 @@ let moveMap = false;
 let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
 let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
+
+export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+export let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+export let downrightCorner: { x: number; y: number } | undefined = {
+  x: 0,
+  y: 0,
+};
 
 // zooms to a point
 export function zoom(zoom: number, xCoord: number, yCoord: number) {
@@ -160,4 +166,14 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
   boundCoords();
   //redraw = true;
   setRedraw();
+}
+
+// updates coordinate points for map panning and zooming
+export function updateCoords() {
+  centerPos = tfPoint(
+    (canvasSize.x - offset.x) / 2,
+    (canvasSize.y - offset.y) / 2,
+  );
+  upleftCorner = tfPoint(0, 0);
+  downrightCorner = tfPoint(canvasSize.x, canvasSize.y);
 }

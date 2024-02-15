@@ -7,6 +7,8 @@ import {
   mapNodes,
   mapEdges,
 } from "./MapNode.ts";
+import { upleftCorner, downrightCorner } from "./Mouse.ts";
+import { homePosition, currentFloor } from "./BoundMap.ts";
 import "../components/styles/ZoomButton.css";
 
 /**
@@ -15,7 +17,7 @@ import "../components/styles/ZoomButton.css";
  * pathInView causing bottom path from L2 to F3 to not draw
  */
 
-const canvasSize = { x: 0, y: 0 };
+export const canvasSize = { x: 0, y: 0 };
 export const offset = { x: 0, y: 0 };
 
 export let startNode: MapNode | undefined = undefined;
@@ -30,7 +32,7 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
-let newMap = true;
+
 let redraw = true;
 let floors: string[] = [];
 
@@ -39,9 +41,6 @@ let pathHighest = { x: 0, y: 0 };
 
 //Stores scaled map amount
 export let scalar = 1;
-export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
-let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
-let downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
 export const zoomAmount = 0.1;
 
@@ -59,7 +58,6 @@ export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
 
 export let image = new Image();
 image.src = "00_thelowerlevel1.png";
-export let currentFloor = "L1";
 
 export function getWidth(): number {
   const width =
@@ -94,6 +92,11 @@ export function setHover(node: MapNode | undefined) {
 export function resetPath() {
   path = [];
   frames = [[[]]];
+}
+
+export function setImage(imageSrc: string) {
+  image = new Image();
+  image.src = imageSrc;
 }
 
 // converts coordinates from page frame to image frame
@@ -381,104 +384,4 @@ export function nodePoll() {
     //aStar();
     searchAlg();
   }
-}
-
-// resets map position to a default position
-export function homePosition() {
-  if (ctx === null) {
-    return;
-  }
-  ctx!.translate(-1200, -400);
-  updateCoords();
-  scalar = 0.75;
-  ctx!.scale(0.75, 0.75);
-  updateCoords();
-  boundCoords();
-  const scaleID = document.querySelector("#scalar");
-  scaleID!.textContent = scalar.toFixed(2).toString();
-}
-
-// updates coordinate points for map panning and zooming
-export function updateCoords() {
-  centerPos = tfPoint(
-    (canvasSize.x - offset.x) / 2,
-    (canvasSize.y - offset.y) / 2,
-  );
-  upleftCorner = tfPoint(0, 0);
-  downrightCorner = tfPoint(canvasSize.x, canvasSize.y);
-}
-
-export function boundCoords() {
-  if (downrightCorner === undefined || upleftCorner === undefined) return null;
-  if (downrightCorner.x - upleftCorner.x > image.width) {
-    // centers canvas along x axis
-    ctx!.translate(upleftCorner.x, 0);
-    updateCoords();
-    ctx!.translate(
-      (downrightCorner.x - image.width - offset.x / scalar) / 2,
-      0,
-    );
-  } else {
-    if (upleftCorner.x < 0) {
-      // aligns canvas along left side
-      ctx!.translate(upleftCorner.x, 0);
-    } else if (downrightCorner.x > image.width + offset.x / scalar) {
-      // aligns canvas along right side
-      ctx!.translate(-image.width - offset.x / scalar + downrightCorner.x, 0);
-    }
-  }
-  if (downrightCorner.y - upleftCorner.y > image.height) {
-    // centers canvas along y axis
-    ctx!.translate(0, upleftCorner.y);
-    updateCoords();
-    ctx!.translate(
-      0,
-      (downrightCorner.y - image.height - offset.y / scalar) / 2,
-    );
-  } else {
-    if (upleftCorner.y < 0) {
-      // aligns canvas along top side
-      ctx!.translate(0, upleftCorner.y);
-    } else if (downrightCorner.y > image.height + offset.y / scalar) {
-      // aligns canvas along bottom side
-      ctx!.translate(0, -image.height - offset.y / scalar + downrightCorner.y);
-    }
-  }
-  updateCoords();
-}
-
-export function resetMap() {
-  frames = [[[]]];
-  drawStep = 0;
-  ctx!.scale(1 / scalar, 1 / scalar);
-  scalar *= 1 / scalar;
-  updateCoords();
-  ctx!.translate(upleftCorner!.x, upleftCorner!.y);
-  updateCoords();
-  redraw = true;
-}
-
-export function setMap(floor: string, imageSrc: string) {
-  if (newMap) {
-    newMap = false;
-    const tempScalar = scalar;
-    ctx!.save();
-    resetMap();
-    currentFloor = floor;
-    image = new Image();
-    image.src = imageSrc;
-    homePosition();
-    newMap = true;
-    ctx!.restore();
-    scalar = tempScalar;
-    const scaleID = document.querySelector("#scalar");
-    scaleID!.textContent = scalar.toFixed(2).toString();
-    path = [];
-    frames = [[[]]];
-    //aStar();
-    searchAlg();
-  }
-  setTimeout(() => {
-    redraw = true;
-  }, 100);
 }
