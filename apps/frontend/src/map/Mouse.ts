@@ -11,12 +11,11 @@ import {
   hoverNode,
   setHover,
   resetPath,
-  startNode,
   path,
-  searchAlg,
   canvasSize,
 } from "./Draw.ts";
 import { currentFloor, boundCoords } from "./BoundMap.ts";
+import { startNode, searchAlg } from "./MapAlgorithm.ts";
 
 //Stores map delta xy coordinates while panning
 const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };

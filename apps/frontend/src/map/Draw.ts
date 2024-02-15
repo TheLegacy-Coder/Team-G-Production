@@ -1,14 +1,14 @@
 //import React from "react";
-import {
-  getEndNode,
-  getStartNode,
-  AStarSearch,
-  MapNode,
-  mapNodes,
-  mapEdges,
-} from "./MapNode.ts";
+import { MapNode, mapNodes, mapEdges } from "./MapNode.ts";
 import { upleftCorner, downrightCorner } from "./Mouse.ts";
 import { homePosition, currentFloor } from "./BoundMap.ts";
+import {
+  startNode,
+  endNode,
+  pathHighest,
+  pathLowest,
+  floors,
+} from "./MapAlgorithm.ts";
 import "../components/styles/ZoomButton.css";
 
 /**
@@ -20,24 +20,13 @@ import "../components/styles/ZoomButton.css";
 export const canvasSize = { x: 0, y: 0 };
 export const offset = { x: 0, y: 0 };
 
-export let startNode: MapNode | undefined = undefined;
-let endNode: MapNode | undefined = undefined;
 export let hoverNode: MapNode | undefined = undefined;
 export let path: MapNode[] = [];
 
-let totalDistance = 0;
-let steps: number[] = [];
 let drawStep = 0;
 let frames: number[][][] = [[[]]];
-const spacing = 50;
-
 let showEdges = false;
-
 let redraw = true;
-let floors: string[] = [];
-
-let pathLowest = { x: 0, y: 0 };
-let pathHighest = { x: 0, y: 0 };
 
 //Stores scaled map amount
 export let scalar = 1;
@@ -97,6 +86,10 @@ export function resetPath() {
 export function setImage(imageSrc: string) {
   image = new Image();
   image.src = imageSrc;
+}
+
+export function framePush(temp: number[][]) {
+  frames.push(temp);
 }
 
 // converts coordinates from page frame to image frame
@@ -283,105 +276,3 @@ image.onload = () => {
     redraw = true;
   }, 25);
 };
-
-export function searchAlg() {
-  // filters path not on floor
-  const unfilteredPath = AStarSearch(startNode, endNode);
-
-  floors = [];
-
-  pathLowest = { x: image.width, y: image.height };
-  pathHighest = { x: 0, y: 0 };
-
-  unfilteredPath.forEach((node) => {
-    if (node.floor === currentFloor) path.push(node);
-    if (!floors.includes(node.floor)) floors.push(node.floor);
-  });
-
-  for (let i = 0; i < floors.length; i++) {
-    if (floors[i].length === 1) floors[i] = "F" + floors[i];
-    const scaleID = document.querySelector("#" + floors[i]);
-    scaleID!.classList.add("path-floor");
-  }
-
-  totalDistance = 0;
-  steps = [0];
-  let last: MapNode | undefined = undefined;
-  // gets distance based on connected nodes
-  path.forEach((node) => {
-    if (last != undefined /* && node.edges.includes(last)*/) {
-      const length = Math.sqrt(
-        Math.pow(last.ycoord - node.ycoord, 2) +
-          Math.pow(last.xcoord - node.xcoord, 2),
-      );
-      totalDistance += length;
-      steps.push(totalDistance);
-    }
-    last = node;
-  });
-  //bake frames
-  for (let f = 0; f < spacing; f++) {
-    const temp = [];
-    for (let i = 0; i < totalDistance / spacing; i++) {
-      let prog = spacing * i + (f % spacing);
-      let s = 0;
-      while (s < path.length) {
-        if (prog < steps[s]) {
-          break;
-        }
-        s++;
-      }
-      s--;
-      prog -= steps[s];
-      if (s + 1 < path.length && path[s + 1].edges.includes(path[s])) {
-        const angleRadians = Math.atan2(
-          path[s].ycoord - path[s + 1].ycoord,
-          path[s].xcoord - path[s + 1].xcoord,
-        );
-        const x = path[s].xcoord - Math.cos(angleRadians) * prog;
-        const y = path[s].ycoord - Math.sin(angleRadians) * prog;
-        temp.push([x, y]);
-        if (x < pathLowest.x) pathLowest.x = x;
-        else if (x > pathHighest.x) pathHighest.x = x;
-        if (y < pathLowest.y) pathLowest.y = y;
-        else if (y > pathHighest.y) pathHighest.y = y;
-      }
-    }
-    frames.push(temp);
-  }
-  redraw = true;
-}
-
-export function nodePoll() {
-  const prevStart = startNode;
-  const prevEnd = endNode;
-  startNode = getStartNode();
-  endNode = getEndNode();
-  if (prevStart !== startNode || prevEnd !== endNode) {
-    const floorNames: string[] = ["F3", "F2", "F1", "L1", "L2"];
-    for (let i = 0; i < floorNames.length; i++) {
-      const scaleID = document.querySelector("#" + floorNames[i]);
-      if (scaleID !== null) scaleID!.classList.remove("path-floor");
-    }
-    floors = [];
-    path.forEach((node) => {
-      if (!floors.includes(node.floor)) floors.push(node.floor);
-    });
-    for (let i = 0; i < floors.length; i++) {
-      if (floors[i].length === 1) floors[i] = "F" + floors[i];
-      const scaleID = document.querySelector("#" + floors[i]);
-      scaleID!.classList.add("path-floor");
-    }
-  }
-
-  if (
-    startNode !== undefined &&
-    endNode !== undefined &&
-    (prevStart !== startNode || prevEnd !== endNode)
-  ) {
-    path = [];
-    frames = [[[]]];
-    //aStar();
-    searchAlg();
-  }
-}

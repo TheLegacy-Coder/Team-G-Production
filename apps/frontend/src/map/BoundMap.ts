@@ -4,12 +4,13 @@ import {
   offset,
   resetPath,
   scalar,
-  searchAlg,
   setImage,
   setRedraw,
   setScalar,
 } from "./Draw.ts";
+
 import { updateCoords, upleftCorner, downrightCorner } from "./Mouse.ts";
+import { searchAlg } from "./MapAlgorithm.ts";
 
 let newMap = true;
 export let currentFloor = "L1";

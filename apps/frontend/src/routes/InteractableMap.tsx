@@ -7,9 +7,7 @@ import {
   toggleEdges,
   zoomAmount,
   initCTX,
-  searchAlg,
   image,
-  nodePoll,
 } from "../map/Draw";
 import { currentFloor, resetMap, setMap, homePosition } from "../map/BoundMap";
 import {
@@ -20,6 +18,7 @@ import {
   zoom,
   centerPos,
 } from "../map/Mouse";
+import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
