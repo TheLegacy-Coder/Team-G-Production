@@ -1,5 +1,28 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import {
+  setMap,
+  mouseMove,
+  mouseUp,
+  mouseDown,
+  mouseScroll,
+  getWidth,
+  getHeight,
+  resetMap,
+  homePosition,
+  zoom,
+  scalar,
+  offset,
+  toggleEdges,
+  centerPos,
+  zoomAmount,
+  initCTX,
+  searchAlg,
+  currentFloor,
+  image,
+  nodePoll,
+} from "../map/Draw";
+/*import {AStarSearch, getEndNode, getStartNode, MapNode} from "../map/MapNode.ts";
+import {
   setStartNode,
   setEndNode,
   getEndNode,
@@ -50,10 +73,39 @@ let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 let downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
-const zoomAmount = 0.1;
+const zoomAmount = 0.1;*/
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
+  initCTX(canvasCtxRef.current);
+
+  // initializes canvas variables
+  useEffect(() => {
+    // Initialize
+    if (canvasRef.current) {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      offset.y = rect.top;
+      offset.x = rect.left;
+      canvasCtxRef.current = canvasRef.current.getContext("2d");
+    }
+    initCTX(canvasCtxRef.current);
+  }, []);
+
+  /*const aStar = */ useCallback(searchAlg, [
+    currentFloor,
+    image.width,
+    image.height,
+  ]);
+
+  const poll = useCallback(nodePoll, [searchAlg]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
+  /*const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   let ctx = canvasCtxRef.current;
 
@@ -289,7 +341,7 @@ export const InteractableMap = () => {
     let last: MapNode | undefined = undefined;
     // gets distance based on connected nodes
     path.forEach((node) => {
-      if (last != undefined /* && node.edges.includes(last)*/) {
+      if (last != undefined) {
         const length = Math.sqrt(
           Math.pow(last.ycoord - node.ycoord, 2) +
             Math.pow(last.xcoord - node.xcoord, 2),
@@ -353,16 +405,6 @@ export const InteractableMap = () => {
         scaleID!.classList.add("path-floor");
       }
     }
-
-    /*floors = [];
-    path.forEach((node) => {
-      if (!floors.includes(node.floor)) floors.push(node.floor);
-    });
-    for (let i = 0; i < floors.length; i++) {
-      if (floors[i].length === 1) floors[i] = "F" + floors[i];
-      const scaleID = document.querySelector("#" + floors[i]);
-      scaleID!.classList.add("path-floor");
-    }*/
 
     if (
       startNode !== undefined &&
@@ -618,14 +660,14 @@ export const InteractableMap = () => {
     setTimeout(() => {
       redraw = true;
     }, 25);
-  }
+  }*/
 
   return (
     <div
       style={
         {
-          width: canvasSize.x - offset.x,
-          height: canvasSize.y - offset.y,
+          width: getWidth() - offset.x,
+          height: getHeight() - offset.y,
           overflow: "hidden",
         } as React.CSSProperties
       }
@@ -657,8 +699,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button whole-graph-button"}
         onClick={() => {
-          showEdges = !showEdges;
-          redraw = true;
+          toggleEdges();
         }}
       >
         O
