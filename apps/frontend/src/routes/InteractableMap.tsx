@@ -169,6 +169,17 @@ export const InteractableMap = () => {
           " evaluation: " +
           floors.includes(currentFloor),
       );
+
+      let pathInView = false;
+      if (
+        pathHighest.x > upleftCorner!.x &&
+        pathLowest.x < downrightCorner!.x &&
+        pathHighest.y > upleftCorner!.y &&
+        pathLowest.y < downrightCorner!.y
+      ) {
+        pathInView = true;
+      }
+
       let currentSelectedFloor = currentFloor;
       if (currentSelectedFloor.length == 1) {
         currentSelectedFloor = "F" + currentSelectedFloor;
@@ -176,7 +187,8 @@ export const InteractableMap = () => {
       if (
         startNode === undefined ||
         endNode === undefined ||
-        !floors.includes(currentSelectedFloor)
+        !floors.includes(currentSelectedFloor) ||
+        !pathInView
       )
         redraw = false;
       console.log("redraw map");
