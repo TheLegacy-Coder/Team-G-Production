@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { contextMenuState } from "../stores/ContextMenuState.ts";
-import "./styles/TopNavbar.css";
 import { loginStore } from "../stores/LoginStore.ts";
 import { Login } from "../routes/Login.tsx";
 export interface ContextMenuRouterButtonProps {
