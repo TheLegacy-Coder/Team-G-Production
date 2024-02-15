@@ -8,8 +8,7 @@ import {
 } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
 import axios from "axios";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import { TabSwitcher } from "../components/TabSwitcher.tsx";
 
 const Nodes = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -74,8 +73,7 @@ const Nodes = () => {
         })
         // update local store
         .then(() => {
-          getMapNodesEdges().then((res) => {
-            console.log(res);
+          getMapNodesEdges().then(() => {
             forceUpdate();
           });
         });
@@ -103,28 +101,31 @@ const Nodes = () => {
 
   return (
     <>
-      <h1>Nodes</h1>
-      <button onClick={handleExportNodes}>Export CSV</button>
-      <label style={{ border: "2px solid" }}>
-        <input
-          onChange={handleImportNodes}
-          type={"file"}
-          accept={".csv"}
-          hidden
-        />
-        Import CSV
-      </label>
+      <div className={"float-buttons"}>
+        <button className={"import-export-buttons"} onClick={handleExportNodes}>
+          Export CSV
+        </button>
+        <label className={"import-export-buttons"}>
+          <input
+            onChange={handleImportNodes}
+            type={"file"}
+            accept={".csv"}
+            hidden
+          />
+          Import CSV
+        </label>
+      </div>
       <table>
         <thead>
           <tr>
-            <th>nodeID</th>
-            <th>xcoord</th>
-            <th>ycoord</th>
-            <th>floor</th>
-            <th>building</th>
-            <th>nodeType</th>
-            <th>longName</th>
-            <th>shortName</th>
+            <th>Node ID</th>
+            <th>X-Coordinate</th>
+            <th>Y-Coordinate</th>
+            <th>Floor</th>
+            <th>Building</th>
+            <th>Node Type</th>
+            <th>Long Name</th>
+            <th>Short Name</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -202,23 +203,27 @@ const Edges = () => {
 
   return (
     <>
-      <h1>Edges</h1>
-      <button onClick={handleExportEdges}>Export CSV</button>
-      <label style={{ border: "2px solid" }}>
-        <input
-          onChange={handleImportEdges}
-          type={"file"}
-          accept={".csv"}
-          hidden
-        />
-        Import CSV
-      </label>
+      <div className={"float-buttons"}>
+        <button className={"import-export-buttons"} onClick={handleExportEdges}>
+          Export CSV
+        </button>
+        <label className={"import-export-buttons"}>
+          <input
+            onChange={handleImportEdges}
+            type={"file"}
+            accept={".csv"}
+            hidden
+          />
+          Import CSV
+        </label>
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>edgeID</th>
-            <th>startNode</th>
-            <th>endNode</th>
+            <th>Edge ID</th>
+            <th>Start Node</th>
+            <th>End Node</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -230,18 +235,10 @@ const Edges = () => {
 export const Csvs = () => {
   return (
     <div className={"csvs-page"}>
-      <Tabs
-        defaultActiveKey="nodes"
-        id="uncontrolled-tab-example"
-        className="mb-3"
-      >
-        <Tab eventKey="nodes" title="Nodes">
-          <Nodes />
-        </Tab>
-        <Tab eventKey="edges" title="Edges">
-          <Edges />
-        </Tab>
-      </Tabs>
+      <TabSwitcher
+        titles={["Nodes", "Edges"]}
+        components={[<Nodes />, <Edges />]}
+      />
     </div>
   );
 };

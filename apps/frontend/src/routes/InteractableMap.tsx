@@ -1,16 +1,24 @@
-import React, { useEffect, useRef } from "react";
-import { AStarSearch, MapNode, mapNodes, nodeStore } from "../map/MapNode.ts";
+import React, { useCallback, useEffect, useRef } from "react";
+import {
+  setStartNode,
+  setEndNode,
+  getEndNode,
+  getStartNode,
+  AStarSearch,
+  MapNode,
+  mapNodes,
+  nodeStore,
+  mapEdges,
+} from "../map/MapNode.ts";
 import "../components/styles/ZoomButton.css";
 
-let imageWidth = 100;
-let imageHeight = 100;
-let yOffset = 0;
-let xOffset = 0;
-let hl: MapNode | undefined = undefined;
-let sl: MapNode | undefined = undefined;
-let path: MapNode[] = [];
+const canvasSize = { x: 0, y: 0 };
+const offset = { x: 0, y: 0 };
 
-let flip = false;
+let startNode: MapNode | undefined = undefined;
+let endNode: MapNode | undefined = undefined;
+let hoverNode: MapNode | undefined = undefined;
+let path: MapNode[] = [];
 
 let totalDistance = 0;
 let steps: number[] = [];
@@ -19,34 +27,41 @@ let frames: number[][][] = [[[]]];
 const spacing = 50;
 
 let showEdges = false;
+let newMap = true;
 
 //Stores scaled map amount
-let scalar = 0.75;
-//Stores map xy coordinates for translation
-let mapX = -1500;
-let mapY = -600;
+let scalar = 1;
 //Stores map delta xy coordinates while panning
-let xDelta = 0;
-let yDelta = 0;
-//Stores the start xy of mouse when pressed
-let startX = 0;
-let startY = 0;
+const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
+//Stores the start xy of mouse when pressed to test click clear or not
+const pageStart: { x: number; y: number } | undefined = { x: 0, y: 0 };
 //Stores whether to update map position if moving
 let moveMap = false;
+// start position in image frame for translating when panning
+let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+// coordinates of mouse in map frame
+let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+
+const zoomAmount = 0.1;
+
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   let ctx = canvasCtxRef.current;
 
-  const image = new Image();
+  let image = new Image();
   image.src = "00_thelowerlevel1.png";
+  let currentFloor = "L1";
 
   function getWidth(): number {
     const width =
       window.innerWidth ||
       document.documentElement.clientWidth ||
       document.body.clientWidth;
-    imageWidth = width;
+    canvasSize.x = width;
     return width;
   }
 
@@ -55,337 +70,498 @@ export const InteractableMap = () => {
       window.innerHeight ||
       document.documentElement.clientHeight ||
       document.body.clientHeight;
-    imageHeight = height;
+    canvasSize.y = height;
     return height;
   }
 
-  function draw() {
-    ctx = canvasCtxRef.current;
+  // converts coordinates from page frame to image frame
+  function tfPoint(x: number, y: number) {
+    if (ctx === null) {
+      return undefined;
+    }
+    const origin = new DOMPoint(x, y);
+    return ctx!.getTransform().invertSelf().transformPoint(origin);
+  }
 
+  function draw() {
+    // verifies canvas context is set up
+    ctx = canvasCtxRef.current;
     if (ctx == null) {
       return;
     }
 
-    //Stores local scaled variable to avoid getting/setting conflicts
-    const scaled = scalar;
-    //Stores the width and height of window
-    const width =
-      window.innerWidth ||
-      document.documentElement.clientWidth ||
-      document.body.clientWidth;
-    const height =
-      window.innerHeight ||
-      document.documentElement.clientHeight ||
-      document.body.clientHeight;
-    //Stores amount to translate drawn canvas items
-    const transX = mapX + xDelta;
-    const transY = mapY + yDelta;
-    //Clears canvas
-    ctx!.clearRect(0, 0, width, height);
-    //Scales canvas for zoom
-    ctx!.scale(scaled, scaled);
     drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
-    ctx?.drawImage(image, transX, transY);
+    // save the context data for tf
+    ctx!.save();
+    ctx!.setTransform(1, 0, 0, 1, 0, 0);
+    ctx!.clearRect(0, 0, canvasSize.x, canvasSize.y);
+    ctx!.restore();
+    // draws image
+    ctx!.drawImage(image, 0, 0);
+
+    //if draw edges
+    if (showEdges) {
+      mapNodes.forEach((node) => {
+        if (node.floor === currentFloor) {
+          ctx!.lineWidth = 3;
+          ctx!.strokeStyle = "#AAAAAA";
+          node.edges.forEach((edge) => {
+            if (edge.floor === currentFloor) {
+              // Start a new Path
+              ctx!.beginPath();
+              ctx!.moveTo(node.xcoord, node.ycoord);
+              ctx!.lineTo(edge.xcoord, edge.ycoord);
+              // Draw the Path
+              ctx!.stroke();
+            }
+          });
+        }
+      });
+    }
+
+    // draws the path trail
     if (frames[drawStep] != undefined) {
       frames[drawStep].forEach((frame) => {
         ctx!.beginPath();
-        ctx!.arc(
-          frame[0] + transX,
-          frame[1] + transY,
-          5,
-          0,
-          2 * Math.PI,
-          false,
-        );
+        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
         ctx!.fillStyle = "#0000FF";
         ctx!.fill();
       });
     }
 
-    flip = !flip;
-
-    //if draw edges
-    if (showEdges) {
-      mapNodes.forEach((node) => {
-        // wrap in if
-        ctx!.lineWidth = 3;
-        ctx!.strokeStyle = "#AAAAAA";
-        node.edges.forEach((edge) => {
-          // Start a new Path
-          ctx!.beginPath();
-          ctx!.moveTo(node.xcoord + transX, node.ycoord + transY);
-          ctx!.lineTo(edge.xcoord + transX, edge.ycoord + transY);
-          // Draw the Path
-          ctx!.stroke();
-        });
-      });
-    }
-
     mapNodes.forEach((node) => {
-      ctx!.beginPath();
-      ctx!.arc(
-        node.xcoord + transX,
-        node.ycoord + transY,
-        10,
-        0,
-        2 * Math.PI,
-        false,
-      );
-      ctx!.fillStyle =
-        sl == node ? "#00FF00" : hl == node ? "#0000FF" : "#FF0000";
-      ctx!.fill();
-      ctx!.lineWidth = 5;
-      ctx!.strokeStyle = "#330000";
-      ctx!.stroke();
-      if (node == hl || node == sl) {
-        ctx!.fillStyle = "#FFFFFF";
-        ctx!.strokeStyle = "#000000";
-        ctx!.fillRect(
-          node.xcoord - 80 + transX,
-          node.ycoord + 15 + transY,
-          160,
-          20,
-        );
-        ctx!.strokeRect(
-          node.xcoord - 80 + transX,
-          node.ycoord + 15 + transY,
-          160,
-          20,
-        );
-        ctx!.font = "bold 10pt Courier";
-        ctx!.textAlign = "center";
-        ctx!.fillStyle = "#550000";
-        ctx!.fillText(
-          node.shortName,
-          node.xcoord + transX,
-          node.ycoord + 28 + transY,
-        );
+      if (node.floor === currentFloor) {
+        ctx!.beginPath();
+        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+        ctx!.fillStyle =
+          startNode == node
+            ? "#00FF00"
+            : endNode == node
+              ? "#00ffff"
+              : hoverNode == node
+                ? "#0000FF"
+                : "#FF0000";
+        ctx!.fill();
+        ctx!.lineWidth = 5;
+        ctx!.strokeStyle = "#330000";
+        ctx!.stroke();
       }
     });
 
-    //forceUpdate();
+    if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
-    //Sets image width for display
-    imageWidth = width;
-    imageHeight = height;
-    //Unscales canvas for zoom
-    ctx!.scale(1 / scaled, 1 / scaled);
-    //console.log(drawStep);
     setTimeout(draw, 15);
+  }
+
+  function getContentWidth(prevNum: number, inString: string): number {
+    if (inString.length > prevNum) {
+      return inString.length;
+    }
+    return prevNum;
+  }
+
+  function drawNodeDetails(node: MapNode) {
+    ctx!.fillStyle = "#FFFFFF";
+    ctx!.strokeStyle = "#000000";
+    ctx!.lineWidth = 5 / scalar;
+    const content: string[] = [];
+    let contentWidth: number = node.shortName.length;
+    content.push(node.shortName);
+    contentWidth = getContentWidth(
+      contentWidth,
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push(
+      "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),
+    );
+    content.push("Adjacent Nodes:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Nodes:");
+    let lineCount = 3;
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      content.push(node.edges[i].shortName);
+      contentWidth = getContentWidth(contentWidth, node.edges[i].shortName);
+    }
+    content.push("Adjacent Edges:");
+    contentWidth = getContentWidth(contentWidth, "Adjacent Edges:");
+    lineCount++;
+
+    for (let i = 0; i < node.edges.length; i++) {
+      lineCount++;
+      let lineContent = "";
+      mapEdges.forEach((edge) => {
+        if (
+          (edge.startNode === node.nodeID &&
+            edge.endNode === node.edges[i].nodeID) ||
+          (edge.endNode === node.nodeID &&
+            edge.startNode === node.edges[i].nodeID)
+        ) {
+          lineContent = edge.edgeID;
+        }
+      });
+      content.push(lineContent);
+      contentWidth = getContentWidth(contentWidth, lineContent);
+    }
+
+    ctx!.fillRect(
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
+      node.ycoord + 15,
+      (contentWidth * 9) / scalar,
+      5 + (15 / scalar) * lineCount,
+    );
+    ctx!.strokeRect(
+      node.xcoord - (contentWidth * 9) / 2 / scalar,
+      node.ycoord + 15,
+      (contentWidth * 9) / scalar,
+      5 + (15 / scalar) * lineCount,
+    );
+    ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
+    ctx!.textAlign = "center";
+    ctx!.fillStyle = "#550000";
+    for (let i = 0; i < lineCount; i++) {
+      ctx!.fillText(
+        content[i],
+        node.xcoord,
+        node.ycoord + 14 + (14 / scalar) * (i + 1),
+      );
+    }
   }
 
   //Draws on canvas when map image loaded
   image.onload = () => {
     draw();
+    homePosition();
   };
 
-  //Updates map location to be within the bounds of the page
-  function updateXY() {
-    if (image.width * scalar < imageWidth) {
-      //Centers image along x axis
-      mapX = (imageWidth - image.width * scalar) / 2 / scalar;
-      xDelta = 0;
-    } else {
-      if (mapX + xDelta >= 0) {
-        //Aligns image along left side
-        mapX -= mapX + xDelta;
-      }
-      if (mapX <= imageWidth / scalar - image.width - xDelta - xOffset) {
-        //Aligns image along right side
-        mapX = imageWidth / scalar - image.width - xDelta - xOffset;
-      }
-    }
-    if (image.height * scalar < imageHeight) {
-      //Centers image along y axis
-      mapY = (imageHeight - image.height * scalar) / 2 / scalar;
-      yDelta = 0;
-    } else {
-      if (mapY + yDelta >= 0) {
-        //Aligns image along top side
-        mapY -= mapY + yDelta;
-      }
-      if (mapY <= (imageHeight - yOffset) / scalar - image.height - yDelta) {
-        //Aligns image along bottom side
-        mapY = (imageHeight - yOffset) / scalar - image.height - yDelta;
-      }
-    }
-  }
+  const aStar = useCallback(() => {
+    // filters path not on floor
+    const unfilteredPath = AStarSearch(startNode, endNode);
 
-  //Gets the x and y coordinates for mouse hovering and adjusts xy for corner bounds
-  function getXY(evt: React.MouseEvent<Element, MouseEvent>): {
-    x: number;
-    y: number;
-  } {
-    //Adjust delta values if moving map
-    if (moveMap) {
-      xDelta = (evt.pageX - startX) / scalar;
-      yDelta = (evt.pageY - startY) / scalar;
+    const floors: string[] = [];
+
+    unfilteredPath.forEach((node) => {
+      if (node.floor === currentFloor) path.push(node);
+      if (!floors.includes(node.floor)) floors.push(node.floor);
+    });
+
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
     }
 
-    updateXY();
-
-    //Returned xy values
-    const x = (evt.pageX - xOffset) / scalar - mapX;
-    const y = (evt.pageY - yOffset) / scalar - mapY;
-
-    return { x, y };
-  }
-
-  function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
-    const cord = getXY(evt);
-
-    let emptyClick = true;
-    mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(cord.x - node.xcoord, 2) + Math.pow(cord.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        emptyClick = false;
-        if (sl != undefined && path.length == 0) {
-          path = AStarSearch(sl, node);
-          totalDistance = 0;
-          steps = [0];
-          let last: MapNode | undefined = undefined;
-          path.forEach((node) => {
-            if (last != undefined) {
-              const length = Math.sqrt(
-                Math.pow(last.ycoord - node.ycoord, 2) +
-                  Math.pow(last.xcoord - node.xcoord, 2),
-              );
-              totalDistance += length;
-              steps.push(totalDistance);
-            }
-            last = node;
-          });
-          //bake frames
-          for (let f = 0; f < spacing; f++) {
-            const temp = [];
-            for (let i = 0; i < totalDistance / spacing; i++) {
-              let prog = spacing * i + (f % spacing);
-              let s = 0;
-              while (s < path.length) {
-                if (prog < steps[s]) {
-                  break;
-                }
-                s++;
-              }
-              s--;
-              prog -= steps[s];
-              if (s + 1 < path.length) {
-                const angleRadians = Math.atan2(
-                  path[s].ycoord - path[s + 1].ycoord,
-                  path[s].xcoord - path[s + 1].xcoord,
-                );
-                const x = path[s].xcoord - Math.cos(angleRadians) * prog;
-                const y = path[s].ycoord - Math.sin(angleRadians) * prog;
-                temp.push([x, y]);
-              }
-            }
-            frames.push(temp);
+    totalDistance = 0;
+    steps = [0];
+    let last: MapNode | undefined = undefined;
+    // gets distance based on connected nodes
+    path.forEach((node) => {
+      if (last != undefined /* && node.edges.includes(last)*/) {
+        const length = Math.sqrt(
+          Math.pow(last.ycoord - node.ycoord, 2) +
+            Math.pow(last.xcoord - node.xcoord, 2),
+        );
+        totalDistance += length;
+        steps.push(totalDistance);
+      }
+      last = node;
+    });
+    //bake frames
+    for (let f = 0; f < spacing; f++) {
+      const temp = [];
+      for (let i = 0; i < totalDistance / spacing; i++) {
+        let prog = spacing * i + (f % spacing);
+        let s = 0;
+        while (s < path.length) {
+          if (prog < steps[s]) {
+            break;
           }
-          console.log("frames");
-          console.log(frames);
-        } else {
-          path = [];
-          frames = [[[]]];
-          sl = node;
-          nodeStore.setSelectedNode(sl);
-          console.log("CLEAR");
+          s++;
+        }
+        s--;
+        prog -= steps[s];
+        if (s + 1 < path.length && path[s + 1].edges.includes(path[s])) {
+          const angleRadians = Math.atan2(
+            path[s].ycoord - path[s + 1].ycoord,
+            path[s].xcoord - path[s + 1].xcoord,
+          );
+          const x = path[s].xcoord - Math.cos(angleRadians) * prog;
+          const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+          temp.push([x, y]);
         }
       }
+      frames.push(temp);
+    }
+  }, [currentFloor]);
+
+  const poll = useCallback(() => {
+    startNode = getStartNode();
+    endNode = getEndNode();
+    let floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
+    for (let i = 0; i < floors.length; i++) {
+      const scaleID = document.querySelector("#" + floors[i]);
+      if (scaleID !== null) scaleID!.classList.remove("path-floor");
+    }
+
+    floors = [];
+    path.forEach((node) => {
+      if (!floors.includes(node.floor)) floors.push(node.floor);
     });
-    if (emptyClick && xDelta == 0 && yDelta == 0) {
-      hl = undefined;
-      sl = undefined;
-      nodeStore.setSelectedNode(sl);
+    for (let i = 0; i < floors.length; i++) {
+      if (floors[i].length === 1) floors[i] = "F" + floors[i];
+      const scaleID = document.querySelector("#" + floors[i]);
+      scaleID!.classList.add("path-floor");
+    }
+
+    if (startNode !== undefined && endNode !== undefined) {
       path = [];
       frames = [[[]]];
+      aStar();
     }
-    mapX += xDelta;
-    mapY += yDelta;
-    xDelta = 0;
-    yDelta = 0;
-    moveMap = false;
-  }
+  }, [aStar]);
 
-  //Starts moving map according to mouse drag
-  function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
-    startX = evt.pageX;
-    startY = evt.pageY;
-    moveMap = true;
-  }
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
 
-  function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
-    if (ctx == null) return;
-    //let changed = moveMap;
-    const cord = getXY(evt);
-    mapNodes.forEach((node) => {
-      const dist = Math.sqrt(
-        Math.pow(cord.x - node.xcoord, 2) + Math.pow(cord.y - node.ycoord, 2),
-      );
-      if (dist < 10 && path.length == 0) {
-        hl = node;
-        //changed = true;
-      } else {
-        if (hl == node && path.length == 0) {
-          //changed = true;
-          hl = undefined;
-        }
-      }
-    });
-  }
-
-  function zoom(zoomIn: boolean) {
-    if (zoomIn && scalar < 1.3) {
-      //Zooms in
-      scalar *= 1.2;
-    } else if (!zoomIn && scalar > 0.4) {
-      //Zooms out
-      scalar *= 1 / 1.2;
+  // resets map position to a default position
+  function homePosition() {
+    if (ctx === null) {
+      return;
     }
-    updateXY();
+    ctx!.translate(-1200, -400);
+    updateCoords();
+    scalar = 0.75;
+    ctx!.scale(0.75, 0.75);
+    updateCoords();
+    boundCoords();
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
   }
 
-  //Adjusts zoom according to scroll
-  function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
-    if (ctx == null) return;
-    const delta = evt.deltaY;
-
-    if (delta < 0) {
-      zoom(true);
-    } else {
-      zoom(false);
-    }
+  // updates coordinate points for map panning and zooming
+  function updateCoords() {
+    centerPos = tfPoint(
+      (canvasSize.x - offset.x) / 2,
+      (canvasSize.y - offset.y) / 2,
+    );
+    upleftCorner = tfPoint(0, 0);
+    downrightCorner = tfPoint(canvasSize.x, canvasSize.y);
   }
 
+  function boundCoords() {
+    if (downrightCorner === undefined || upleftCorner === undefined)
+      return null;
+    if (downrightCorner.x - upleftCorner.x > image.width) {
+      // centers canvas along x axis
+      ctx!.translate(upleftCorner.x, 0);
+      updateCoords();
+      ctx!.translate(
+        (downrightCorner.x - image.width - offset.x / scalar) / 2,
+        0,
+      );
+    } else {
+      if (upleftCorner.x < 0) {
+        // aligns canvas along left side
+        ctx!.translate(upleftCorner.x, 0);
+      } else if (downrightCorner.x > image.width + offset.x / scalar) {
+        // aligns canvas along right side
+        ctx!.translate(-image.width - offset.x / scalar + downrightCorner.x, 0);
+      }
+    }
+    if (downrightCorner.y - upleftCorner.y > image.height) {
+      // centers canvas along y axis
+      ctx!.translate(0, upleftCorner.y);
+      updateCoords();
+      ctx!.translate(
+        0,
+        (downrightCorner.y - image.height - offset.y / scalar) / 2,
+      );
+    } else {
+      if (upleftCorner.y < 0) {
+        // aligns canvas along top side
+        ctx!.translate(0, upleftCorner.y);
+      } else if (downrightCorner.y > image.height + offset.y / scalar) {
+        // aligns canvas along bottom side
+        ctx!.translate(
+          0,
+          -image.height - offset.y / scalar + downrightCorner.y,
+        );
+      }
+    }
+    updateCoords();
+  }
+
+  // runs when mouse reeased
+  function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (tfCursor === undefined || delta === undefined) {
+      return null;
+    }
+    moveMap = false;
+    evt.pageX;
+    let emptyClick = true;
+    mapNodes.forEach((node) => {
+      if (node.floor === currentFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          emptyClick = false;
+          if (startNode != undefined && path.length == 0) {
+            setEndNode(node);
+            aStar();
+          } else {
+            path = [];
+            frames = [[[]]];
+            setStartNode(node);
+          }
+          nodeStore.setSelectedNode(node);
+        }
+      }
+    });
+    if (emptyClick && delta.x == 0 && delta.y == 0) {
+      setStartNode(undefined);
+      setEndNode(undefined);
+      nodeStore.setSelectedNode(undefined);
+      path = [];
+      frames = [[[]]];
+    }
+    delta.x = 0;
+    delta.y = 0;
+    boundCoords();
+  }
+
+  //Starts moving map according to mouse drag
+  function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (pageStart === undefined) {
+      return null;
+    }
+    pageStart.x = evt.pageX;
+    pageStart.y = evt.pageY;
+    moveMap = true;
+    startPos = tfPoint(evt.pageX, evt.pageY);
+    boundCoords();
+  }
+
+  // runs for moving mouse
+  function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
+    tfCursor = tfPoint(evt.pageX - offset.x, evt.pageY - offset.y);
+
+    if (
+      delta === undefined ||
+      tfCursor === undefined ||
+      startPos === undefined
+    ) {
+      return null;
+    }
+
+    if (moveMap) {
+      delta.x = evt.pageX - pageStart!.x;
+      delta.y = evt.pageY - pageStart!.y;
+      ctx!.translate(
+        tfCursor.x + offset.x / scalar - startPos.x,
+        tfCursor.y + offset.y / scalar - startPos.y,
+      );
+    }
+    mapNodes.forEach((node) => {
+      if (node.floor === currentFloor) {
+        const dist = Math.sqrt(
+          Math.pow(tfCursor!.x - node.xcoord, 2) +
+            Math.pow(tfCursor!.y - node.ycoord, 2),
+        );
+        if (dist < 10) {
+          hoverNode = node;
+          //changed = true;
+        } else {
+          if (hoverNode == node) {
+            //changed = true;
+            hoverNode = undefined;
+          }
+        }
+      }
+    });
+    updateCoords();
+    boundCoords();
+  }
+
+  // zooms to a point
+  function zoom(zoom: number, xCoord: number, yCoord: number) {
+    if (scalar * zoom > 0.3 && scalar * zoom < 2) {
+      scalar *= zoom;
+      const scaleID = document.querySelector("#scalar");
+      scaleID!.textContent = scalar.toFixed(2).toString();
+
+      ctx!.translate(xCoord, yCoord);
+      ctx!.scale(zoom, zoom);
+      ctx!.translate(-xCoord, -yCoord);
+    }
+    updateCoords();
+    boundCoords();
+  }
+
+  //Adjusts zoom according to scroll
+  function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
+    if (tfCursor === undefined) {
+      return null;
+    }
+    const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
+    zoom(zoomDelta, tfCursor.x, tfCursor.y);
+  }
+
+  // initializes canvas variables
   useEffect(() => {
     // Initialize
     if (canvasRef.current) {
       const rect = canvasRef.current?.getBoundingClientRect();
-      yOffset = rect.top;
-
-      xOffset = rect.left;
+      offset.y = rect.top;
+      offset.x = rect.left;
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
   }, [ctx]);
 
-  function toggleEdges() {
-    showEdges = !showEdges;
+  function resetMap() {
+    frames = [[[]]];
+    drawStep = 0;
+    ctx!.scale(1 / scalar, 1 / scalar);
+    scalar *= 1 / scalar;
+    updateCoords();
+    ctx!.translate(upleftCorner!.x, upleftCorner!.y);
+    updateCoords();
+  }
+
+  function setMap(floor: string, imageSrc: string) {
+    if (newMap) {
+      newMap = false;
+      const tempScalar = scalar;
+      ctx!.save();
+      resetMap();
+      currentFloor = floor;
+      image = new Image();
+      image.src = imageSrc;
+      homePosition();
+      newMap = true;
+      ctx!.restore();
+      scalar = tempScalar;
+      const scaleID = document.querySelector("#scalar");
+      scaleID!.textContent = scalar.toFixed(2).toString();
+    }
   }
 
   return (
     <div
       style={
         {
-          width: imageWidth - xOffset,
-          height: imageHeight - yOffset,
+          width: canvasSize.x - offset.x,
+          height: canvasSize.y - offset.y,
           overflow: "hidden",
         } as React.CSSProperties
       }
     >
-      <button className={"zoom-button plus-button"} onClick={() => zoom(true)}>
+      <button
+        className={"zoom-button plus-button"}
+        onClick={() => zoom(1 + zoomAmount, centerPos!.x, centerPos!.y)}
+      >
         +
       </button>
       <button className={"zoom-button zoom-amount"}>
@@ -393,28 +569,71 @@ export const InteractableMap = () => {
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => zoom(false)}
+        onClick={() => zoom(1 - zoomAmount, centerPos!.x, centerPos!.y)}
       >
         -
       </button>
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          scalar = 0.75;
-          //Stores map xy coordinates for translation
-          mapX = -1500;
-          mapY = -600;
-          const scaleID = document.querySelector("#scalar");
-          scaleID!.textContent = scalar.toFixed(2).toString();
+          resetMap();
+          homePosition();
         }}
       >
         ↺
       </button>
       <button
         className={"zoom-button whole-graph-button"}
-        onClick={toggleEdges}
+        onClick={() => {
+          showEdges = !showEdges;
+        }}
       >
         O
+      </button>
+      <button
+        id={"F3"}
+        className={"zoom-button third-floor"}
+        onClick={() => {
+          setMap("3", "03_thethirdfloor.png");
+        }}
+      >
+        F3
+      </button>
+      <button
+        id={"F2"}
+        className={"zoom-button second-floor"}
+        onClick={() => {
+          setMap("2", "02_thesecondfloor.png");
+        }}
+      >
+        F2
+      </button>
+      <button
+        id={"F1"}
+        className={"zoom-button first-floor"}
+        onClick={() => {
+          setMap("1", "01_thefirstfloor.png");
+        }}
+      >
+        F1
+      </button>
+      <button
+        id={"L1"}
+        className={"zoom-button lower-floor"}
+        onClick={() => {
+          setMap("L1", "00_thelowerlevel1.png");
+        }}
+      >
+        L1
+      </button>
+      <button
+        id={"L2"}
+        className={"zoom-button lowest-floor"}
+        onClick={() => {
+          setMap("L2", "00_thelowerlevel2.png");
+        }}
+      >
+        L2
       </button>
       <canvas
         onMouseMove={mouseMove}

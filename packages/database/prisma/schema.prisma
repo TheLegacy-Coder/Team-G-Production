@@ -13,8 +13,7 @@ model Employee {
   employeeID                                              String           @id
   firstName                                               String
   lastName                                                String
-  username                                                String
-  password                                                String
+  email                                                   String
   job                                                     String
   accessLevel                                             String
   Announcement                                            Announcement[]
@@ -23,17 +22,23 @@ model Employee {
 }
 
 model ServiceRequest {
-  requestID                                         String    @id
+  requestID                                         String                           @id
   requestType                                       String
+  priority                                          String
   location                                          String
   status                                            String
   requester                                         String?
   helpingEmployee                                   String?
   desc                                              String
-  time                                              DateTime? @default(now()) @db.Timestamptz(6)
-  Nodes                                             Node      @relation(fields: [location], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequest_fk1")
-  Employee_ServiceRequest_helpingEmployeeToEmployee Employee? @relation("ServiceRequest_helpingEmployeeToEmployee", fields: [helpingEmployee], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk2")
-  Employee_ServiceRequest_requesterToEmployee       Employee? @relation("ServiceRequest_requesterToEmployee", fields: [requester], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk3")
+  time                                              DateTime?                        @default(now()) @db.Timestamptz(6)
+  Nodes                                             Node                             @relation(fields: [location], references: [nodeID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequest_fk1")
+  Employee_ServiceRequest_helpingEmployeeToEmployee Employee?                        @relation("ServiceRequest_helpingEmployeeToEmployee", fields: [helpingEmployee], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk2")
+  Employee_ServiceRequest_requesterToEmployee       Employee?                        @relation("ServiceRequest_requesterToEmployee", fields: [requester], references: [employeeID], onUpdate: NoAction, map: "ServiceRequest_fk3")
+  ServiceRequestExternalTransport                   ServiceRequestExternalTransport?
+  ServiceRequestFlowers                             ServiceRequestFlowers?
+  ServiceRequestInterpreter                         ServiceRequestInterpreter?
+  ServiceRequestReligious                           ServiceRequestReligious?
+  ServiceRequestSanitation                          ServiceRequestSanitation?
 }
 
 model Announcement {
@@ -65,4 +70,37 @@ model Node {
   Edge_Edge_startNodeToNode Edge[]           @relation("Edge_startNodeToNode")
   Edge_Edge_endNodeToNode   Edge[]           @relation("Edge_endNodeToNode")
   ServiceRequest            ServiceRequest[]
+}
+
+model ServiceRequestExternalTransport {
+  requestID      String         @id
+  vehicle        String
+  destination    String
+  ServiceRequest ServiceRequest @relation(fields: [requestID], references: [requestID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequestExternalTransport_fk1")
+}
+
+model ServiceRequestFlowers {
+  requestID      String         @id
+  flowerType     String
+  amount         Int
+  ServiceRequest ServiceRequest @relation(fields: [requestID], references: [requestID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequestFlowers_fk1")
+}
+
+model ServiceRequestInterpreter {
+  requestID      String         @id
+  language       String
+  ServiceRequest ServiceRequest @relation(fields: [requestID], references: [requestID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequestInterpreter")
+}
+
+model ServiceRequestReligious {
+  requestID      String         @id
+  faith          String
+  ServiceRequest ServiceRequest @relation(fields: [requestID], references: [requestID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequestReligious_fk1")
+}
+
+model ServiceRequestSanitation {
+  requestID      String         @id
+  hazardous      Boolean
+  messType       String
+  ServiceRequest ServiceRequest @relation(fields: [requestID], references: [requestID], onDelete: Cascade, onUpdate: NoAction, map: "ServiceRequestSanitation_fk1")
 }

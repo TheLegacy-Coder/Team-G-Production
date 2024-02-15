@@ -1,0 +1,53 @@
+.location-dropdowns {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.start-location {
+  width: 80%;
+  border-radius: 16px;
+  border-color: black;
+  border-width: 1px;
+  background: white;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.dropdown {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.end-location {
+  width: 80%;
+  border-radius: 16px;
+  border-color: black;
+  border-width: 1px;
+  background: white;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.location-dropdowns label {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.dropdown label {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.dropdown-select {
+  /* Add any specific styles for the select boxes here */
+}
+
+/* Optionally, add styles for the dropdown options */
+.dropdown select option {
+  background-color: white;
+  color: black;
+}

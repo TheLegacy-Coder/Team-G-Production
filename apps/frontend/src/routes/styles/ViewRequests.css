@@ -1,7 +1,14 @@
-.csvs-page {
-  overflow: scroll;
-  max-height: 100%;
-  min-height: 100%;
+.view-requests-page {
+  overflow-y: scroll;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
+  background: #e9d3b7;
+}
+
+.float-buttons {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
 }
 
 table {
@@ -9,18 +16,52 @@ table {
   border-collapse: collapse;
   margin-bottom: 1rem;
   border: 1px solid;
+  table-layout: fixed;
 }
 
 td {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
   text-align: center;
+  word-wrap: anywhere;
 }
 
 th {
   padding: 0.5rem;
   border: 1px solid;
+  font-size: 17px;
   text-align: center;
-  background-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  background-color: #00284f;
   color: white;
+}
+
+.status {
+  width: 100%;
+  background-color: #b8c4d1;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.filter {
+  margin: 8px;
+  width: 30%;
+  background-color: #00284f;
+  border: 4px solid white;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
+}
+
+.filterText {
+  padding: 6px;
+  color: white;
+}
+
+.statusFilter {
+  margin-left: 10px;
+  padding: 6px;
+  background-color: #b8c4d1;
+  border-radius: 5px;
 }

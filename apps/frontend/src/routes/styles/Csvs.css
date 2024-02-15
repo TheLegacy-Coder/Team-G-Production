@@ -1,6 +1,13 @@
 .csvs-page {
-  overflow: scroll;
-  max-height: 100%;
+  overflow-y: scroll;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
+}
+
+.float-buttons {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
 }
 
 table {
@@ -8,18 +15,118 @@ table {
   border-collapse: collapse;
   margin-bottom: 1rem;
   border: 1px solid;
+  background: #e9d3b7;
+  color: black;
+  font-weight: bold;
 }
 
 td {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
+  text-align: center;
+}
+
+tr {
+  padding: 0.5rem;
+  border: 2px solid;
   text-align: center;
 }
 
 th {
   padding: 0.5rem;
-  border: 1px solid;
+  border: 2px solid;
   text-align: center;
-  background-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  background-color: #00284f;
   color: white;
+}
+
+.import-export-buttons {
+  padding: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+  border: 2px solid white;
+  background-color: #00284f;
+  color: white;
+}
+
+#root
+  > div
+  > div.context-menu-in-to-long
+  > div.context-menu-divider-content-reselect
+  > div.csvs-page
+  > ul
+  > li:nth-child(1) {
+  width: 49%;
+  font-size: 30px;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 3px solid white;
+  border-bottom: none;
+  margin-top: 13px;
+  margin-left: 10px;
+  margin-right: 4px;
+  background-color: #00284f !important;
+  color: white !important;
+}
+
+#root
+  > div
+  > div.context-menu-in-to-long
+  > div.context-menu-divider-content-reselect
+  > div.csvs-page
+  > ul
+  > li:nth-child(2) {
+  width: 49%;
+  font-size: 30px;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 3px solid white;
+  border-bottom: none;
+  margin-top: 13px;
+  background-color: #00284f !important;
+  color: white !important;
+}
+
+#root
+  > div
+  > div.context-menu-in-to-long
+  > div.context-menu-divider-content-reselect-alt
+  > div.csvs-page
+  > ul
+  > li:nth-child(1) {
+  width: 49%;
+  font-size: 30px;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 3px solid white;
+  border-bottom: none;
+  margin-top: 13px;
+  margin-left: 10px;
+  margin-right: 4px;
+  background-color: #00284f !important;
+  color: white !important;
+}
+
+#root
+  > div
+  > div.context-menu-in-to-long
+  > div.context-menu-divider-content-reselect-alt
+  > div.csvs-page
+  > ul
+  > li:nth-child(2) {
+  width: 49%;
+  font-size: 30px;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 3px solid white;
+  border-bottom: none;
+  margin-top: 13px;
+  background-color: #00284f !important;
+  color: white !important;
 }

@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { contextMenuState } from "../stores/ContextMenuState.ts";
 import "./styles/TopNavbar.css";
-import { Nav } from "react-bootstrap";
 import { loginStore } from "../stores/LoginStore.ts";
 import { Login } from "../routes/Login.tsx";
 export interface ContextMenuRouterButtonProps {
@@ -9,6 +8,9 @@ export interface ContextMenuRouterButtonProps {
   lable: string;
   protected?: boolean;
   style: string;
+  customText?: string;
+  admin?: boolean;
+  button?: boolean;
 }
 
 export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
@@ -21,12 +23,33 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
     contextMenuState.update(
       enable ? props.content : <Login />,
       enable ? props.lable : "Login",
+      props.admin === undefined ? false : props.admin,
     );
   }
 
-  return (
-    <Nav className={props.style} onClick={route}>
-      {props.lable}
-    </Nav>
-  );
+  if (props.button === true) {
+    return (
+      <button
+        className={
+          props.style +
+          (props.lable == contextMenuState.title ? "-selected" : "")
+        }
+        onClick={route}
+      >
+        {props.customText !== undefined ? props.customText : props.lable}
+      </button>
+    );
+  } else {
+    return (
+      <div
+        className={
+          props.style +
+          (props.lable == contextMenuState.title ? "-selected" : "")
+        }
+        onClick={route}
+      >
+        {props.customText !== undefined ? props.customText : props.lable}
+      </div>
+    );
+  }
 }

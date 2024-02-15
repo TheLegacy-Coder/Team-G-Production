@@ -42,7 +42,6 @@ export const HomeAnnounce = () => {
 
   const divRef = document.getElementById("marquee-content");
   const divWidth = divRef === null ? 100 : divRef.getBoundingClientRect().width;
-  console.log(divWidth);
   const pxps = 25;
   if (divRef === null) {
     setTimeout(forceUpdate, 100);

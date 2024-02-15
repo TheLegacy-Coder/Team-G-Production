@@ -28,10 +28,9 @@ class NodeStore {
   public currentRefresh: DispatchWithoutAction | undefined;
   setSelectedNode(node: MapNode | undefined) {
     this.selectedNode = node;
-    console.log(node);
-    console.log(this.currentRefresh);
+    // console.log(this.currentRefresh);
     if (this.currentRefresh !== undefined) {
-      console.log("refreshing");
+      // console.log("refreshing");
       this.currentRefresh();
     }
   }
@@ -48,7 +47,7 @@ export function getMapNodesEdges() {
     axios
       .get("http://localhost:3000/api/map/nodes")
       .then((response: AxiosResponse<MapNode[]>) => {
-        console.log(response.data);
+        // console.log(response.data);
         response.data.forEach((node) => {
           node.edges = [];
           mapNodes.set(node.nodeID, node);
@@ -57,12 +56,12 @@ export function getMapNodesEdges() {
         axios
           .get("http://localhost:3000/api/map/edges")
           .then((response: AxiosResponse<Edge[]>) => {
-            console.log(response.data);
+            // console.log(response.data);
             response.data.forEach((edge) => {
               const n1 = mapNodes.get(edge.startNode);
               const n2 = mapNodes.get(edge.endNode);
               if (n1 == undefined || n2 == undefined) {
-                console.log("bad edge");
+                // console.log("bad edge");
               } else {
                 n1.edges.push(n2);
                 n2.edges.push(n1);
@@ -80,6 +79,25 @@ export function getMapNodesEdges() {
         console.error("Error fetching data:", error);
       });
   });
+}
+
+let startNode: MapNode | undefined;
+let endNode: MapNode | undefined;
+
+export function setStartNode(node: MapNode | undefined) {
+  startNode = node;
+}
+
+export function getStartNode(): MapNode | undefined {
+  return startNode;
+}
+
+export function setEndNode(node: MapNode | undefined) {
+  endNode = node;
+}
+
+export function getEndNode(): MapNode | undefined {
+  return endNode;
 }
 
 //TODO: remove this and replace with an actual backend
@@ -166,9 +184,12 @@ export function AStarSearch(
     frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
 
     const current = frontier.shift() as MapNode;
-    console.log(current);
-    console.log(fScore);
+    // console.log(current);
+    // console.log(fScore);
 
+    if (current === undefined) {
+      return [];
+    }
     if (current === end) {
       // Reconstruct path
       const path: MapNode[] = [];
