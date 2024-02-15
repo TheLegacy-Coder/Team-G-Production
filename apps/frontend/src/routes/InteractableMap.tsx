@@ -1,15 +1,10 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import {
   setMap,
-  mouseMove,
-  mouseUp,
-  mouseDown,
-  mouseScroll,
   getWidth,
   getHeight,
   resetMap,
   homePosition,
-  zoom,
   scalar,
   offset,
   toggleEdges,
@@ -21,6 +16,7 @@ import {
   image,
   nodePoll,
 } from "../map/Draw";
+import { mouseScroll, mouseMove, mouseUp, mouseDown, zoom } from "../map/Mouse";
 /*import {AStarSearch, getEndNode, getStartNode, MapNode} from "../map/MapNode.ts";
 import {
   setStartNode,

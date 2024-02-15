@@ -1,13 +1,10 @@
-import React from "react";
+//import React from "react";
 import {
-  setStartNode,
-  setEndNode,
   getEndNode,
   getStartNode,
   AStarSearch,
   MapNode,
   mapNodes,
-  nodeStore,
   mapEdges,
 } from "./MapNode.ts";
 import "../components/styles/ZoomButton.css";
@@ -15,15 +12,16 @@ import "../components/styles/ZoomButton.css";
 /**
  * Issues that are occurring
  * swapping between clicking nodes and selecting nodes not causing side buttons to update
+ * pathInView causing bottom path from L2 to F3 to not draw
  */
 
 const canvasSize = { x: 0, y: 0 };
 export const offset = { x: 0, y: 0 };
 
-let startNode: MapNode | undefined = undefined;
+export let startNode: MapNode | undefined = undefined;
 let endNode: MapNode | undefined = undefined;
-let hoverNode: MapNode | undefined = undefined;
-let path: MapNode[] = [];
+export let hoverNode: MapNode | undefined = undefined;
+export let path: MapNode[] = [];
 
 let totalDistance = 0;
 let steps: number[] = [];
@@ -41,16 +39,6 @@ let pathHighest = { x: 0, y: 0 };
 
 //Stores scaled map amount
 export let scalar = 1;
-//Stores map delta xy coordinates while panning
-const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
-//Stores the start xy of mouse when pressed to test click clear or not
-const pageStart: { x: number; y: number } | undefined = { x: 0, y: 0 };
-//Stores whether to update map position if moving
-let moveMap = false;
-// start position in image frame for translating when panning
-let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
-// coordinates of mouse in map frame
-let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
 export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 let downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
@@ -63,7 +51,7 @@ export function toggleEdges() {
 }
 
 //let ctx = canvasCtxRef.current;
-let ctx: CanvasRenderingContext2D | null;
+export let ctx: CanvasRenderingContext2D | null;
 
 export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
   ctx = ctxRef;
@@ -91,8 +79,25 @@ export function getHeight(): number {
   return height;
 }
 
+export function setScalar(value: number) {
+  scalar = value;
+}
+
+export function setRedraw() {
+  redraw = true;
+}
+
+export function setHover(node: MapNode | undefined) {
+  hoverNode = node;
+}
+
+export function resetPath() {
+  path = [];
+  frames = [[[]]];
+}
+
 // converts coordinates from page frame to image frame
-function tfPoint(x: number, y: number) {
+export function tfPoint(x: number, y: number) {
   if (ctx === null) {
     return undefined;
   }
@@ -394,7 +399,7 @@ export function homePosition() {
 }
 
 // updates coordinate points for map panning and zooming
-function updateCoords() {
+export function updateCoords() {
   centerPos = tfPoint(
     (canvasSize.x - offset.x) / 2,
     (canvasSize.y - offset.y) / 2,
@@ -403,7 +408,7 @@ function updateCoords() {
   downrightCorner = tfPoint(canvasSize.x, canvasSize.y);
 }
 
-function boundCoords() {
+export function boundCoords() {
   if (downrightCorner === undefined || upleftCorner === undefined) return null;
   if (downrightCorner.x - upleftCorner.x > image.width) {
     // centers canvas along x axis
@@ -440,129 +445,6 @@ function boundCoords() {
     }
   }
   updateCoords();
-}
-
-// runs when mouse released
-export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
-  if (tfCursor === undefined || delta === undefined) {
-    return null;
-  }
-  moveMap = false;
-  evt.pageX;
-  let emptyClick = true;
-  mapNodes.forEach((node) => {
-    if (node.floor === currentFloor) {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        emptyClick = false;
-        if (startNode != undefined && path.length == 0) {
-          setEndNode(node);
-          //aStar();
-          searchAlg();
-        } else {
-          path = [];
-          frames = [[[]]];
-          setStartNode(node);
-        }
-        nodeStore.setSelectedNode(node);
-      }
-    }
-  });
-  if (emptyClick && delta.x == 0 && delta.y == 0) {
-    setStartNode(undefined);
-    setEndNode(undefined);
-    nodeStore.setSelectedNode(undefined);
-    path = [];
-    frames = [[[]]];
-  }
-  delta.x = 0;
-  delta.y = 0;
-  boundCoords();
-  redraw = true;
-}
-
-//Starts moving map according to mouse drag
-export function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
-  if (pageStart === undefined) {
-    return null;
-  }
-  pageStart.x = evt.pageX;
-  pageStart.y = evt.pageY;
-  moveMap = true;
-  startPos = tfPoint(evt.pageX, evt.pageY);
-  boundCoords();
-}
-
-// runs for moving mouse
-export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
-  let moveRedraw = false;
-  tfCursor = tfPoint(evt.pageX - offset.x, evt.pageY - offset.y);
-
-  if (delta === undefined || tfCursor === undefined || startPos === undefined) {
-    return null;
-  }
-
-  if (moveMap) {
-    const currDelta = { x: delta.x, y: delta.y };
-    delta.x = evt.pageX - pageStart!.x;
-    delta.y = evt.pageY - pageStart!.y;
-    if (delta.x !== currDelta.x || delta.y !== currDelta.y) moveRedraw = true;
-    ctx!.translate(
-      tfCursor.x + offset.x / scalar - startPos.x,
-      tfCursor.y + offset.y / scalar - startPos.y,
-    );
-  }
-  mapNodes.forEach((node) => {
-    if (node.floor === currentFloor) {
-      const dist = Math.sqrt(
-        Math.pow(tfCursor!.x - node.xcoord, 2) +
-          Math.pow(tfCursor!.y - node.ycoord, 2),
-      );
-      if (dist < 10) {
-        if (hoverNode !== node) {
-          moveRedraw = true;
-        }
-        hoverNode = node;
-      } else if (hoverNode == node) {
-        hoverNode = undefined;
-        moveRedraw = true;
-      }
-    }
-  });
-  updateCoords();
-  boundCoords();
-  if (moveRedraw) {
-    redraw = true;
-  }
-}
-
-// zooms to a point
-export function zoom(zoom: number, xCoord: number, yCoord: number) {
-  if (scalar * zoom > 0.3 && scalar * zoom < 2) {
-    scalar *= zoom;
-    const scaleID = document.querySelector("#scalar");
-    scaleID!.textContent = scalar.toFixed(2).toString();
-
-    ctx!.translate(xCoord, yCoord);
-    ctx!.scale(zoom, zoom);
-    ctx!.translate(-xCoord, -yCoord);
-  }
-  updateCoords();
-  boundCoords();
-  redraw = true;
-}
-
-//Adjusts zoom according to scroll
-export function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
-  if (tfCursor === undefined) {
-    return null;
-  }
-  const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
-  zoom(zoomDelta, tfCursor.x, tfCursor.y);
-  redraw = true;
 }
 
 export function resetMap() {
