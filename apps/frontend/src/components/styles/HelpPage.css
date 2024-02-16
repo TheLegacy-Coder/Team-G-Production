@@ -1,4 +1,12 @@
+.encompassing-div {
+  height: calc(100% - 90px);
+  align-content: center;
+}
+
 .help-page-container {
+  overflow-y: scroll;
+  justify-content: center;
+  text-align: center;
   font-weight: bold;
   font-size: 19px;
   max-width: 800px;
@@ -6,9 +14,8 @@
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background: #00284f;
   height: 100%;
-  color: white;
+  color: black;
   font-size: 20px;
   font-weight: bold;
 }
@@ -22,5 +29,5 @@
 }
 
 a {
-  color: white;
+  color: midnightblue;
 }
