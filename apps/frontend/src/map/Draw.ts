@@ -1,14 +1,16 @@
 //import React from "react";
+
+/**
+ * Completed
+ */
+
 import { MapNode, mapNodes, mapEdges } from "./MapNode.ts";
-import { upleftCorner, downrightCorner } from "./Mouse.ts";
+
+/**
+ * NOT Completed
+ */
 import { homePosition, currentFloor } from "./BoundMap.ts";
-import {
-  startNode,
-  endNode,
-  pathHighest,
-  pathLowest,
-  floors,
-} from "./MapAlgorithm.ts";
+import { startNode, endNode, floors, inView } from "./MapAlgorithm.ts";
 import "../components/styles/ZoomButton.css";
 
 /**
@@ -17,7 +19,7 @@ import "../components/styles/ZoomButton.css";
  * pathInView causing bottom path from L2 to F3 to not draw
  */
 
-export const canvasSize = { x: 0, y: 0 };
+const canvasSize = { x: 0, y: 0 };
 export const offset = { x: 0, y: 0 };
 
 export let hoverNode: MapNode | undefined = undefined;
@@ -45,7 +47,12 @@ export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
   ctx = ctxRef;
 }
 
-export let image = new Image();
+export function setOffset(top: number, left: number) {
+  offset.y = top;
+  offset.x = left;
+}
+
+let image = new Image();
 image.src = "00_thelowerlevel1.png";
 
 export function getWidth(): number {
@@ -170,12 +177,7 @@ function draw() {
     if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
     //let pathInView = false;
-    if (
-      pathHighest.x > upleftCorner!.x &&
-      pathLowest.x < downrightCorner!.x &&
-      pathHighest.y > upleftCorner!.y &&
-      pathLowest.y < downrightCorner!.y
-    ) {
+    if (inView()) {
       //pathInView = true;
     }
 

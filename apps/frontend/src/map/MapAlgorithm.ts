@@ -1,6 +1,19 @@
+/**
+ * Completed
+ */
+
 import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
+
+/**
+ * NOT Completed
+ */
+
 import { currentFloor } from "./BoundMap.ts";
-import { framePush, image, path, resetPath, setRedraw } from "./Draw.ts";
+import { framePush, path, resetPath, setRedraw } from "./Draw.ts";
+import { downrightCorner, upleftCorner } from "./Mouse.ts";
+
+const imageWidth = 5000;
+const imageHeight = 3400;
 
 const spacing = 50;
 let totalDistance = 0;
@@ -11,13 +24,22 @@ export let floors: string[] = [];
 export let pathLowest = { x: 0, y: 0 };
 export let pathHighest = { x: 0, y: 0 };
 
+export function inView(): boolean {
+  return (
+    pathHighest.x > upleftCorner!.x &&
+    pathLowest.x < downrightCorner!.x &&
+    pathHighest.y > upleftCorner!.y &&
+    pathLowest.y < downrightCorner!.y
+  );
+}
+
 export function searchAlg() {
   // filters path not on floor
   const unfilteredPath = AStarSearch(startNode, endNode);
 
   floors = [];
 
-  pathLowest = { x: image.width, y: image.height };
+  pathLowest = { x: imageWidth, y: imageHeight };
   pathHighest = { x: 0, y: 0 };
 
   unfilteredPath.forEach((node) => {

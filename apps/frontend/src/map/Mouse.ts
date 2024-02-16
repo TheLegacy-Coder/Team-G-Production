@@ -1,5 +1,14 @@
 import React from "react";
+
+/**
+ * Completed
+ */
 import { setStartNode, setEndNode, mapNodes, nodeStore } from "./MapNode.ts";
+
+/**
+ * NOT Completed
+ */
+
 import {
   scalar,
   ctx,
@@ -11,8 +20,8 @@ import {
   hoverNode,
   setHover,
   resetPath,
-  path,
-  canvasSize,
+  getWidth,
+  getHeight,
 } from "./Draw.ts";
 import { currentFloor, boundCoords } from "./BoundMap.ts";
 import { startNode, searchAlg } from "./MapAlgorithm.ts";
@@ -28,7 +37,7 @@ let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
 let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
-export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 export let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
 export let downrightCorner: { x: number; y: number } | undefined = {
   x: 0,
@@ -51,6 +60,13 @@ export function zoom(zoom: number, xCoord: number, yCoord: number) {
   boundCoords();
   //redraw = true;
   setRedraw();
+}
+
+export function buttonZoom(input: boolean) {
+  let zoomIncrement: number;
+  if (input) zoomIncrement = 1 + zoomAmount;
+  else zoomIncrement = 1 - zoomAmount;
+  zoom(zoomIncrement, centerPos!.x, centerPos!.y);
 }
 
 //Adjusts zoom according to scroll
@@ -138,13 +154,10 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
       );
       if (dist < 10) {
         emptyClick = false;
-        if (startNode != undefined && path.length == 0) {
+        if (startNode != undefined) {
           setEndNode(node);
-          //aStar();
           searchAlg();
         } else {
-          //path = [];
-          //frames = [[[]]];
           resetPath();
           setStartNode(node);
         }
@@ -156,8 +169,6 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     setStartNode(undefined);
     setEndNode(undefined);
     nodeStore.setSelectedNode(undefined);
-    //path = [];
-    //frames = [[[]]];
     resetPath();
   }
   delta.x = 0;
@@ -170,9 +181,9 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
 // updates coordinate points for map panning and zooming
 export function updateCoords() {
   centerPos = tfPoint(
-    (canvasSize.x - offset.x) / 2,
-    (canvasSize.y - offset.y) / 2,
+    (getWidth() - offset.x) / 2,
+    (getHeight() - offset.y) / 2,
   );
   upleftCorner = tfPoint(0, 0);
-  downrightCorner = tfPoint(canvasSize.x, canvasSize.y);
+  downrightCorner = tfPoint(getWidth(), getHeight());
 }

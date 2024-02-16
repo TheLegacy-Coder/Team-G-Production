@@ -2,21 +2,18 @@ import React, { useCallback, useEffect, useRef } from "react";
 import {
   getWidth,
   getHeight,
-  scalar,
   offset,
   toggleEdges,
-  zoomAmount,
   initCTX,
-  image,
+  setOffset,
 } from "../map/Draw";
-import { currentFloor, resetMap, setMap, homePosition } from "../map/BoundMap";
+import { resetMap, setMap, homePosition } from "../map/BoundMap";
 import {
   mouseScroll,
   mouseMove,
   mouseUp,
   mouseDown,
-  zoom,
-  centerPos,
+  buttonZoom,
 } from "../map/Mouse";
 import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
 
@@ -25,23 +22,23 @@ export const InteractableMap = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
 
+  const imageWidth = 5000;
+  const imageHeight = 3400;
+
   // initializes canvas variables
   useEffect(() => {
     // Initialize
     if (canvasRef.current) {
       const rect = canvasRef.current?.getBoundingClientRect();
-      offset.y = rect.top;
-      offset.x = rect.left;
+      //offset.y = rect.top;
+      //offset.x = rect.left;
+      setOffset(rect.top, rect.left);
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
     initCTX(canvasCtxRef.current);
   }, []);
 
-  /*const aStar = */ useCallback(searchAlg, [
-    currentFloor,
-    image.width,
-    image.height,
-  ]);
+  /*const aStar = */ useCallback(searchAlg, [imageWidth, imageHeight]);
 
   const poll = useCallback(nodePoll, [searchAlg]);
 
@@ -62,16 +59,16 @@ export const InteractableMap = () => {
     >
       <button
         className={"zoom-button plus-button"}
-        onClick={() => zoom(1 + zoomAmount, centerPos!.x, centerPos!.y)}
+        onClick={() => buttonZoom(true)}
       >
         +
       </button>
       <button className={"zoom-button zoom-amount"}>
-        <div id={"scalar"}>{scalar.toFixed(2)}</div>
+        <div id={"scalar"}></div>
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => zoom(1 - zoomAmount, centerPos!.x, centerPos!.y)}
+        onClick={() => buttonZoom(false)}
       >
         -
       </button>
