@@ -6,10 +6,16 @@
   background: #e9d3b7;
 }
 
-.float-buttons {
+.float-buttons-right {
   position: absolute;
   bottom: 16px;
   right: 32px;
+}
+
+.float-buttons-left {
+  position: absolute;
+  bottom: 16px;
+  left: 32px;
 }
 
 table {
