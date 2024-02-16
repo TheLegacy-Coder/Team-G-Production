@@ -15,9 +15,15 @@ import {
 /**
  * NOT Completed
  */
-import { homePosition, currentFloor } from "./BoundMap.ts";
 import { floors } from "./MapAlgorithm.ts";
-import { hoverNode, inView } from "./Mouse.ts";
+import {
+  hoverNode,
+  inView,
+  currentFloor,
+  updateCoords,
+  upleftCorner,
+  homePosition,
+} from "./Mouse.ts";
 
 /**
  * Issues that are occurring
@@ -36,8 +42,6 @@ export let scalar = 1;
 /**
  * End Exported types
  */
-
-const canvasSize = { x: 0, y: 0 };
 
 let drawStep = 0;
 let frames: number[][][] = [[[]]];
@@ -63,18 +67,6 @@ export function setOffset(top: number, left: number) {
 
 let image = new Image();
 image.src = "00_thelowerlevel1.png";
-
-/*export function getWidth(): number {
-  const width = window.innerWidth;
-  canvasSize.x = width;
-  return width;
-}
-
-export function getHeight(): number {
-  const height = window.innerHeight;
-  canvasSize.y = height;
-  return height;
-}*/
 
 export function setScalar(value: number) {
   scalar = value;
@@ -119,7 +111,7 @@ function draw() {
     // save the context data for tf
     ctx!.save();
     ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    ctx!.clearRect(0, 0, canvasSize.x, canvasSize.y);
+    ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
     ctx!.restore();
     // draws image
     ctx!.drawImage(image, 0, 0);
@@ -277,3 +269,17 @@ image.onload = () => {
     redraw = true;
   }, 25);
 };
+
+export function resetMap() {
+  //frames = [[[]]];
+  resetPath();
+  //drawStep = 0;
+  ctx!.scale(1 / scalar, 1 / scalar);
+  //scalar *= 1 / scalar;
+  setScalar(1);
+  updateCoords();
+  ctx!.translate(upleftCorner!.x, upleftCorner!.y);
+  updateCoords();
+  //redraw = true;
+  setRedraw();
+}

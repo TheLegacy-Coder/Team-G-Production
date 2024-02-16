@@ -5,14 +5,16 @@ import {
   initCTX,
   setOffset,
   setRedraw,
+  resetMap,
 } from "../map/Draw";
-import { resetMap, setMap, homePosition } from "../map/BoundMap";
 import {
   mouseScroll,
   mouseMove,
   mouseUp,
   mouseDown,
   buttonZoom,
+  setMap,
+  homePosition,
 } from "../map/Mouse";
 import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
 import "../components/styles/ZoomButton.css";

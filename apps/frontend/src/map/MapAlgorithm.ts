@@ -8,7 +8,7 @@ import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
  * NOT Completed
  */
 
-import { currentFloor } from "./BoundMap.ts";
+import { currentFloor } from "./Mouse.ts";
 import { framePush, path, resetPath, setRedraw } from "./Draw.ts";
 
 let startNode: MapNode | undefined = undefined;
