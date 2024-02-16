@@ -28,6 +28,11 @@ const spacing = 50;
 
 let showEdges = false;
 let newMap = true;
+let redraw = true;
+let floors: string[] = [];
+
+let pathLowest = { x: 0, y: 0 };
+let pathHighest = { x: 0, y: 0 };
 
 //Stores scaled map amount
 let scalar = 1;
@@ -84,73 +89,96 @@ export const InteractableMap = () => {
   }
 
   function draw() {
-    // verifies canvas context is set up
-    ctx = canvasCtxRef.current;
-    if (ctx == null) {
-      return;
-    }
+    if (redraw) {
+      // verifies canvas context is set up
+      ctx = canvasCtxRef.current;
+      if (ctx == null) {
+        return;
+      }
 
-    drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
-    // save the context data for tf
-    ctx!.save();
-    ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    ctx!.clearRect(0, 0, canvasSize.x, canvasSize.y);
-    ctx!.restore();
-    // draws image
-    ctx!.drawImage(image, 0, 0);
+      drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
+      // save the context data for tf
+      ctx!.save();
+      ctx!.setTransform(1, 0, 0, 1, 0, 0);
+      ctx!.clearRect(0, 0, canvasSize.x, canvasSize.y);
+      ctx!.restore();
+      // draws image
+      ctx!.drawImage(image, 0, 0);
 
-    //if draw edges
-    if (showEdges) {
+      //if draw edges
+      if (showEdges) {
+        mapNodes.forEach((node) => {
+          if (node.floor === currentFloor) {
+            ctx!.lineWidth = 3;
+            ctx!.strokeStyle = "#AAAAAA";
+            node.edges.forEach((edge) => {
+              if (edge.floor === currentFloor) {
+                // Start a new Path
+                ctx!.beginPath();
+                ctx!.moveTo(node.xcoord, node.ycoord);
+                ctx!.lineTo(edge.xcoord, edge.ycoord);
+                // Draw the Path
+                ctx!.stroke();
+              }
+            });
+          }
+        });
+      }
+
+      // draws the path trail
+      if (frames[drawStep] != undefined) {
+        frames[drawStep].forEach((frame) => {
+          ctx!.beginPath();
+          ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
+          ctx!.fillStyle = "#0000FF";
+          ctx!.fill();
+        });
+      }
+
       mapNodes.forEach((node) => {
         if (node.floor === currentFloor) {
-          ctx!.lineWidth = 3;
-          ctx!.strokeStyle = "#AAAAAA";
-          node.edges.forEach((edge) => {
-            if (edge.floor === currentFloor) {
-              // Start a new Path
-              ctx!.beginPath();
-              ctx!.moveTo(node.xcoord, node.ycoord);
-              ctx!.lineTo(edge.xcoord, edge.ycoord);
-              // Draw the Path
-              ctx!.stroke();
-            }
-          });
+          ctx!.beginPath();
+          ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+          ctx!.fillStyle =
+            startNode == node
+              ? "#00FF00"
+              : endNode == node
+                ? "#00ffff"
+                : hoverNode == node
+                  ? "#0000FF"
+                  : "#FF0000";
+          ctx!.fill();
+          ctx!.lineWidth = 5;
+          ctx!.strokeStyle = "#330000";
+          ctx!.stroke();
         }
       });
-    }
 
-    // draws the path trail
-    if (frames[drawStep] != undefined) {
-      frames[drawStep].forEach((frame) => {
-        ctx!.beginPath();
-        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
-        ctx!.fillStyle = "#0000FF";
-        ctx!.fill();
-      });
-    }
+      if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
-    mapNodes.forEach((node) => {
-      if (node.floor === currentFloor) {
-        ctx!.beginPath();
-        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-        ctx!.fillStyle =
-          startNode == node
-            ? "#00FF00"
-            : endNode == node
-              ? "#00ffff"
-              : hoverNode == node
-                ? "#0000FF"
-                : "#FF0000";
-        ctx!.fill();
-        ctx!.lineWidth = 5;
-        ctx!.strokeStyle = "#330000";
-        ctx!.stroke();
+      let pathInView = false;
+      if (
+        pathHighest.x > upleftCorner!.x &&
+        pathLowest.x < downrightCorner!.x &&
+        pathHighest.y > upleftCorner!.y &&
+        pathLowest.y < downrightCorner!.y
+      ) {
+        pathInView = true;
       }
-    });
 
-    if (hoverNode !== undefined) drawNodeDetails(hoverNode);
-
-    setTimeout(draw, 15);
+      let currentSelectedFloor = currentFloor;
+      if (currentSelectedFloor.length == 1) {
+        currentSelectedFloor = "F" + currentSelectedFloor;
+      }
+      if (
+        startNode === undefined ||
+        endNode === undefined ||
+        !floors.includes(currentSelectedFloor) ||
+        !pathInView
+      )
+        redraw = false;
+    }
+    setTimeout(draw, 16);
   }
 
   function getContentWidth(prevNum: number, inString: string): number {
@@ -231,13 +259,19 @@ export const InteractableMap = () => {
   image.onload = () => {
     draw();
     homePosition();
+    setTimeout(() => {
+      redraw = true;
+    }, 25);
   };
 
   const aStar = useCallback(() => {
     // filters path not on floor
     const unfilteredPath = AStarSearch(startNode, endNode);
 
-    const floors: string[] = [];
+    floors = [];
+
+    pathLowest = { x: image.width, y: image.height };
+    pathHighest = { x: 0, y: 0 };
 
     unfilteredPath.forEach((node) => {
       if (node.floor === currentFloor) path.push(node);
@@ -287,22 +321,40 @@ export const InteractableMap = () => {
           const x = path[s].xcoord - Math.cos(angleRadians) * prog;
           const y = path[s].ycoord - Math.sin(angleRadians) * prog;
           temp.push([x, y]);
+          if (x < pathLowest.x) pathLowest.x = x;
+          else if (x > pathHighest.x) pathHighest.x = x;
+          if (y < pathLowest.y) pathLowest.y = y;
+          else if (y > pathHighest.y) pathHighest.y = y;
         }
       }
       frames.push(temp);
     }
-  }, [currentFloor]);
+    redraw = true;
+  }, [currentFloor, image.width, image.height]);
 
   const poll = useCallback(() => {
+    const prevStart = startNode;
+    const prevEnd = endNode;
     startNode = getStartNode();
     endNode = getEndNode();
-    let floors: string[] = ["F3", "F2", "F1", "L1", "L2"];
-    for (let i = 0; i < floors.length; i++) {
-      const scaleID = document.querySelector("#" + floors[i]);
-      if (scaleID !== null) scaleID!.classList.remove("path-floor");
+    if (prevStart !== startNode || prevEnd !== endNode) {
+      const floorNames: string[] = ["F3", "F2", "F1", "L1", "L2"];
+      for (let i = 0; i < floorNames.length; i++) {
+        const scaleID = document.querySelector("#" + floorNames[i]);
+        if (scaleID !== null) scaleID!.classList.remove("path-floor");
+      }
+      floors = [];
+      path.forEach((node) => {
+        if (!floors.includes(node.floor)) floors.push(node.floor);
+      });
+      for (let i = 0; i < floors.length; i++) {
+        if (floors[i].length === 1) floors[i] = "F" + floors[i];
+        const scaleID = document.querySelector("#" + floors[i]);
+        scaleID!.classList.add("path-floor");
+      }
     }
 
-    floors = [];
+    /*floors = [];
     path.forEach((node) => {
       if (!floors.includes(node.floor)) floors.push(node.floor);
     });
@@ -310,9 +362,13 @@ export const InteractableMap = () => {
       if (floors[i].length === 1) floors[i] = "F" + floors[i];
       const scaleID = document.querySelector("#" + floors[i]);
       scaleID!.classList.add("path-floor");
-    }
+    }*/
 
-    if (startNode !== undefined && endNode !== undefined) {
+    if (
+      startNode !== undefined &&
+      endNode !== undefined &&
+      (prevStart !== startNode || prevEnd !== endNode)
+    ) {
       path = [];
       frames = [[[]]];
       aStar();
@@ -392,7 +448,7 @@ export const InteractableMap = () => {
     updateCoords();
   }
 
-  // runs when mouse reeased
+  // runs when mouse released
   function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     if (tfCursor === undefined || delta === undefined) {
       return null;
@@ -430,6 +486,7 @@ export const InteractableMap = () => {
     delta.x = 0;
     delta.y = 0;
     boundCoords();
+    redraw = true;
   }
 
   //Starts moving map according to mouse drag
@@ -446,6 +503,7 @@ export const InteractableMap = () => {
 
   // runs for moving mouse
   function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
+    let moveRedraw = false;
     tfCursor = tfPoint(evt.pageX - offset.x, evt.pageY - offset.y);
 
     if (
@@ -457,8 +515,10 @@ export const InteractableMap = () => {
     }
 
     if (moveMap) {
+      const currDelta = { x: delta.x, y: delta.y };
       delta.x = evt.pageX - pageStart!.x;
       delta.y = evt.pageY - pageStart!.y;
+      if (delta.x !== currDelta.x || delta.y !== currDelta.y) moveRedraw = true;
       ctx!.translate(
         tfCursor.x + offset.x / scalar - startPos.x,
         tfCursor.y + offset.y / scalar - startPos.y,
@@ -471,18 +531,21 @@ export const InteractableMap = () => {
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
         if (dist < 10) {
-          hoverNode = node;
-          //changed = true;
-        } else {
-          if (hoverNode == node) {
-            //changed = true;
-            hoverNode = undefined;
+          if (hoverNode !== node) {
+            moveRedraw = true;
           }
+          hoverNode = node;
+        } else if (hoverNode == node) {
+          hoverNode = undefined;
+          moveRedraw = true;
         }
       }
     });
     updateCoords();
     boundCoords();
+    if (moveRedraw) {
+      redraw = true;
+    }
   }
 
   // zooms to a point
@@ -498,6 +561,7 @@ export const InteractableMap = () => {
     }
     updateCoords();
     boundCoords();
+    redraw = true;
   }
 
   //Adjusts zoom according to scroll
@@ -507,6 +571,7 @@ export const InteractableMap = () => {
     }
     const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
     zoom(zoomDelta, tfCursor.x, tfCursor.y);
+    redraw = true;
   }
 
   // initializes canvas variables
@@ -528,6 +593,7 @@ export const InteractableMap = () => {
     updateCoords();
     ctx!.translate(upleftCorner!.x, upleftCorner!.y);
     updateCoords();
+    redraw = true;
   }
 
   function setMap(floor: string, imageSrc: string) {
@@ -545,7 +611,13 @@ export const InteractableMap = () => {
       scalar = tempScalar;
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = scalar.toFixed(2).toString();
+      path = [];
+      frames = [[[]]];
+      aStar();
     }
+    setTimeout(() => {
+      redraw = true;
+    }, 25);
   }
 
   return (
@@ -586,6 +658,7 @@ export const InteractableMap = () => {
         className={"zoom-button whole-graph-button"}
         onClick={() => {
           showEdges = !showEdges;
+          redraw = true;
         }}
       >
         O
