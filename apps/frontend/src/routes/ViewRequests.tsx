@@ -24,8 +24,20 @@ export const RequestsTable = ({
   requests,
   type,
 }: RequestsTableProps) => {
+  const [openDropdowns, setOpenDropdowns] = useState(
+    new Map<string, boolean>(),
+  );
   const [stati] = useState(new Map<string, string>());
   const [filter, setFilter] = useState<string>("All");
+
+  const handleExtraDropdown = (requestID: string) => {
+    if (openDropdowns.get(requestID)) {
+      openDropdowns.set(requestID, false);
+    } else {
+      openDropdowns.set(requestID, true);
+    }
+    setOpenDropdowns(new Map(openDropdowns));
+  };
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
@@ -81,49 +93,51 @@ export const RequestsTable = ({
       switch (type) {
         case "All":
           extraCols.push(
-              <td key="dropdown">
-                <button>Dropdown</button>
-              </td>,
+            <td key="dropdown">
+              <button onClick={() => handleExtraDropdown(request.requestID)}>
+                {openDropdowns.get(request.requestID) ? "Hide" : "Show"}
+              </button>
+            </td>,
           );
           break;
         case "Flowers":
           extraCols.push(
-              <td key="flowerType">
-                {(request as ServiceRequestFlowers).flowerType}
-              </td>,
-              <td key="amount">{(request as ServiceRequestFlowers).amount}</td>,
+            <td key="flowerType">
+              {(request as ServiceRequestFlowers).flowerType}
+            </td>,
+            <td key="amount">{(request as ServiceRequestFlowers).amount}</td>,
           );
           break;
         case "Religious":
           extraCols.push(
-              <td key="faith">{(request as ServiceRequestReligious).faith}</td>,
+            <td key="faith">{(request as ServiceRequestReligious).faith}</td>,
           );
           break;
         case "Sanitation":
           extraCols.push(
-              <td key="hazardous">
-                {(request as ServiceRequestSanitation).hazardous.toString()}
-              </td>,
-              <td key="messType">
-                {(request as ServiceRequestSanitation).messType}
-              </td>,
+            <td key="hazardous">
+              {(request as ServiceRequestSanitation).hazardous.toString()}
+            </td>,
+            <td key="messType">
+              {(request as ServiceRequestSanitation).messType}
+            </td>,
           );
           break;
         case "Interpreter":
           extraCols.push(
-              <td key="language">
-                {(request as ServiceRequestInterpreter).language}
-              </td>,
+            <td key="language">
+              {(request as ServiceRequestInterpreter).language}
+            </td>,
           );
           break;
         case "Transport":
           extraCols.push(
-              <td key="vehicle">
-                {(request as ServiceRequestExternalTransport).vehicle}
-              </td>,
-              <td key="destination">
-                {(request as ServiceRequestExternalTransport).destination}
-              </td>,
+            <td key="vehicle">
+              {(request as ServiceRequestExternalTransport).vehicle}
+            </td>,
+            <td key="destination">
+              {(request as ServiceRequestExternalTransport).destination}
+            </td>,
           );
           break;
       }
@@ -139,20 +153,75 @@ export const RequestsTable = ({
           <td>{request.desc}</td>
           <td>{request.time}</td>
           {extraCols}
-        </tr>
+        </tr>,
       );
+
+      if (type === "All" && openDropdowns.get(request.requestID)) {
+        const extraInfo = [];
+        switch (request.requestType) {
+          case "Flowers":
+            extraInfo.push(
+              <p>
+                Flower Type: {(request as ServiceRequestFlowers).flowerType}
+              </p>,
+              <p>Amount: {(request as ServiceRequestFlowers).amount}</p>,
+            );
+            break;
+          case "Religious":
+            extraInfo.push(
+              <p>Faith: {(request as ServiceRequestReligious).faith}</p>,
+            );
+            break;
+          case "Sanitation":
+            extraInfo.push(
+              <p>
+                Hazardous:{" "}
+                {(request as ServiceRequestSanitation).hazardous.toString()}
+              </p>,
+              <p>
+                Mess Type: {(request as ServiceRequestSanitation).messType}
+              </p>,
+            );
+            break;
+          case "Interpreter":
+            extraInfo.push(
+              <p>
+                Language: {(request as ServiceRequestInterpreter).language}
+              </p>,
+            );
+            break;
+          case "Transport":
+            extraInfo.push(
+              <p>
+                Vehicle: {(request as ServiceRequestExternalTransport).vehicle}
+              </p>,
+              <p>
+                Destination:{" "}
+                {(request as ServiceRequestExternalTransport).destination}
+              </p>,
+            );
+            break;
+        }
+        rows.push(
+          <tr key={request.requestID + "extra"}>
+            <td colSpan={9}>
+              <div className="extraInfo">{extraInfo}</div>
+            </td>
+          </tr>,
+        );
+      }
     }
   });
 
   const extraHeaders = [];
   switch (type) {
     case "All":
-      extraHeaders.push(<th key="extra">Extra</th>);
+      extraHeaders.push(<th key="extra">Extra Info</th>);
       break;
     case "Flowers":
       extraHeaders.push(
-          <th key="flowerType">Flower Type</th>,
-          <th key="amount">Amount</th>,
+        <th key="flowerType">Flower Type</th>,
+        <th key="amount">Amount</th>,
       );
       break;
     case "Religious":
@@ -160,8 +229,8 @@ export const RequestsTable = ({
       break;
     case "Sanitation":
       extraHeaders.push(
-          <th key="hazardous">Hazardous</th>,
-          <th key="messType">Mess Type</th>,
+        <th key="hazardous">Hazardous</th>,
+        <th key="messType">Mess Type</th>,
       );
       break;
     case "Interpreter":
@@ -169,8 +238,8 @@ export const RequestsTable = ({
       break;
     case "Transport":
       extraHeaders.push(
-          <th key="vehicle">Vehicle</th>,
-          <th key="destination">Destination</th>,
+        <th key="vehicle">Vehicle</th>,
+        <th key="destination">Destination</th>,
       );
       break;
   }
@@ -182,11 +251,11 @@ export const RequestsTable = ({
           Filter by Status:
         </label>
         <select
-            name="statusFilter"
-            className="statusFilter"
-            id="statusFilter"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+          name="statusFilter"
+          className="statusFilter"
+          id="statusFilter"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
         >
           <option value="All">All</option>
           <option value="Assigned">Assigned</option>
@@ -196,17 +265,17 @@ export const RequestsTable = ({
       </div>
       <table>
         <thead>
-        <tr>
-          <th>Request ID</th>
-          <th>Request Type</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Requester</th>
-          <th>Employee</th>
-          <th>Description</th>
-          <th>Time</th>
-          {extraHeaders}
-        </tr>
+          <tr>
+            <th>Request ID</th>
+            <th>Request Type</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Requester</th>
+            <th>Employee</th>
+            <th>Description</th>
+            <th>Time</th>
+            {extraHeaders}
+          </tr>
         </thead>
         <tbody>{rows}</tbody>
       </table>
@@ -221,10 +290,10 @@ export const ViewRequests = () => {
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
       axios
-          .get("http://localhost:3000/api/services/requests", {
-            params: {getAll: true},
-          })
-          .then((res: AxiosResponse<AllServiceRequests>) => {
+        .get("http://localhost:3000/api/services/requests", {
+          params: { getAll: true },
+        })
+        .then((res: AxiosResponse<AllServiceRequests>) => {
           setRequests(res.data);
         });
     } else {
