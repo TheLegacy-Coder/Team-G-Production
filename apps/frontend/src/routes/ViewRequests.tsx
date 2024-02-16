@@ -77,6 +77,57 @@ export const RequestsTable = ({
       (filter === "In Progress" && request.status === "In Progress") ||
       (filter === "Completed" && request.status === "Completed")
     ) {
+      const extraCols = [];
+      switch (type) {
+        case "All":
+          extraCols.push(
+              <td key="dropdown">
+                <button>Dropdown</button>
+              </td>,
+          );
+          break;
+        case "Flowers":
+          extraCols.push(
+              <td key="flowerType">
+                {(request as ServiceRequestFlowers).flowerType}
+              </td>,
+              <td key="amount">{(request as ServiceRequestFlowers).amount}</td>,
+          );
+          break;
+        case "Religious":
+          extraCols.push(
+              <td key="faith">{(request as ServiceRequestReligious).faith}</td>,
+          );
+          break;
+        case "Sanitation":
+          extraCols.push(
+              <td key="hazardous">
+                {(request as ServiceRequestSanitation).hazardous.toString()}
+              </td>,
+              <td key="messType">
+                {(request as ServiceRequestSanitation).messType}
+              </td>,
+          );
+          break;
+        case "Interpreter":
+          extraCols.push(
+              <td key="language">
+                {(request as ServiceRequestInterpreter).language}
+              </td>,
+          );
+          break;
+        case "Transport":
+          extraCols.push(
+              <td key="vehicle">
+                {(request as ServiceRequestExternalTransport).vehicle}
+              </td>,
+              <td key="destination">
+                {(request as ServiceRequestExternalTransport).destination}
+              </td>,
+          );
+          break;
+      }
+
       rows.push(
         <tr key={request.requestID}>
           <td>{request.requestID}</td>
@@ -87,45 +138,42 @@ export const RequestsTable = ({
           <td>{request.helpingEmployee}</td>
           <td>{request.desc}</td>
           <td>{request.time}</td>
-          {type === "All" && (
-            <>
-              <td>
-                <button>Drop</button>
-              </td>
-            </>
-          )}
-          {type === "Flowers" && (
-            <>
-              <td>{(request as ServiceRequestFlowers).flowerType}</td>
-              <td>{(request as ServiceRequestFlowers).amount}</td>
-            </>
-          )}
-          {type === "Religious" && (
-            <td>{(request as ServiceRequestReligious).faith}</td>
-          )}
-          {type === "Sanitation" && (
-            <>
-              <td>
-                {(request as ServiceRequestSanitation).hazardous.toString()}
-              </td>
-              <td>{(request as ServiceRequestSanitation).messType}</td>
-            </>
-          )}
-          {type === "Interpreter" && (
-            <td>{(request as ServiceRequestInterpreter).language}</td>
-          )}
-          {type === "Transport" && (
-            <>
-              <td>{(request as ServiceRequestExternalTransport).vehicle}</td>
-              <td>
-                {(request as ServiceRequestExternalTransport).destination}
-              </td>
-            </>
-          )}
-        </tr>,
+          {extraCols}
+        </tr>
       );
     }
   });
+
+  const extraHeaders = [];
+  switch (type) {
+    case "All":
+      extraHeaders.push(<th key="extra">Extra</th>);
+      break;
+    case "Flowers":
+      extraHeaders.push(
+          <th key="flowerType">Flower Type</th>,
+          <th key="amount">Amount</th>,
+      );
+      break;
+    case "Religious":
+      extraHeaders.push(<th key="faith">Faith</th>);
+      break;
+    case "Sanitation":
+      extraHeaders.push(
+          <th key="hazardous">Hazardous</th>,
+          <th key="messType">Mess Type</th>,
+      );
+      break;
+    case "Interpreter":
+      extraHeaders.push(<th key="language">Language</th>);
+      break;
+    case "Transport":
+      extraHeaders.push(
+          <th key="vehicle">Vehicle</th>,
+          <th key="destination">Destination</th>,
+      );
+      break;
+  }
 
   return (
     <>
@@ -134,11 +182,11 @@ export const RequestsTable = ({
           Filter by Status:
         </label>
         <select
-          name="statusFilter"
-          className="statusFilter"
-          id="statusFilter"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+            name="statusFilter"
+            className="statusFilter"
+            id="statusFilter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
         >
           <option value="All">All</option>
           <option value="Assigned">Assigned</option>
@@ -148,41 +196,17 @@ export const RequestsTable = ({
       </div>
       <table>
         <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Request Type</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Requester</th>
-            <th>Employee</th>
-            <th>Description</th>
-            <th>Time</th>
-            {type === "All" && (
-              <>
-                <th>Extra</th>
-              </>
-            )}
-            {type === "Flowers" && (
-              <>
-                <th>Flower Type</th>
-                <th>Amount</th>
-              </>
-            )}
-            {type === "Religious" && <th>Faith</th>}
-            {type === "Sanitation" && (
-              <>
-                <th>Hazardous</th>
-                <th>Mess Type</th>
-              </>
-            )}
-            {type === "Interpreter" && <th>Language</th>}
-            {type === "Transport" && (
-              <>
-                <th>Vehicle</th>
-                <th>Destination</th>
-              </>
-            )}
-          </tr>
+        <tr>
+          <th>Request ID</th>
+          <th>Request Type</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Requester</th>
+          <th>Employee</th>
+          <th>Description</th>
+          <th>Time</th>
+          {extraHeaders}
+        </tr>
         </thead>
         <tbody>{rows}</tbody>
       </table>
@@ -197,10 +221,10 @@ export const ViewRequests = () => {
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
       axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { getAll: true },
-        })
-        .then((res: AxiosResponse<AllServiceRequests>) => {
+          .get("http://localhost:3000/api/services/requests", {
+            params: {getAll: true},
+          })
+          .then((res: AxiosResponse<AllServiceRequests>) => {
           setRequests(res.data);
         });
     } else {
