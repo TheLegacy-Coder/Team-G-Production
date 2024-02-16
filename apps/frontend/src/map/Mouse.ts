@@ -16,32 +16,32 @@ import {
  * NOT Completed
  */
 
+import { searchAlg } from "./MapAlgorithm.ts";
 import {
-  scalar,
-  ctx,
-  setScalar,
-  setRedraw,
-  tfPoint,
-  offset,
+  pathLowest,
+  pathHighest,
+  currentFloor,
+  setCurrentFloor,
   resetPath,
+  setRedraw,
+  scalar,
+  setScalar,
+  offset,
   setImage,
+  ctx,
   resetMap,
-} from "./Draw.ts";
-import { searchAlg, pathLowest, pathHighest } from "./MapAlgorithm.ts";
+  upleftCorner,
+  updateCoords,
+  downrightCorner,
+  centerPos,
+  tfPoint,
+} from "./DrawData.ts";
 
 /**
  * Start Exported types
  */
 
-export let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
-export let downrightCorner: { x: number; y: number } | undefined = {
-  x: 0,
-  y: 0,
-};
-
 export let hoverNode: MapNode | undefined = undefined;
-
-export let currentFloor = "L1";
 
 /**
  * End Exported types
@@ -61,7 +61,6 @@ let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
 let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
-let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 const zoomAmount = 0.1;
 
 let newMap = true;
@@ -81,7 +80,7 @@ function zoom(zoom: number, xCoord: number, yCoord: number) {
   updateCoords();
   boundCoords();
   //redraw = true;
-  setRedraw();
+  setRedraw(true);
 }
 
 export function inView(): boolean {
@@ -108,7 +107,7 @@ export function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
   const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
   zoom(zoomDelta, tfCursor.x, tfCursor.y);
   //redraw = true;
-  setRedraw();
+  setRedraw(true);
 }
 
 // runs for moving mouse
@@ -151,7 +150,7 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
   boundCoords();
   if (moveRedraw) {
     //redraw = true;
-    setRedraw();
+    setRedraw(true);
   }
 }
 
@@ -204,17 +203,7 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
   delta.y = 0;
   boundCoords();
   //redraw = true;
-  setRedraw();
-}
-
-// updates coordinate points for map panning and zooming
-export function updateCoords() {
-  centerPos = tfPoint(
-    (window.innerWidth - offset.x) / 2,
-    (window.innerHeight - offset.y) / 2,
-  );
-  upleftCorner = tfPoint(0, 0);
-  downrightCorner = tfPoint(window.innerWidth, window.innerHeight);
+  setRedraw(true);
 }
 
 export function setMap(floor: string, imageSrc: string) {
@@ -223,7 +212,8 @@ export function setMap(floor: string, imageSrc: string) {
     const tempScalar = scalar;
     ctx!.save();
     resetMap();
-    currentFloor = floor;
+    //currentFloor = floor;
+    setCurrentFloor(floor);
     setImage(imageSrc);
     homePosition();
     newMap = true;

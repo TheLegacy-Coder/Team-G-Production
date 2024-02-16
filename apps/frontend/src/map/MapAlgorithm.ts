@@ -8,8 +8,17 @@ import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
  * NOT Completed
  */
 
-import { currentFloor } from "./Mouse.ts";
-import { framePush, path, resetPath, setRedraw } from "./Draw.ts";
+import {
+  floors,
+  pathLowest,
+  pathHighest,
+  currentFloor,
+  clearFloors,
+  path,
+  resetPath,
+  framePush,
+  setRedraw,
+} from "./DrawData.ts";
 
 let startNode: MapNode | undefined = undefined;
 let endNode: MapNode | undefined = undefined;
@@ -21,9 +30,9 @@ const spacing = 50;
 let totalDistance = 0;
 let steps: number[] = [];
 
-export let floors: string[] = [];
+/*export let floors: string[] = [];
 export let pathLowest = { x: 0, y: 0 };
-export let pathHighest = { x: 0, y: 0 };
+export let pathHighest = { x: 0, y: 0 };*/
 
 function setFloorButtons() {
   for (let i = 0; i < floors.length; i++) {
@@ -37,10 +46,13 @@ export function searchAlg() {
   // filters path not on floor
   const unfilteredPath = AStarSearch(startNode, endNode);
 
-  floors = [];
+  //floors = [];
+  clearFloors();
 
-  pathLowest = { x: imageWidth, y: imageHeight };
-  pathHighest = { x: 0, y: 0 };
+  pathLowest.x = imageWidth;
+  pathLowest.y = imageHeight;
+  pathHighest.x = imageWidth;
+  pathHighest.y = imageHeight;
 
   unfilteredPath.forEach((node) => {
     if (node.floor === currentFloor) path.push(node);
@@ -96,7 +108,7 @@ export function searchAlg() {
     framePush(temp);
   }
   //redraw = true;
-  setRedraw();
+  setRedraw(true);
 }
 
 export function nodePoll() {
@@ -110,7 +122,8 @@ export function nodePoll() {
       const scaleID = document.querySelector("#" + floorNames[i]);
       if (scaleID !== null) scaleID!.classList.remove("path-floor");
     }
-    floors = [];
+    //floors = [];
+    clearFloors();
     path.forEach((node) => {
       if (!floors.includes(node.floor)) floors.push(node.floor);
     });

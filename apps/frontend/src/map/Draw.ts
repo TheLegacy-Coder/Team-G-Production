@@ -15,15 +15,18 @@ import {
 /**
  * NOT Completed
  */
-import { floors } from "./MapAlgorithm.ts";
+import { hoverNode, inView, homePosition } from "./Mouse.ts";
+
 import {
-  hoverNode,
-  inView,
+  frames,
+  redraw,
+  scalar,
+  floors,
   currentFloor,
-  updateCoords,
-  upleftCorner,
-  homePosition,
-} from "./Mouse.ts";
+  setRedraw,
+  image,
+  ctx,
+} from "./DrawData.ts";
 
 /**
  * Issues that are occurring
@@ -35,69 +38,19 @@ import {
  * Start Exported types
  */
 
-export const offset = { x: 0, y: 0 };
-export let path: MapNode[] = [];
-export let scalar = 1;
-
 /**
  * End Exported types
  */
 
 let drawStep = 0;
-let frames: number[][][] = [[[]]];
 let showEdges = false;
-let redraw = true;
 
 export function toggleEdges() {
   showEdges = !showEdges;
-  redraw = true;
+  setRedraw(true);
 }
 
 //let ctx = canvasCtxRef.current;
-export let ctx: CanvasRenderingContext2D | null;
-
-export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
-  ctx = ctxRef;
-}
-
-export function setOffset(top: number, left: number) {
-  offset.y = top;
-  offset.x = left;
-}
-
-let image = new Image();
-image.src = "00_thelowerlevel1.png";
-
-export function setScalar(value: number) {
-  scalar = value;
-}
-
-export function setRedraw() {
-  redraw = true;
-}
-
-export function resetPath() {
-  path = [];
-  frames = [[[]]];
-}
-
-export function setImage(imageSrc: string) {
-  image = new Image();
-  image.src = imageSrc;
-}
-
-export function framePush(temp: number[][]) {
-  frames.push(temp);
-}
-
-// converts coordinates from page frame to image frame
-export function tfPoint(x: number, y: number) {
-  if (ctx === null) {
-    return undefined;
-  }
-  const origin = new DOMPoint(x, y);
-  return ctx!.getTransform().invertSelf().transformPoint(origin);
-}
 
 function draw() {
   if (redraw) {
@@ -182,7 +135,7 @@ function draw() {
       !floors.includes(currentSelectedFloor) /* ||
                 !pathInView*/
     )
-      redraw = false;
+      setRedraw(false);
   }
   setTimeout(draw, 16);
 }
@@ -266,20 +219,6 @@ image.onload = () => {
   draw();
   homePosition();
   setTimeout(() => {
-    redraw = true;
+    setRedraw(true);
   }, 25);
 };
-
-export function resetMap() {
-  //frames = [[[]]];
-  resetPath();
-  //drawStep = 0;
-  ctx!.scale(1 / scalar, 1 / scalar);
-  //scalar *= 1 / scalar;
-  setScalar(1);
-  updateCoords();
-  ctx!.translate(upleftCorner!.x, upleftCorner!.y);
-  updateCoords();
-  //redraw = true;
-  setRedraw();
-}

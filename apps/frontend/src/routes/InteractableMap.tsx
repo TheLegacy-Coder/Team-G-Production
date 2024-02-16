@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import {
-  offset,
-  toggleEdges,
-  initCTX,
-  setOffset,
-  setRedraw,
-  resetMap,
-} from "../map/Draw";
+import { toggleEdges } from "../map/Draw";
 import {
   mouseScroll,
   mouseMove,
@@ -17,6 +10,13 @@ import {
   homePosition,
 } from "../map/Mouse";
 import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
+import {
+  setRedraw,
+  offset,
+  setOffset,
+  initCTX,
+  resetMap,
+} from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 
 export const InteractableMap = () => {
@@ -52,7 +52,7 @@ export const InteractableMap = () => {
       searchAlg();
       setTimeout(() => {
         //redraw = true;
-        setRedraw();
+        setRedraw(true);
       }, 100);
     }
   }
