@@ -24,20 +24,8 @@ export const RequestsTable = ({
   requests,
   type,
 }: RequestsTableProps) => {
-  const [openDropdowns, setOpenDropdowns] = useState(
-    new Map<string, boolean>(),
-  );
   const [stati] = useState(new Map<string, string>());
   const [filter, setFilter] = useState<string>("All");
-
-  const handleExtraDropdown = (requestID: string) => {
-    if (openDropdowns.get(requestID)) {
-      openDropdowns.set(requestID, false);
-    } else {
-      openDropdowns.set(requestID, true);
-    }
-    setOpenDropdowns(new Map(openDropdowns));
-  };
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
@@ -90,15 +78,55 @@ export const RequestsTable = ({
       (filter === "Completed" && request.status === "Completed")
     ) {
       const extraCols = [];
+      const extraInfo = [];
       switch (type) {
         case "All":
-          extraCols.push(
-            <td key="dropdown">
-              <button onClick={() => handleExtraDropdown(request.requestID)}>
-                {openDropdowns.get(request.requestID) ? "Hide" : "Show"}
-              </button>
-            </td>,
-          );
+          switch (request.requestType) {
+            case "Flowers":
+              extraInfo.push(
+                <p>
+                  Flower Type: {(request as ServiceRequestFlowers).flowerType}
+                </p>,
+                <p>Amount: {(request as ServiceRequestFlowers).amount}</p>,
+              );
+              break;
+            case "Religious":
+              extraInfo.push(
+                <p>Faith: {(request as ServiceRequestReligious).faith}</p>,
+              );
+              break;
+            case "Sanitation":
+              extraInfo.push(
+                <p>
+                  Hazardous:{" "}
+                  {(request as ServiceRequestSanitation).hazardous.toString()}
+                </p>,
+                <p>
+                  Mess Type: {(request as ServiceRequestSanitation).messType}
+                </p>,
+              );
+              break;
+            case "Interpreter":
+              extraInfo.push(
+                <p>
+                  Language: {(request as ServiceRequestInterpreter).language}
+                </p>,
+              );
+              break;
+            case "Transport":
+              extraInfo.push(
+                <p>
+                  Vehicle:{" "}
+                  {(request as ServiceRequestExternalTransport).vehicle}
+                </p>,
+                <p>
+                  Destination:{" "}
+                  {(request as ServiceRequestExternalTransport).destination}
+                </p>,
+              );
+              break;
+          }
+          extraCols.push(<td key="extra info">{extraInfo}</td>);
           break;
         case "Flowers":
           extraCols.push(
@@ -155,61 +183,6 @@ export const RequestsTable = ({
           {extraCols}
         </tr>,
       );
-
-      if (type === "All" && openDropdowns.get(request.requestID)) {
-        const extraInfo = [];
-        switch (request.requestType) {
-          case "Flowers":
-            extraInfo.push(
-              <p>
-                Flower Type: {(request as ServiceRequestFlowers).flowerType}
-              </p>,
-              <p>Amount: {(request as ServiceRequestFlowers).amount}</p>,
-            );
-            break;
-          case "Religious":
-            extraInfo.push(
-              <p>Faith: {(request as ServiceRequestReligious).faith}</p>,
-            );
-            break;
-          case "Sanitation":
-            extraInfo.push(
-              <p>
-                Hazardous:{" "}
-                {(request as ServiceRequestSanitation).hazardous.toString()}
-              </p>,
-              <p>
-                Mess Type: {(request as ServiceRequestSanitation).messType}
-              </p>,
-            );
-            break;
-          case "Interpreter":
-            extraInfo.push(
-              <p>
-                Language: {(request as ServiceRequestInterpreter).language}
-              </p>,
-            );
-            break;
-          case "Transport":
-            extraInfo.push(
-              <p>
-                Vehicle: {(request as ServiceRequestExternalTransport).vehicle}
-              </p>,
-              <p>
-                Destination:{" "}
-                {(request as ServiceRequestExternalTransport).destination}
-              </p>,
-            );
-            break;
-        }
-        rows.push(
-          <tr key={request.requestID + "extra"}>
-            <td colSpan={9}>
-              <div className="extraInfo">{extraInfo}</div>
-            </td>
-          </tr>,
-        );
-      }
     }
   });
 
