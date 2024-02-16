@@ -17,10 +17,18 @@ import {
 } from "./Draw.ts";
 
 import { updateCoords, upleftCorner, downrightCorner } from "./Mouse.ts";
-import { searchAlg } from "./MapAlgorithm.ts";
+
+/**
+ * Start Exported types
+ */
+
+export let currentFloor = "L1";
+
+/**
+ * End Exported types
+ */
 
 let newMap = true;
-export let currentFloor = "L1";
 const imageWidth = 5000;
 const imageHeight = 3400;
 
@@ -61,26 +69,17 @@ export function setMap(floor: string, imageSrc: string) {
     ctx!.save();
     resetMap();
     currentFloor = floor;
-    //image = new Image();
-    //image.src = imageSrc;
     setImage(imageSrc);
     homePosition();
     newMap = true;
     ctx!.restore();
-    //scalar = tempScalar;
     setScalar(tempScalar);
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = scalar.toFixed(2).toString();
-    //path = [];
-    //frames = [[[]]];
     resetPath();
-    //aStar();
-    searchAlg();
+    return true;
   }
-  setTimeout(() => {
-    //redraw = true;
-    setRedraw();
-  }, 100);
+  return false;
 }
 
 export function boundCoords() {

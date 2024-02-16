@@ -4,14 +4,20 @@
  * Completed
  */
 
-import { MapNode, mapNodes, mapEdges } from "./MapNode.ts";
+import {
+  MapNode,
+  mapNodes,
+  mapEdges,
+  getStartNode,
+  getEndNode,
+} from "./MapNode.ts";
 
 /**
  * NOT Completed
  */
 import { homePosition, currentFloor } from "./BoundMap.ts";
-import { startNode, endNode, floors, inView } from "./MapAlgorithm.ts";
-import "../components/styles/ZoomButton.css";
+import { floors } from "./MapAlgorithm.ts";
+import { hoverNode, inView } from "./Mouse.ts";
 
 /**
  * Issues that are occurring
@@ -19,21 +25,24 @@ import "../components/styles/ZoomButton.css";
  * pathInView causing bottom path from L2 to F3 to not draw
  */
 
-const canvasSize = { x: 0, y: 0 };
-export const offset = { x: 0, y: 0 };
+/**
+ * Start Exported types
+ */
 
-export let hoverNode: MapNode | undefined = undefined;
+export const offset = { x: 0, y: 0 };
 export let path: MapNode[] = [];
+export let scalar = 1;
+
+/**
+ * End Exported types
+ */
+
+const canvasSize = { x: 0, y: 0 };
 
 let drawStep = 0;
 let frames: number[][][] = [[[]]];
 let showEdges = false;
 let redraw = true;
-
-//Stores scaled map amount
-export let scalar = 1;
-
-export const zoomAmount = 0.1;
 
 export function toggleEdges() {
   showEdges = !showEdges;
@@ -55,23 +64,17 @@ export function setOffset(top: number, left: number) {
 let image = new Image();
 image.src = "00_thelowerlevel1.png";
 
-export function getWidth(): number {
-  const width =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
+/*export function getWidth(): number {
+  const width = window.innerWidth;
   canvasSize.x = width;
   return width;
 }
 
 export function getHeight(): number {
-  const height =
-    window.innerHeight ||
-    document.documentElement.clientHeight ||
-    document.body.clientHeight;
+  const height = window.innerHeight;
   canvasSize.y = height;
   return height;
-}
+}*/
 
 export function setScalar(value: number) {
   scalar = value;
@@ -79,10 +82,6 @@ export function setScalar(value: number) {
 
 export function setRedraw() {
   redraw = true;
-}
-
-export function setHover(node: MapNode | undefined) {
-  hoverNode = node;
 }
 
 export function resetPath() {
@@ -160,9 +159,9 @@ function draw() {
         ctx!.beginPath();
         ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
         ctx!.fillStyle =
-          startNode == node
+          getStartNode() == node
             ? "#00FF00"
-            : endNode == node
+            : getEndNode() == node
               ? "#00ffff"
               : hoverNode == node
                 ? "#0000FF"
@@ -186,8 +185,8 @@ function draw() {
       currentSelectedFloor = "F" + currentSelectedFloor;
     }
     if (
-      startNode === undefined ||
-      endNode === undefined ||
+      getStartNode() === undefined ||
+      getEndNode() === undefined ||
       !floors.includes(currentSelectedFloor) /* ||
                 !pathInView*/
     )

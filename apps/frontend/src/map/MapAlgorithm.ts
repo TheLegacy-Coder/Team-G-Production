@@ -10,7 +10,9 @@ import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
 
 import { currentFloor } from "./BoundMap.ts";
 import { framePush, path, resetPath, setRedraw } from "./Draw.ts";
-import { downrightCorner, upleftCorner } from "./Mouse.ts";
+
+let startNode: MapNode | undefined = undefined;
+let endNode: MapNode | undefined = undefined;
 
 const imageWidth = 5000;
 const imageHeight = 3400;
@@ -18,19 +20,17 @@ const imageHeight = 3400;
 const spacing = 50;
 let totalDistance = 0;
 let steps: number[] = [];
-export let startNode: MapNode | undefined = undefined;
-export let endNode: MapNode | undefined = undefined;
+
 export let floors: string[] = [];
 export let pathLowest = { x: 0, y: 0 };
 export let pathHighest = { x: 0, y: 0 };
 
-export function inView(): boolean {
-  return (
-    pathHighest.x > upleftCorner!.x &&
-    pathLowest.x < downrightCorner!.x &&
-    pathHighest.y > upleftCorner!.y &&
-    pathLowest.y < downrightCorner!.y
-  );
+function setFloorButtons() {
+  for (let i = 0; i < floors.length; i++) {
+    if (floors[i].length === 1) floors[i] = "F" + floors[i];
+    const scaleID = document.querySelector("#" + floors[i]);
+    scaleID!.classList.add("path-floor");
+  }
 }
 
 export function searchAlg() {
@@ -47,11 +47,7 @@ export function searchAlg() {
     if (!floors.includes(node.floor)) floors.push(node.floor);
   });
 
-  for (let i = 0; i < floors.length; i++) {
-    if (floors[i].length === 1) floors[i] = "F" + floors[i];
-    const scaleID = document.querySelector("#" + floors[i]);
-    scaleID!.classList.add("path-floor");
-  }
+  setFloorButtons();
 
   totalDistance = 0;
   steps = [0];
@@ -118,11 +114,7 @@ export function nodePoll() {
     path.forEach((node) => {
       if (!floors.includes(node.floor)) floors.push(node.floor);
     });
-    for (let i = 0; i < floors.length; i++) {
-      if (floors[i].length === 1) floors[i] = "F" + floors[i];
-      const scaleID = document.querySelector("#" + floors[i]);
-      scaleID!.classList.add("path-floor");
-    }
+    setFloorButtons();
   }
 
   if (
@@ -130,10 +122,7 @@ export function nodePoll() {
     endNode !== undefined &&
     (prevStart !== startNode || prevEnd !== endNode)
   ) {
-    //path = [];
-    //frames = [[[]]];
     resetPath();
-    //aStar();
     searchAlg();
   }
 }

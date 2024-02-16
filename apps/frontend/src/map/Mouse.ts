@@ -3,7 +3,14 @@ import React from "react";
 /**
  * Completed
  */
-import { setStartNode, setEndNode, mapNodes, nodeStore } from "./MapNode.ts";
+import {
+  setStartNode,
+  setEndNode,
+  mapNodes,
+  nodeStore,
+  getStartNode,
+  MapNode,
+} from "./MapNode.ts";
 
 /**
  * NOT Completed
@@ -13,18 +20,29 @@ import {
   scalar,
   ctx,
   setScalar,
-  zoomAmount,
   setRedraw,
   tfPoint,
   offset,
-  hoverNode,
-  setHover,
   resetPath,
-  getWidth,
-  getHeight,
 } from "./Draw.ts";
 import { currentFloor, boundCoords } from "./BoundMap.ts";
-import { startNode, searchAlg } from "./MapAlgorithm.ts";
+import { searchAlg, pathLowest, pathHighest } from "./MapAlgorithm.ts";
+
+/**
+ * Start Exported types
+ */
+
+export let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+export let downrightCorner: { x: number; y: number } | undefined = {
+  x: 0,
+  y: 0,
+};
+
+export let hoverNode: MapNode | undefined = undefined;
+
+/**
+ * End Exported types
+ */
 
 //Stores map delta xy coordinates while panning
 const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
@@ -38,14 +56,10 @@ let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
 let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
-export let upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
-export let downrightCorner: { x: number; y: number } | undefined = {
-  x: 0,
-  y: 0,
-};
+const zoomAmount = 0.1;
 
 // zooms to a point
-export function zoom(zoom: number, xCoord: number, yCoord: number) {
+function zoom(zoom: number, xCoord: number, yCoord: number) {
   if (scalar * zoom > 0.3 && scalar * zoom < 2) {
     //scalar *= zoom;
     setScalar(scalar * zoom);
@@ -60,6 +74,15 @@ export function zoom(zoom: number, xCoord: number, yCoord: number) {
   boundCoords();
   //redraw = true;
   setRedraw();
+}
+
+export function inView(): boolean {
+  return (
+    pathHighest.x > upleftCorner!.x &&
+    pathLowest.x < downrightCorner!.x &&
+    pathHighest.y > upleftCorner!.y &&
+    pathLowest.y < downrightCorner!.y
+  );
 }
 
 export function buttonZoom(input: boolean) {
@@ -109,11 +132,9 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
         if (hoverNode !== node) {
           moveRedraw = true;
         }
-        //hoverNode = node;
-        setHover(node);
+        hoverNode = node;
       } else if (hoverNode == node) {
-        //hoverNode = undefined;
-        setHover(undefined);
+        hoverNode = undefined;
         moveRedraw = true;
       }
     }
@@ -154,7 +175,7 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
       );
       if (dist < 10) {
         emptyClick = false;
-        if (startNode != undefined) {
+        if (getStartNode() != undefined) {
           setEndNode(node);
           searchAlg();
         } else {
@@ -181,9 +202,9 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
 // updates coordinate points for map panning and zooming
 export function updateCoords() {
   centerPos = tfPoint(
-    (getWidth() - offset.x) / 2,
-    (getHeight() - offset.y) / 2,
+    (window.innerWidth - offset.x) / 2,
+    (window.innerHeight - offset.y) / 2,
   );
   upleftCorner = tfPoint(0, 0);
-  downrightCorner = tfPoint(getWidth(), getHeight());
+  downrightCorner = tfPoint(window.innerWidth, window.innerHeight);
 }
