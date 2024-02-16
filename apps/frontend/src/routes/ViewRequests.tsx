@@ -87,6 +87,13 @@ export const RequestsTable = ({
           <td>{request.helpingEmployee}</td>
           <td>{request.desc}</td>
           <td>{request.time}</td>
+          {type === "All" && (
+            <>
+              <td>
+                <button>Drop</button>
+              </td>
+            </>
+          )}
           {type === "Flowers" && (
             <>
               <td>{(request as ServiceRequestFlowers).flowerType}</td>
@@ -150,6 +157,11 @@ export const RequestsTable = ({
             <th>Employee</th>
             <th>Description</th>
             <th>Time</th>
+            {type === "All" && (
+              <>
+                <th>Extra</th>
+              </>
+            )}
             {type === "Flowers" && (
               <>
                 <th>Flower Type</th>
@@ -205,10 +217,28 @@ export const ViewRequests = () => {
   // Fetch the requests from the server on load
   useEffect(updateRequests, []);
 
+  let allRequests: Array<
+    | ServiceRequestFlowers
+    | ServiceRequestReligious
+    | ServiceRequestSanitation
+    | ServiceRequestInterpreter
+    | ServiceRequestExternalTransport
+  > = [];
+  if (requests !== undefined) {
+    allRequests = allRequests.concat(
+      requests.flowers,
+      requests.religious,
+      requests.sanitation,
+      requests.interpreter,
+      requests.transport,
+    );
+  }
+
   return (
     <div className={"view-requests-page"}>
       <TabSwitcher
         titles={[
+          "All",
           "Flowers",
           "Religious",
           "Sanitation",
@@ -216,6 +246,11 @@ export const ViewRequests = () => {
           "Transport",
         ]}
         components={[
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={allRequests}
+            type={"All"}
+          />,
           <RequestsTable
             updateRequests={updateRequests}
             requests={requests?.flowers}
