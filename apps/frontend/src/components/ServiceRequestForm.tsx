@@ -8,12 +8,12 @@ import {
   ServiceRequestInterpreter,
   ServiceRequestReligious,
   ServiceRequestSanitation,
+  ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { nodeStore } from "../map/MapNode.ts";
 
 import axios, { AxiosResponse } from "axios";
 import { Employee } from "common/src/Employee.ts";
-import { ServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import "./styles/ServiceRequestForm.css";
 import { ServiceRequests } from "./ServiceRequests.tsx";
@@ -73,14 +73,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       break;
   }
   function handleSubmit() {
-    let req: ServiceRequest = {
-      desc: "",
-      location: "",
-      requestID: "",
-      requestType: "",
-      requester: "",
-      status: "",
-    };
+    let req: ServiceRequest;
     switch (props.requestType) {
       case RequestType.Religious:
         req = {
