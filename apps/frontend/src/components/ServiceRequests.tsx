@@ -8,7 +8,7 @@ import { RequestType } from "common/src/ServiceRequests.ts";
 export const ServiceRequests = () => {
   // Like before, ServiceRequests handling logic
   return (
-    <div className={"service-request-container"}>
+    <div className={"asdf-service-request-container"}>
       <ContextMenuRouterButton
         content={<ServiceRequestForm requestType={RequestType.Flowers} />}
         lable={"Flowers"} // Fixed typo in the label attribute
