@@ -268,3 +268,46 @@ export function AStarSearch(
 //   return path;
 // }
 // console.log(mapNodes);
+
+export function DFS(
+  start: MapNode | undefined,
+  end: MapNode | undefined,
+): MapNode[] | undefined {
+  if (start === undefined || end === undefined) return undefined;
+
+  const visited = new Map<string, boolean>();
+  const parent = new Map<string, MapNode>();
+  const stack = [start];
+
+  while (stack.length > 0) {
+    const current = stack.pop() as MapNode;
+
+    // Mark the current node as visited
+    visited.set(current.nodeID, true);
+
+    // Check if we reached the end node
+    if (current === end) {
+      // Construct the path from the start to the end
+      const path = [];
+      let currentPathNode = end;
+      while (currentPathNode !== start) {
+        path.unshift(currentPathNode);
+        currentPathNode = parent.get(currentPathNode.nodeID) as MapNode;
+      }
+      path.unshift(start);
+      return path;
+    }
+
+    // Add unvisited neighbors to the stack
+    current.edges.forEach((neighbor) => {
+      if (!visited.get(neighbor.nodeID)) {
+        visited.set(neighbor.nodeID, true);
+        parent.set(neighbor.nodeID, current);
+        stack.push(neighbor);
+      }
+    });
+  }
+
+  // If the loop completes without finding a path, return empty array
+  return [];
+}
