@@ -11,7 +11,7 @@ import {
   ServiceRequestSanitation,
   ServiceRequest,
 } from "common/src/ServiceRequests.ts";
-import { currentEmployee } from "../stores/LoginStore.ts";
+import { currentEmployee, currentToken } from "../stores/LoginStore.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -31,6 +31,9 @@ export const RequestsTable = ({
   const handleStatusChange = (requestID: string, newStatus: string) => {
     axios
       .patch("http://localhost:3000/api/services/requests", {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
         requestID: requestID,
         status: newStatus,
       })
@@ -186,6 +189,9 @@ export const ViewRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
       axios
         .get("http://localhost:3000/api/services/requests", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
           params: { getAll: true },
         })
         .then((res: AxiosResponse<AllServiceRequests>) => {
@@ -194,6 +200,9 @@ export const ViewRequests = () => {
     } else {
       axios
         .get("http://localhost:3000/api/services/requests", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
           params: { employeeID: currentEmployee?.employeeID },
         })
         .then((res: AxiosResponse<AllServiceRequests>) => {

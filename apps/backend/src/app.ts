@@ -6,6 +6,7 @@ import mapRouter from "./routes/mapRouter.ts";
 import serviceRouter from "./routes/serviceRouter.ts";
 import announcementRouter from "./routes/announcementRouter.ts";
 import employeeRouter from "./routes/employeeRouter.ts";
+import { auth } from "express-oauth2-jwt-bearer";
 
 const app: Express = express(); // Setup the backend
 
@@ -48,5 +49,13 @@ app.use((err: HttpError, req: Request, res: Response): void => {
   // Reply with the error
   res.status(err.status || 500);
 });
+
+app.use(
+  auth({
+    audience: "/api",
+    issuerBaseURL: "https://dev-1uv1d12i66i3umpd.us.auth0.com/",
+    tokenSigningAlg: "RS256",
+  }),
+);
 
 export default app; // Export the backend, so that www.ts can start it

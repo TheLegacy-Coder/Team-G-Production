@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
 import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
+import { currentToken } from "../stores/LoginStore.ts";
 
 type State = "none" | "add" | "edit";
 
@@ -11,6 +12,9 @@ export interface EmployeeWrapper {
 
 async function getEmployees(): Promise<EmployeeWrapper> {
   return axios.get("http://localhost:3000/api/employees", {
+    headers: {
+      Authorization: `Bearer ${currentToken}`,
+    },
     params: { getAll: true },
   });
 }
@@ -68,6 +72,9 @@ export const ViewEmployees = () => {
       try {
         axios
           .delete("http://localhost:3000/api/employees", {
+            headers: {
+              Authorization: `Bearer ${currentToken}`,
+            },
             data: { employeeID: employeeID },
           })
           .then(() => {
@@ -100,7 +107,11 @@ export const ViewEmployees = () => {
     if (state === "edit") {
       try {
         axios
-          .patch("http://localhost:3000/api/employees", data, {})
+          .patch("http://localhost:3000/api/employees", data, {
+            headers: {
+              Authorization: `Bearer ${currentToken}`,
+            },
+          })
           .then(() => {
             getAndSetEmployees();
             setState("none");
@@ -110,10 +121,16 @@ export const ViewEmployees = () => {
       }
     } else if (state === "add") {
       try {
-        axios.post("http://localhost:3000/api/employees", data, {}).then(() => {
-          getAndSetEmployees();
-          setState("none");
-        });
+        axios
+          .post("http://localhost:3000/api/employees", data, {
+            headers: {
+              Authorization: `Bearer ${currentToken}`,
+            },
+          })
+          .then(() => {
+            getAndSetEmployees();
+            setState("none");
+          });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }

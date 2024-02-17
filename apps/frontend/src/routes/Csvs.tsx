@@ -9,6 +9,7 @@ import {
 import "./styles/Csvs.css";
 import axios from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
+import { currentToken } from "../stores/LoginStore.ts";
 
 const Nodes = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -65,9 +66,11 @@ const Nodes = () => {
           importedMapNodes.push(node);
         }
       }
-
       axios
         .post("http://localhost:3000/api/map/nodes", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
           deleteAll: true,
           nodes: importedMapNodes,
         })
@@ -175,6 +178,9 @@ const Edges = () => {
       }
       axios
         .post("http://localhost:3000/api/map/edges", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
           deleteAll: true,
           edges: importedMapEdges,
         })
