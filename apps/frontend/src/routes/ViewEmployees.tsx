@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
 import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
@@ -31,12 +31,11 @@ export const ViewEmployees = () => {
       if (list !== undefined) {
         setEmployees(list.data);
       }
-      console.log(employees);
     });
   };
 
   // Fetch the employees from the server on load
-  //useEffect(getAndSetEmployees, []);
+  useEffect(getAndSetEmployees, []);
 
   // Set the employeeID of the employee being hovered over
   const handleMouseEnter = (employeeID: string) => {
@@ -111,10 +110,16 @@ export const ViewEmployees = () => {
       }
     } else if (state === "add") {
       try {
-        axios.post("http://localhost:3000/api/employees", data, {}).then(() => {
-          getAndSetEmployees();
-          setState("none");
-        });
+        axios
+          .post(
+            "http://localhost:3000/api/employees",
+            { employees: [data] },
+            {},
+          )
+          .then(() => {
+            getAndSetEmployees();
+            setState("none");
+          });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
@@ -161,20 +166,20 @@ export const ViewEmployees = () => {
         }
       }
       console.log(importedMapEmployees);
+
+      // post all new employees & replace all old ones
       axios
         .post("http://localhost:3000/api/employees", {
           deleteAll: true,
           employees: importedMapEmployees,
         })
-        // update local store
         .then(() => {
+          // update local store
           getAndSetEmployees();
         });
       e.target.value = "";
     };
     reader.readAsText(file);
-
-    // post all new nodes & replace all old ones
   };
 
   // Render rows for each employee
