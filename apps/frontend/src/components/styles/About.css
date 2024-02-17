@@ -1,0 +1,24 @@
+.about-page-container {
+  font-size: 19px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #00284f;
+  height: 100%;
+  color: white;
+  font-size: 18px;
+}
+
+.about-page-container div {
+  margin-bottom: 20px;
+}
+
+.about-page-container div:last-child {
+  margin-bottom: 0; /* Remove bottom margin for the last div */
+}
+
+a {
+  color: white;
+}
