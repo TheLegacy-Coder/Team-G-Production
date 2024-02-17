@@ -17,27 +17,7 @@ import {
  */
 
 import { searchAlg } from "./MapAlgorithm.ts";
-import {
-  /*pathLowest,
-  pathHighest,
-  currentFloor,
-  setCurrentFloor,
-  resetPath,
-  setRedraw,
-  scalar,
-  setScalar,
-  offset,
-  setImage,
-  ctx,
-  resetMap,
-  upleftCorner,
-  updateCoords,
-  downrightCorner,
-  centerPos,
-  tfPoint,*/
-  drawData,
-  ctx,
-} from "./DrawData.ts";
+import { drawData, ctx } from "./DrawData.ts";
 
 /**
  * Start Exported types

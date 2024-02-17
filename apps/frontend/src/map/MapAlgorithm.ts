@@ -8,18 +8,7 @@ import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
  * NOT Completed
  */
 
-import {
-  /*floors,
-  pathLowest,
-  pathHighest,
-  currentFloor,
-  clearFloors,
-  path,
-  resetPath,
-  framePush,
-  setRedraw,*/
-  drawData,
-} from "./DrawData.ts";
+import { drawData } from "./DrawData.ts";
 
 let startNode: MapNode | undefined = undefined;
 let endNode: MapNode | undefined = undefined;
@@ -30,10 +19,6 @@ const imageHeight = 3400;
 const spacing = 50;
 let totalDistance = 0;
 let steps: number[] = [];
-
-/*export let floors: string[] = [];
-export let pathLowest = { x: 0, y: 0 };
-export let pathHighest = { x: 0, y: 0 };*/
 
 function setFloorButtons() {
   for (let i = 0; i < drawData.floors.length; i++) {

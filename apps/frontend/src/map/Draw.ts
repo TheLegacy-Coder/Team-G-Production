@@ -1,9 +1,5 @@
 //import React from "react";
 
-/**
- * Completed
- */
-
 import {
   MapNode,
   mapNodes,
@@ -12,36 +8,14 @@ import {
   getEndNode,
 } from "./MapNode.ts";
 
-/**
- * NOT Completed
- */
 import { hoverNode, inView, homePosition } from "./Mouse.ts";
 
-import {
-  /*frames,
-  redraw,
-  scalar,
-  floors,
-  currentFloor,
-  setRedraw,
-  image,
-  ctx,*/
-  drawData,
-  ctx,
-} from "./DrawData.ts";
+import { drawData, ctx } from "./DrawData.ts";
 
 /**
  * Issues that are occurring
  * swapping between clicking nodes and selecting nodes not causing side buttons to update
  * pathInView causing bottom path from L2 to F3 to not draw
- */
-
-/**
- * Start Exported types
- */
-
-/**
- * End Exported types
  */
 
 let drawStep = 0;
@@ -58,86 +32,84 @@ function draw() {
   if (drawData.redraw) {
     // verifies canvas context is set up
     //ctx = canvasCtxRef.current;
-    if (ctx == null) {
-      return;
-    }
+    if (ctx !== null) {
+      drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
+      // save the context data for tf
+      ctx!.save();
+      ctx!.setTransform(1, 0, 0, 1, 0, 0);
+      ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx!.restore();
+      // draws image
+      ctx!.drawImage(drawData.image, 0, 0);
 
-    drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
-    // save the context data for tf
-    ctx!.save();
-    ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx!.restore();
-    // draws image
-    ctx!.drawImage(drawData.image, 0, 0);
+      //if draw edges
+      if (showEdges) {
+        mapNodes.forEach((node) => {
+          if (node.floor === drawData.currentFloor) {
+            ctx!.lineWidth = 3;
+            ctx!.strokeStyle = "#AAAAAA";
+            node.edges.forEach((edge) => {
+              if (edge.floor === drawData.currentFloor) {
+                // Start a new Path
+                ctx!.beginPath();
+                ctx!.moveTo(node.xcoord, node.ycoord);
+                ctx!.lineTo(edge.xcoord, edge.ycoord);
+                // Draw the Path
+                ctx!.stroke();
+              }
+            });
+          }
+        });
+      }
 
-    //if draw edges
-    if (showEdges) {
+      // draws the path trail
+      if (drawData.frames[drawStep] != undefined) {
+        drawData.frames[drawStep].forEach((frame) => {
+          ctx!.beginPath();
+          ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
+          ctx!.fillStyle = "#0000FF";
+          ctx!.fill();
+        });
+      }
+
       mapNodes.forEach((node) => {
         if (node.floor === drawData.currentFloor) {
-          ctx!.lineWidth = 3;
-          ctx!.strokeStyle = "#AAAAAA";
-          node.edges.forEach((edge) => {
-            if (edge.floor === drawData.currentFloor) {
-              // Start a new Path
-              ctx!.beginPath();
-              ctx!.moveTo(node.xcoord, node.ycoord);
-              ctx!.lineTo(edge.xcoord, edge.ycoord);
-              // Draw the Path
-              ctx!.stroke();
-            }
-          });
+          ctx!.beginPath();
+          ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+          ctx!.fillStyle =
+            getStartNode() == node
+              ? "#00FF00"
+              : getEndNode() == node
+                ? "#00ffff"
+                : hoverNode == node
+                  ? "#0000FF"
+                  : "#FF0000";
+          ctx!.fill();
+          ctx!.lineWidth = 5;
+          ctx!.strokeStyle = "#330000";
+          ctx!.stroke();
         }
       });
-    }
 
-    // draws the path trail
-    if (drawData.frames[drawStep] != undefined) {
-      drawData.frames[drawStep].forEach((frame) => {
-        ctx!.beginPath();
-        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
-        ctx!.fillStyle = "#0000FF";
-        ctx!.fill();
-      });
-    }
+      if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
-    mapNodes.forEach((node) => {
-      if (node.floor === drawData.currentFloor) {
-        ctx!.beginPath();
-        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-        ctx!.fillStyle =
-          getStartNode() == node
-            ? "#00FF00"
-            : getEndNode() == node
-              ? "#00ffff"
-              : hoverNode == node
-                ? "#0000FF"
-                : "#FF0000";
-        ctx!.fill();
-        ctx!.lineWidth = 5;
-        ctx!.strokeStyle = "#330000";
-        ctx!.stroke();
+      //let pathInView = false;
+      if (inView()) {
+        //pathInView = true;
       }
-    });
 
-    if (hoverNode !== undefined) drawNodeDetails(hoverNode);
-
-    //let pathInView = false;
-    if (inView()) {
-      //pathInView = true;
+      let currentSelectedFloor = drawData.currentFloor;
+      if (currentSelectedFloor.length == 1) {
+        currentSelectedFloor = "F" + currentSelectedFloor;
+      }
+      if (
+        getStartNode() === undefined ||
+        getEndNode() === undefined ||
+        !drawData.floors.includes(currentSelectedFloor) /* ||
+                    !pathInView*/
+      )
+        drawData.setRedraw(false);
     }
-
-    let currentSelectedFloor = drawData.currentFloor;
-    if (currentSelectedFloor.length == 1) {
-      currentSelectedFloor = "F" + currentSelectedFloor;
-    }
-    if (
-      getStartNode() === undefined ||
-      getEndNode() === undefined ||
-      !drawData.floors.includes(currentSelectedFloor) /* ||
-                !pathInView*/
-    )
-      drawData.setRedraw(false);
   }
   setTimeout(draw, 16);
 }

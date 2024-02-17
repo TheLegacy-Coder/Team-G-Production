@@ -10,15 +10,7 @@ import {
   homePosition,
 } from "../map/Mouse";
 import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
-import {
-  /*setRedraw,
-  offset,
-  setOffset,
-  initCTX,
-  resetMap,*/
-  drawData,
-  initCTX,
-} from "../map/DrawData.ts";
+import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 
 export const InteractableMap = () => {
@@ -29,28 +21,18 @@ export const InteractableMap = () => {
   const imageWidth = 5000;
   const imageHeight = 3400;
 
-  /*function initContext() {
-      if (canvasRef.current) {
-          const rect = canvasRef.current?.getBoundingClientRect();
-          drawData.setOffset(rect.top, rect.left);
-          canvasCtxRef.current = canvasRef.current.getContext("2d");
-      }
-      initCTX(canvasCtxRef.current);
-  }*/
-
-  // initializes canvas variables
-  useEffect(() => {
-    // Initialize
+  function initContext() {
     if (canvasRef.current) {
       const rect = canvasRef.current?.getBoundingClientRect();
       drawData.setOffset(rect.top, rect.left);
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
     initCTX(canvasCtxRef.current);
-    /*setTimeout(() => {
-        initContext();
-        drawData.setRedraw(true);
-    }, 1000);*/
+    drawData.setRedraw(true);
+  }
+  // initializes canvas variables
+  useEffect(() => {
+    initContext();
   }, []);
 
   /*const aStar = */ useCallback(searchAlg, [imageWidth, imageHeight]);

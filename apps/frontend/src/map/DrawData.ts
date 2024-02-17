@@ -81,4 +81,4 @@ class DrawData {
 
 export const drawData = new DrawData();
 
-drawData.image.src = "00_thelowerlevel1.png";
+drawData.setImage("00_thelowerlevel1.png");
