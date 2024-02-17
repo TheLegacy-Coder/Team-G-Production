@@ -21,13 +21,13 @@ class DrawData {
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
 
-  setImage(imageSrc: string) {
+  public setImage(imageSrc: string) {
     this.image = new Image();
     this.image.src = imageSrc;
   }
 
   // converts coordinates from page frame to image frame
-  tfPoint(x: number, y: number) {
+  public tfPoint(x: number, y: number) {
     if (ctx === null) {
       return undefined;
     }
@@ -35,7 +35,7 @@ class DrawData {
     return ctx!.getTransform().invertSelf().transformPoint(origin);
   }
   // updates coordinate points for map panning and zooming
-  updateCoords() {
+  public updateCoords() {
     this.centerPos = this.tfPoint(
       (window.innerWidth - this.offset.x) / 2,
       (window.innerHeight - this.offset.y) / 2,
@@ -45,30 +45,30 @@ class DrawData {
     this.upleftCorner!.y = this.tfPoint(0, 0)!.y;
     this.downrightCorner = this.tfPoint(window.innerWidth, window.innerHeight);
   }
-  setOffset(top: number, left: number) {
+  public setOffset(top: number, left: number) {
     this.offset.y = top;
     this.offset.x = left;
   }
-  setScalar(value: number) {
+  public setScalar(value: number) {
     this.scalar = value;
   }
-  setCurrentFloor(value: string) {
+  public setCurrentFloor(value: string) {
     this.currentFloor = value;
   }
-  clearFloors() {
+  public clearFloors() {
     this.floors = [];
   }
-  resetPath() {
+  public resetPath() {
     this.path = [];
     this.frames = [[[]]];
   }
-  framePush(temp: number[][]) {
+  public framePush(temp: number[][]) {
     this.frames.push(temp);
   }
-  setRedraw(value: boolean) {
+  public setRedraw(value: boolean) {
     this.redraw = value;
   }
-  resetMap() {
+  public resetMap() {
     this.resetPath();
     ctx!.scale(1 / this.scalar, 1 / this.scalar);
     this.setScalar(1);

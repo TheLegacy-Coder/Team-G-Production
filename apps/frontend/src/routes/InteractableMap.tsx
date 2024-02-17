@@ -9,7 +9,7 @@ import {
   setMap,
   homePosition,
 } from "../map/Mouse";
-import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
+import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 
@@ -17,9 +17,6 @@ export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
-
-  const imageWidth = 5000;
-  const imageHeight = 3400;
 
   function initContext() {
     if (canvasRef.current) {
@@ -35,9 +32,13 @@ export const InteractableMap = () => {
     initContext();
   }, []);
 
-  /*const aStar = */ useCallback(searchAlg, [imageWidth, imageHeight]);
+  useCallback(() => {
+    algorithm.searchAlg();
+  }, []);
 
-  const poll = useCallback(nodePoll, [searchAlg]);
+  const poll = useCallback(() => {
+    algorithm.nodePoll();
+  }, []);
 
   useEffect(() => {
     const intervalID = setInterval(poll, 10);
@@ -46,7 +47,7 @@ export const InteractableMap = () => {
 
   function changeMap(floor: string, imageSrc: string) {
     if (setMap(floor, imageSrc)) {
-      searchAlg();
+      algorithm.searchAlg();
       setTimeout(() => {
         //redraw = true;
         drawData.setRedraw(true);

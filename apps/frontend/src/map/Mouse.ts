@@ -1,8 +1,5 @@
 import React from "react";
 
-/**
- * Completed
- */
 import {
   setStartNode,
   setEndNode,
@@ -12,26 +9,12 @@ import {
   MapNode,
 } from "./MapNode.ts";
 
-/**
- * NOT Completed
- */
-
-import { searchAlg } from "./MapAlgorithm.ts";
+import { algorithm } from "./MapAlgorithm.ts";
 import { drawData, ctx } from "./DrawData.ts";
 
-/**
- * Start Exported types
- */
-
 export let hoverNode: MapNode | undefined = undefined;
-
-/**
- * End Exported types
- */
-
 const imageWidth = 5000;
 const imageHeight = 3400;
-
 //Stores map delta xy coordinates while panning
 const delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
 //Stores the start xy of mouse when pressed to test click clear or not
@@ -42,9 +25,7 @@ let moveMap = false;
 let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
 let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
-
 const zoomAmount = 0.1;
-
 let newMap = true;
 
 // zooms to a point
@@ -64,7 +45,6 @@ function zoom(zoom: number, xCoord: number, yCoord: number) {
   //redraw = true;
   drawData.setRedraw(true);
 }
-
 export function inView(): boolean {
   return (
     drawData.pathHighest.x > drawData.upleftCorner!.x &&
@@ -169,7 +149,7 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
         emptyClick = false;
         if (getStartNode() != undefined) {
           setEndNode(node);
-          searchAlg();
+          algorithm.searchAlg();
         } else {
           drawData.resetPath();
           setStartNode(node);

@@ -1,132 +1,127 @@
-/**
- * Completed
- */
-
 import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
-
-/**
- * NOT Completed
- */
 
 import { drawData } from "./DrawData.ts";
 
-let startNode: MapNode | undefined = undefined;
-let endNode: MapNode | undefined = undefined;
+class MapAlgorithm {
+  private startNode: MapNode | undefined = undefined;
+  private endNode: MapNode | undefined = undefined;
+  private imageWidth = 5000;
+  private imageHeight = 3400;
+  private spacing = 50;
+  private totalDistance = 0;
+  private steps: number[] = [];
 
-const imageWidth = 5000;
-const imageHeight = 3400;
-
-const spacing = 50;
-let totalDistance = 0;
-let steps: number[] = [];
-
-function setFloorButtons() {
-  for (let i = 0; i < drawData.floors.length; i++) {
-    if (drawData.floors[i].length === 1)
-      drawData.floors[i] = "F" + drawData.floors[i];
-    const scaleID = document.querySelector("#" + drawData.floors[i]);
-    scaleID!.classList.add("path-floor");
+  private setFloorButtons() {
+    for (let i = 0; i < drawData.floors.length; i++) {
+      if (drawData.floors[i].length === 1)
+        drawData.floors[i] = "F" + drawData.floors[i];
+      const scaleID = document.querySelector("#" + drawData.floors[i]);
+      scaleID!.classList.add("path-floor");
+    }
   }
-}
 
-export function searchAlg() {
-  // filters path not on floor
-  const unfilteredPath = AStarSearch(startNode, endNode);
+  public searchAlg() {
+    // filters path not on floor
+    const unfilteredPath = AStarSearch(this.startNode, this.endNode);
 
-  //floors = [];
-  drawData.clearFloors();
-
-  drawData.pathLowest.x = imageWidth;
-  drawData.pathLowest.y = imageHeight;
-  drawData.pathHighest.x = imageWidth;
-  drawData.pathHighest.y = imageHeight;
-
-  unfilteredPath.forEach((node) => {
-    if (node.floor === drawData.currentFloor) drawData.path.push(node);
-    if (!drawData.floors.includes(node.floor)) drawData.floors.push(node.floor);
-  });
-
-  setFloorButtons();
-
-  totalDistance = 0;
-  steps = [0];
-  let last: MapNode | undefined = undefined;
-  // gets distance based on connected nodes
-  drawData.path.forEach((node) => {
-    if (last != undefined /* && node.edges.includes(last)*/) {
-      const length = Math.sqrt(
-        Math.pow(last.ycoord - node.ycoord, 2) +
-          Math.pow(last.xcoord - node.xcoord, 2),
-      );
-      totalDistance += length;
-      steps.push(totalDistance);
-    }
-    last = node;
-  });
-  //bake frames
-  for (let f = 0; f < spacing; f++) {
-    const temp: number[][] = [];
-    for (let i = 0; i < totalDistance / spacing; i++) {
-      let prog = spacing * i + (f % spacing);
-      let s = 0;
-      while (s < drawData.path.length) {
-        if (prog < steps[s]) {
-          break;
-        }
-        s++;
-      }
-      s--;
-      prog -= steps[s];
-      if (
-        s + 1 < drawData.path.length &&
-        drawData.path[s + 1].edges.includes(drawData.path[s])
-      ) {
-        const angleRadians = Math.atan2(
-          drawData.path[s].ycoord - drawData.path[s + 1].ycoord,
-          drawData.path[s].xcoord - drawData.path[s + 1].xcoord,
-        );
-        const x = drawData.path[s].xcoord - Math.cos(angleRadians) * prog;
-        const y = drawData.path[s].ycoord - Math.sin(angleRadians) * prog;
-        temp.push([x, y]);
-        if (x < drawData.pathLowest.x) drawData.pathLowest.x = x;
-        else if (x > drawData.pathHighest.x) drawData.pathHighest.x = x;
-        if (y < drawData.pathLowest.y) drawData.pathLowest.y = y;
-        else if (y > drawData.pathHighest.y) drawData.pathHighest.y = y;
-      }
-    }
-    //frames.push(temp);
-    drawData.framePush(temp);
-  }
-  //redraw = true;
-  drawData.setRedraw(true);
-}
-
-export function nodePoll() {
-  const prevStart = startNode;
-  const prevEnd = endNode;
-  startNode = getStartNode();
-  endNode = getEndNode();
-  if (prevStart !== startNode || prevEnd !== endNode) {
-    const floorNames: string[] = ["F3", "F2", "F1", "L1", "L2"];
-    for (let i = 0; i < floorNames.length; i++) {
-      const scaleID = document.querySelector("#" + floorNames[i]);
-      if (scaleID !== null) scaleID!.classList.remove("path-floor");
-    }
     //floors = [];
     drawData.clearFloors();
-    drawData.path.forEach((node) => {
+
+    drawData.pathLowest.x = this.imageWidth;
+    drawData.pathLowest.y = this.imageHeight;
+    drawData.pathHighest.x = this.imageWidth;
+    drawData.pathHighest.y = this.imageHeight;
+
+    unfilteredPath.forEach((node) => {
+      if (node.floor === drawData.currentFloor) drawData.path.push(node);
       if (!drawData.floors.includes(node.floor))
         drawData.floors.push(node.floor);
     });
-    setFloorButtons();
+
+    this.setFloorButtons();
+
+    this.totalDistance = 0;
+    this.steps = [0];
+    let last: MapNode | undefined = undefined;
+    // gets distance based on connected nodes
+    drawData.path.forEach((node) => {
+      if (last != undefined /* && node.edges.includes(last)*/) {
+        const length = Math.sqrt(
+          Math.pow(last.ycoord - node.ycoord, 2) +
+            Math.pow(last.xcoord - node.xcoord, 2),
+        );
+        this.totalDistance += length;
+        this.steps.push(this.totalDistance);
+      }
+      last = node;
+    });
+    //bake frames
+    for (let f = 0; f < this.spacing; f++) {
+      const temp: number[][] = [];
+      for (let i = 0; i < this.totalDistance / this.spacing; i++) {
+        let prog = this.spacing * i + (f % this.spacing);
+        let s = 0;
+        while (s < drawData.path.length) {
+          if (prog < this.steps[s]) {
+            break;
+          }
+          s++;
+        }
+        s--;
+        prog -= this.steps[s];
+        if (
+          s + 1 < drawData.path.length &&
+          drawData.path[s + 1].edges.includes(drawData.path[s])
+        ) {
+          const angleRadians = Math.atan2(
+            drawData.path[s].ycoord - drawData.path[s + 1].ycoord,
+            drawData.path[s].xcoord - drawData.path[s + 1].xcoord,
+          );
+          const x = drawData.path[s].xcoord - Math.cos(angleRadians) * prog;
+          const y = drawData.path[s].ycoord - Math.sin(angleRadians) * prog;
+          temp.push([x, y]);
+          if (x < drawData.pathLowest.x) drawData.pathLowest.x = x;
+          else if (x > drawData.pathHighest.x) drawData.pathHighest.x = x;
+          if (y < drawData.pathLowest.y) drawData.pathLowest.y = y;
+          else if (y > drawData.pathHighest.y) drawData.pathHighest.y = y;
+        }
+      }
+      //frames.push(temp);
+      drawData.framePush(temp);
+    }
+    //redraw = true;
+    drawData.setRedraw(true);
   }
 
-  if (
-    startNode !== undefined &&
-    endNode !== undefined &&
-    (prevStart !== startNode || prevEnd !== endNode)
-  ) {
-    drawData.resetPath();
-    searchAlg();
+  public nodePoll() {
+    const prevStart = this.startNode;
+    const prevEnd = this.endNode;
+    this.startNode = getStartNode();
+    this.endNode = getEndNode();
+    if (prevStart !== this.startNode || prevEnd !== this.endNode) {
+      const floorNames: string[] = ["F3", "F2", "F1", "L1", "L2"];
+      for (let i = 0; i < floorNames.length; i++) {
+        const scaleID = document.querySelector("#" + floorNames[i]);
+        if (scaleID !== null) scaleID!.classList.remove("path-floor");
+      }
+      //floors = [];
+      drawData.clearFloors();
+      drawData.path.forEach((node) => {
+        if (!drawData.floors.includes(node.floor))
+          drawData.floors.push(node.floor);
+      });
+      this.setFloorButtons();
+    }
+
+    if (
+      this.startNode !== undefined &&
+      this.endNode !== undefined &&
+      (prevStart !== this.startNode || prevEnd !== this.endNode)
+    ) {
+      drawData.resetPath();
+      this.searchAlg();
+    }
   }
 }
+
+export const algorithm = new MapAlgorithm();

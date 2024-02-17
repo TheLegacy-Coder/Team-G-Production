@@ -1,5 +1,3 @@
-//import React from "react";
-
 import {
   MapNode,
   mapNodes,
@@ -25,8 +23,6 @@ export function toggleEdges() {
   showEdges = !showEdges;
   drawData.setRedraw(true);
 }
-
-//let ctx = canvasCtxRef.current;
 
 function draw() {
   if (drawData.redraw) {
