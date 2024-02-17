@@ -44,10 +44,10 @@ model ServiceRequest {
 model Announcement {
   announcementID String    @id(map: "Announcenments_pkey")
   desc           String
-  requester      String
+  requester      String?
   emergency      Boolean
   time           DateTime? @default(now()) @db.Timestamptz(6)
-  Employee       Employee  @relation(fields: [requester], references: [employeeID], onDelete: NoAction, onUpdate: NoAction, map: "Announcement_fk1")
+  Employee       Employee? @relation(fields: [requester], references: [employeeID], onUpdate: NoAction, map: "Announcement_fk1")
 }
 
 model Edge {
