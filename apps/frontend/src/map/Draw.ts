@@ -190,9 +190,9 @@ function drawNodeDetails(node: MapNode) {
 
 //Draws on canvas when map image loaded
 drawData.image.onload = () => {
-  draw();
-  homePosition();
   setTimeout(() => {
+    homePosition();
+    draw();
     drawData.setRedraw(true);
-  }, 25);
+  }, 50);
 };
