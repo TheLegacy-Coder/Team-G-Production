@@ -11,18 +11,19 @@ import {
 } from "../map/Mouse";
 import { searchAlg, nodePoll } from "../map/MapAlgorithm.ts";
 import {
-  setRedraw,
+  /*setRedraw,
   offset,
   setOffset,
   initCTX,
-  resetMap,
+  resetMap,*/
+  drawData,
 } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  initCTX(canvasCtxRef.current);
+  drawData.initCTX(canvasCtxRef.current);
 
   const imageWidth = 5000;
   const imageHeight = 3400;
@@ -32,10 +33,10 @@ export const InteractableMap = () => {
     // Initialize
     if (canvasRef.current) {
       const rect = canvasRef.current?.getBoundingClientRect();
-      setOffset(rect.top, rect.left);
+      drawData.setOffset(rect.top, rect.left);
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
-    initCTX(canvasCtxRef.current);
+    drawData.initCTX(canvasCtxRef.current);
   }, []);
 
   /*const aStar = */ useCallback(searchAlg, [imageWidth, imageHeight]);
@@ -52,7 +53,7 @@ export const InteractableMap = () => {
       searchAlg();
       setTimeout(() => {
         //redraw = true;
-        setRedraw(true);
+        drawData.setRedraw(true);
       }, 100);
     }
   }
@@ -61,8 +62,8 @@ export const InteractableMap = () => {
     <div
       style={
         {
-          width: window.innerWidth - offset.x,
-          height: window.innerHeight - offset.y,
+          width: window.innerWidth - drawData.offset.x,
+          height: window.innerHeight - drawData.offset.y,
           overflow: "hidden",
         } as React.CSSProperties
       }
@@ -85,7 +86,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          resetMap();
+          drawData.resetMap();
           homePosition();
         }}
       >

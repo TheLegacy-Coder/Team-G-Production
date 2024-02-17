@@ -18,7 +18,7 @@ import {
 
 import { searchAlg } from "./MapAlgorithm.ts";
 import {
-  pathLowest,
+  /*pathLowest,
   pathHighest,
   currentFloor,
   setCurrentFloor,
@@ -34,7 +34,8 @@ import {
   updateCoords,
   downrightCorner,
   centerPos,
-  tfPoint,
+  tfPoint,*/
+  drawData,
 } from "./DrawData.ts";
 
 /**
@@ -67,28 +68,28 @@ let newMap = true;
 
 // zooms to a point
 function zoom(zoom: number, xCoord: number, yCoord: number) {
-  if (scalar * zoom > 0.3 && scalar * zoom < 2) {
+  if (drawData.scalar * zoom > 0.3 && drawData.scalar * zoom < 2) {
     //scalar *= zoom;
-    setScalar(scalar * zoom);
+    drawData.setScalar(drawData.scalar * zoom);
     const scaleID = document.querySelector("#scalar");
-    scaleID!.textContent = scalar.toFixed(2).toString();
+    scaleID!.textContent = drawData.scalar.toFixed(2).toString();
 
-    ctx!.translate(xCoord, yCoord);
-    ctx!.scale(zoom, zoom);
-    ctx!.translate(-xCoord, -yCoord);
+    drawData.ctx!.translate(xCoord, yCoord);
+    drawData.ctx!.scale(zoom, zoom);
+    drawData.ctx!.translate(-xCoord, -yCoord);
   }
-  updateCoords();
+  drawData.updateCoords();
   boundCoords();
   //redraw = true;
-  setRedraw(true);
+  drawData.setRedraw(true);
 }
 
 export function inView(): boolean {
   return (
-    pathHighest.x > upleftCorner!.x &&
-    pathLowest.x < downrightCorner!.x &&
-    pathHighest.y > upleftCorner!.y &&
-    pathLowest.y < downrightCorner!.y
+    drawData.pathHighest.x > drawData.upleftCorner!.x &&
+    drawData.pathLowest.x < drawData.downrightCorner!.x &&
+    drawData.pathHighest.y > drawData.upleftCorner!.y &&
+    drawData.pathLowest.y < drawData.downrightCorner!.y
   );
 }
 
@@ -96,7 +97,7 @@ export function buttonZoom(input: boolean) {
   let zoomIncrement: number;
   if (input) zoomIncrement = 1 + zoomAmount;
   else zoomIncrement = 1 - zoomAmount;
-  zoom(zoomIncrement, centerPos!.x, centerPos!.y);
+  zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
 }
 
 //Adjusts zoom according to scroll
@@ -107,13 +108,16 @@ export function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
   const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
   zoom(zoomDelta, tfCursor.x, tfCursor.y);
   //redraw = true;
-  setRedraw(true);
+  drawData.setRedraw(true);
 }
 
 // runs for moving mouse
 export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
   let moveRedraw = false;
-  tfCursor = tfPoint(evt.pageX - offset.x, evt.pageY - offset.y);
+  tfCursor = drawData.tfPoint(
+    evt.pageX - drawData.offset.x,
+    evt.pageY - drawData.offset.y,
+  );
 
   if (delta === undefined || tfCursor === undefined || startPos === undefined) {
     return null;
@@ -124,13 +128,13 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     delta.x = evt.pageX - pageStart!.x;
     delta.y = evt.pageY - pageStart!.y;
     if (delta.x !== currDelta.x || delta.y !== currDelta.y) moveRedraw = true;
-    ctx!.translate(
-      tfCursor.x + offset.x / scalar - startPos.x,
-      tfCursor.y + offset.y / scalar - startPos.y,
+    drawData.ctx!.translate(
+      tfCursor.x + drawData.offset.x / drawData.scalar - startPos.x,
+      tfCursor.y + drawData.offset.y / drawData.scalar - startPos.y,
     );
   }
   mapNodes.forEach((node) => {
-    if (node.floor === currentFloor) {
+    if (node.floor === drawData.currentFloor) {
       const dist = Math.sqrt(
         Math.pow(tfCursor!.x - node.xcoord, 2) +
           Math.pow(tfCursor!.y - node.ycoord, 2),
@@ -146,11 +150,11 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
       }
     }
   });
-  updateCoords();
+  drawData.updateCoords();
   boundCoords();
   if (moveRedraw) {
     //redraw = true;
-    setRedraw(true);
+    drawData.setRedraw(true);
   }
 }
 
@@ -162,7 +166,7 @@ export function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
   pageStart.x = evt.pageX;
   pageStart.y = evt.pageY;
   moveMap = true;
-  startPos = tfPoint(evt.pageX, evt.pageY);
+  startPos = drawData.tfPoint(evt.pageX, evt.pageY);
   boundCoords();
 }
 
@@ -175,7 +179,7 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
   evt.pageX;
   let emptyClick = true;
   mapNodes.forEach((node) => {
-    if (node.floor === currentFloor) {
+    if (node.floor === drawData.currentFloor) {
       const dist = Math.sqrt(
         Math.pow(tfCursor!.x - node.xcoord, 2) +
           Math.pow(tfCursor!.y - node.ycoord, 2),
@@ -186,7 +190,7 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
           setEndNode(node);
           searchAlg();
         } else {
-          resetPath();
+          drawData.resetPath();
           setStartNode(node);
         }
         nodeStore.setSelectedNode(node);
@@ -197,31 +201,31 @@ export function mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     setStartNode(undefined);
     setEndNode(undefined);
     nodeStore.setSelectedNode(undefined);
-    resetPath();
+    drawData.resetPath();
   }
   delta.x = 0;
   delta.y = 0;
   boundCoords();
   //redraw = true;
-  setRedraw(true);
+  drawData.setRedraw(true);
 }
 
 export function setMap(floor: string, imageSrc: string) {
   if (newMap) {
     newMap = false;
-    const tempScalar = scalar;
-    ctx!.save();
-    resetMap();
+    const tempScalar = drawData.scalar;
+    drawData.ctx!.save();
+    drawData.resetMap();
     //currentFloor = floor;
-    setCurrentFloor(floor);
-    setImage(imageSrc);
+    drawData.setCurrentFloor(floor);
+    drawData.setImage(imageSrc);
     homePosition();
     newMap = true;
-    ctx!.restore();
-    setScalar(tempScalar);
+    drawData.ctx!.restore();
+    drawData.setScalar(tempScalar);
     const scaleID = document.querySelector("#scalar");
-    scaleID!.textContent = scalar.toFixed(2).toString();
-    resetPath();
+    scaleID!.textContent = drawData.scalar.toFixed(2).toString();
+    drawData.resetPath();
     return true;
   }
   return false;
@@ -229,52 +233,81 @@ export function setMap(floor: string, imageSrc: string) {
 
 // resets map position to a default position
 export function homePosition() {
-  if (ctx === null) {
+  if (drawData.ctx === null) {
     return;
   }
-  ctx!.translate(-1200, -400);
-  updateCoords();
+  drawData.ctx!.translate(-1200, -400);
+  drawData.updateCoords();
   //scalar = 0.75;
-  setScalar(0.75);
-  ctx!.scale(0.75, 0.75);
-  updateCoords();
+  drawData.setScalar(0.75);
+  drawData.ctx!.scale(0.75, 0.75);
+  drawData.updateCoords();
   boundCoords();
   const scaleID = document.querySelector("#scalar");
-  scaleID!.textContent = scalar.toFixed(2).toString();
+  scaleID!.textContent = drawData.scalar.toFixed(2).toString();
 }
 
 export function boundCoords() {
-  if (downrightCorner === undefined || upleftCorner === undefined) return null;
-  if (downrightCorner.x - upleftCorner.x > imageWidth) {
+  if (
+    drawData.downrightCorner === undefined ||
+    drawData.upleftCorner === undefined
+  )
+    return null;
+  if (drawData.downrightCorner.x - drawData.upleftCorner.x > imageWidth) {
     // centers canvas along x axis
-    ctx!.translate(upleftCorner.x, 0);
-    updateCoords();
-    ctx!.translate((downrightCorner.x - imageWidth - offset.x / scalar) / 2, 0);
-  } else {
-    if (upleftCorner.x < 0) {
-      // aligns canvas along left side
-      ctx!.translate(upleftCorner.x, 0);
-    } else if (downrightCorner.x > imageWidth + offset.x / scalar) {
-      // aligns canvas along right side
-      ctx!.translate(-imageWidth - offset.x / scalar + downrightCorner.x, 0);
-    }
-  }
-  if (downrightCorner.y - upleftCorner.y > imageHeight) {
-    // centers canvas along y axis
-    ctx!.translate(0, upleftCorner.y);
-    updateCoords();
-    ctx!.translate(
+    drawData.ctx!.translate(drawData.upleftCorner.x, 0);
+    drawData.updateCoords();
+    drawData.ctx!.translate(
+      (drawData.downrightCorner.x -
+        imageWidth -
+        drawData.offset.x / drawData.scalar) /
+        2,
       0,
-      (downrightCorner.y - imageHeight - offset.y / scalar) / 2,
     );
   } else {
-    if (upleftCorner.y < 0) {
-      // aligns canvas along top side
-      ctx!.translate(0, upleftCorner.y);
-    } else if (downrightCorner.y > imageHeight + offset.y / scalar) {
-      // aligns canvas along bottom side
-      ctx!.translate(0, -imageHeight - offset.y / scalar + downrightCorner.y);
+    if (drawData.upleftCorner.x < 0) {
+      // aligns canvas along left side
+      drawData.ctx!.translate(drawData.upleftCorner.x, 0);
+    } else if (
+      drawData.downrightCorner.x >
+      imageWidth + drawData.offset.x / drawData.scalar
+    ) {
+      // aligns canvas along right side
+      drawData.ctx!.translate(
+        -imageWidth -
+          drawData.offset.x / drawData.scalar +
+          drawData.downrightCorner.x,
+        0,
+      );
     }
   }
-  updateCoords();
+  if (drawData.downrightCorner.y - drawData.upleftCorner.y > imageHeight) {
+    // centers canvas along y axis
+    drawData.ctx!.translate(0, drawData.upleftCorner.y);
+    drawData.updateCoords();
+    drawData.ctx!.translate(
+      0,
+      (drawData.downrightCorner.y -
+        imageHeight -
+        drawData.offset.y / drawData.scalar) /
+        2,
+    );
+  } else {
+    if (drawData.upleftCorner.y < 0) {
+      // aligns canvas along top side
+      drawData.ctx!.translate(0, drawData.upleftCorner.y);
+    } else if (
+      drawData.downrightCorner.y >
+      imageHeight + drawData.offset.y / drawData.scalar
+    ) {
+      // aligns canvas along bottom side
+      drawData.ctx!.translate(
+        0,
+        -imageHeight -
+          drawData.offset.y / drawData.scalar +
+          drawData.downrightCorner.y,
+      );
+    }
+  }
+  drawData.updateCoords();
 }

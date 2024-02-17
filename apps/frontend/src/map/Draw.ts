@@ -18,14 +18,15 @@ import {
 import { hoverNode, inView, homePosition } from "./Mouse.ts";
 
 import {
-  frames,
+  /*frames,
   redraw,
   scalar,
   floors,
   currentFloor,
   setRedraw,
   image,
-  ctx,
+  ctx,*/
+  drawData,
 } from "./DrawData.ts";
 
 /**
@@ -47,42 +48,42 @@ let showEdges = false;
 
 export function toggleEdges() {
   showEdges = !showEdges;
-  setRedraw(true);
+  drawData.setRedraw(true);
 }
 
 //let ctx = canvasCtxRef.current;
 
 function draw() {
-  if (redraw) {
+  if (drawData.redraw) {
     // verifies canvas context is set up
     //ctx = canvasCtxRef.current;
-    if (ctx == null) {
+    if (drawData.ctx == null) {
       return;
     }
 
     drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     // save the context data for tf
-    ctx!.save();
-    ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx!.restore();
+    drawData.ctx!.save();
+    drawData.ctx!.setTransform(1, 0, 0, 1, 0, 0);
+    drawData.ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    drawData.ctx!.restore();
     // draws image
-    ctx!.drawImage(image, 0, 0);
+    drawData.ctx!.drawImage(drawData.image, 0, 0);
 
     //if draw edges
     if (showEdges) {
       mapNodes.forEach((node) => {
-        if (node.floor === currentFloor) {
-          ctx!.lineWidth = 3;
-          ctx!.strokeStyle = "#AAAAAA";
+        if (node.floor === drawData.currentFloor) {
+          drawData.ctx!.lineWidth = 3;
+          drawData.ctx!.strokeStyle = "#AAAAAA";
           node.edges.forEach((edge) => {
-            if (edge.floor === currentFloor) {
+            if (edge.floor === drawData.currentFloor) {
               // Start a new Path
-              ctx!.beginPath();
-              ctx!.moveTo(node.xcoord, node.ycoord);
-              ctx!.lineTo(edge.xcoord, edge.ycoord);
+              drawData.ctx!.beginPath();
+              drawData.ctx!.moveTo(node.xcoord, node.ycoord);
+              drawData.ctx!.lineTo(edge.xcoord, edge.ycoord);
               // Draw the Path
-              ctx!.stroke();
+              drawData.ctx!.stroke();
             }
           });
         }
@@ -90,20 +91,20 @@ function draw() {
     }
 
     // draws the path trail
-    if (frames[drawStep] != undefined) {
-      frames[drawStep].forEach((frame) => {
-        ctx!.beginPath();
-        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
-        ctx!.fillStyle = "#0000FF";
-        ctx!.fill();
+    if (drawData.frames[drawStep] != undefined) {
+      drawData.frames[drawStep].forEach((frame) => {
+        drawData.ctx!.beginPath();
+        drawData.ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
+        drawData.ctx!.fillStyle = "#0000FF";
+        drawData.ctx!.fill();
       });
     }
 
     mapNodes.forEach((node) => {
-      if (node.floor === currentFloor) {
-        ctx!.beginPath();
-        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-        ctx!.fillStyle =
+      if (node.floor === drawData.currentFloor) {
+        drawData.ctx!.beginPath();
+        drawData.ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+        drawData.ctx!.fillStyle =
           getStartNode() == node
             ? "#00FF00"
             : getEndNode() == node
@@ -111,10 +112,10 @@ function draw() {
               : hoverNode == node
                 ? "#0000FF"
                 : "#FF0000";
-        ctx!.fill();
-        ctx!.lineWidth = 5;
-        ctx!.strokeStyle = "#330000";
-        ctx!.stroke();
+        drawData.ctx!.fill();
+        drawData.ctx!.lineWidth = 5;
+        drawData.ctx!.strokeStyle = "#330000";
+        drawData.ctx!.stroke();
       }
     });
 
@@ -125,17 +126,17 @@ function draw() {
       //pathInView = true;
     }
 
-    let currentSelectedFloor = currentFloor;
+    let currentSelectedFloor = drawData.currentFloor;
     if (currentSelectedFloor.length == 1) {
       currentSelectedFloor = "F" + currentSelectedFloor;
     }
     if (
       getStartNode() === undefined ||
       getEndNode() === undefined ||
-      !floors.includes(currentSelectedFloor) /* ||
+      !drawData.floors.includes(currentSelectedFloor) /* ||
                 !pathInView*/
     )
-      setRedraw(false);
+      drawData.setRedraw(false);
   }
   setTimeout(draw, 16);
 }
@@ -148,9 +149,9 @@ function getContentWidth(prevNum: number, inString: string): number {
 }
 
 function drawNodeDetails(node: MapNode) {
-  ctx!.fillStyle = "#FFFFFF";
-  ctx!.strokeStyle = "#000000";
-  ctx!.lineWidth = 5 / scalar;
+  drawData.ctx!.fillStyle = "#FFFFFF";
+  drawData.ctx!.strokeStyle = "#000000";
+  drawData.ctx!.lineWidth = 5 / drawData.scalar;
   const content: string[] = [];
   let contentWidth: number = node.shortName.length;
   content.push(node.shortName);
@@ -190,35 +191,36 @@ function drawNodeDetails(node: MapNode) {
     contentWidth = getContentWidth(contentWidth, lineContent);
   }
 
-  ctx!.fillRect(
-    node.xcoord - (contentWidth * 9) / 2 / scalar,
+  drawData.ctx!.fillRect(
+    node.xcoord - (contentWidth * 9) / 2 / drawData.scalar,
     node.ycoord + 15,
-    (contentWidth * 9) / scalar,
-    5 + (15 / scalar) * lineCount,
+    (contentWidth * 9) / drawData.scalar,
+    5 + (15 / drawData.scalar) * lineCount,
   );
-  ctx!.strokeRect(
-    node.xcoord - (contentWidth * 9) / 2 / scalar,
+  drawData.ctx!.strokeRect(
+    node.xcoord - (contentWidth * 9) / 2 / drawData.scalar,
     node.ycoord + 15,
-    (contentWidth * 9) / scalar,
-    5 + (15 / scalar) * lineCount,
+    (contentWidth * 9) / drawData.scalar,
+    5 + (15 / drawData.scalar) * lineCount,
   );
-  ctx!.font = "bold " + (10 / scalar).toString() + "pt Courier";
-  ctx!.textAlign = "center";
-  ctx!.fillStyle = "#550000";
+  drawData.ctx!.font =
+    "bold " + (10 / drawData.scalar).toString() + "pt Courier";
+  drawData.ctx!.textAlign = "center";
+  drawData.ctx!.fillStyle = "#550000";
   for (let i = 0; i < lineCount; i++) {
-    ctx!.fillText(
+    drawData.ctx!.fillText(
       content[i],
       node.xcoord,
-      node.ycoord + 14 + (14 / scalar) * (i + 1),
+      node.ycoord + 14 + (14 / drawData.scalar) * (i + 1),
     );
   }
 }
 
 //Draws on canvas when map image loaded
-image.onload = () => {
+drawData.image.onload = () => {
   draw();
   homePosition();
   setTimeout(() => {
-    setRedraw(true);
+    drawData.setRedraw(true);
   }, 25);
 };

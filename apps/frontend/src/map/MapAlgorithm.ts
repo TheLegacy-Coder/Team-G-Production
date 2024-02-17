@@ -9,7 +9,7 @@ import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
  */
 
 import {
-  floors,
+  /*floors,
   pathLowest,
   pathHighest,
   currentFloor,
@@ -17,7 +17,8 @@ import {
   path,
   resetPath,
   framePush,
-  setRedraw,
+  setRedraw,*/
+  drawData,
 } from "./DrawData.ts";
 
 let startNode: MapNode | undefined = undefined;
@@ -35,9 +36,10 @@ export let pathLowest = { x: 0, y: 0 };
 export let pathHighest = { x: 0, y: 0 };*/
 
 function setFloorButtons() {
-  for (let i = 0; i < floors.length; i++) {
-    if (floors[i].length === 1) floors[i] = "F" + floors[i];
-    const scaleID = document.querySelector("#" + floors[i]);
+  for (let i = 0; i < drawData.floors.length; i++) {
+    if (drawData.floors[i].length === 1)
+      drawData.floors[i] = "F" + drawData.floors[i];
+    const scaleID = document.querySelector("#" + drawData.floors[i]);
     scaleID!.classList.add("path-floor");
   }
 }
@@ -47,16 +49,16 @@ export function searchAlg() {
   const unfilteredPath = AStarSearch(startNode, endNode);
 
   //floors = [];
-  clearFloors();
+  drawData.clearFloors();
 
-  pathLowest.x = imageWidth;
-  pathLowest.y = imageHeight;
-  pathHighest.x = imageWidth;
-  pathHighest.y = imageHeight;
+  drawData.pathLowest.x = imageWidth;
+  drawData.pathLowest.y = imageHeight;
+  drawData.pathHighest.x = imageWidth;
+  drawData.pathHighest.y = imageHeight;
 
   unfilteredPath.forEach((node) => {
-    if (node.floor === currentFloor) path.push(node);
-    if (!floors.includes(node.floor)) floors.push(node.floor);
+    if (node.floor === drawData.currentFloor) drawData.path.push(node);
+    if (!drawData.floors.includes(node.floor)) drawData.floors.push(node.floor);
   });
 
   setFloorButtons();
@@ -65,7 +67,7 @@ export function searchAlg() {
   steps = [0];
   let last: MapNode | undefined = undefined;
   // gets distance based on connected nodes
-  path.forEach((node) => {
+  drawData.path.forEach((node) => {
     if (last != undefined /* && node.edges.includes(last)*/) {
       const length = Math.sqrt(
         Math.pow(last.ycoord - node.ycoord, 2) +
@@ -82,7 +84,7 @@ export function searchAlg() {
     for (let i = 0; i < totalDistance / spacing; i++) {
       let prog = spacing * i + (f % spacing);
       let s = 0;
-      while (s < path.length) {
+      while (s < drawData.path.length) {
         if (prog < steps[s]) {
           break;
         }
@@ -90,25 +92,28 @@ export function searchAlg() {
       }
       s--;
       prog -= steps[s];
-      if (s + 1 < path.length && path[s + 1].edges.includes(path[s])) {
+      if (
+        s + 1 < drawData.path.length &&
+        drawData.path[s + 1].edges.includes(drawData.path[s])
+      ) {
         const angleRadians = Math.atan2(
-          path[s].ycoord - path[s + 1].ycoord,
-          path[s].xcoord - path[s + 1].xcoord,
+          drawData.path[s].ycoord - drawData.path[s + 1].ycoord,
+          drawData.path[s].xcoord - drawData.path[s + 1].xcoord,
         );
-        const x = path[s].xcoord - Math.cos(angleRadians) * prog;
-        const y = path[s].ycoord - Math.sin(angleRadians) * prog;
+        const x = drawData.path[s].xcoord - Math.cos(angleRadians) * prog;
+        const y = drawData.path[s].ycoord - Math.sin(angleRadians) * prog;
         temp.push([x, y]);
-        if (x < pathLowest.x) pathLowest.x = x;
-        else if (x > pathHighest.x) pathHighest.x = x;
-        if (y < pathLowest.y) pathLowest.y = y;
-        else if (y > pathHighest.y) pathHighest.y = y;
+        if (x < drawData.pathLowest.x) drawData.pathLowest.x = x;
+        else if (x > drawData.pathHighest.x) drawData.pathHighest.x = x;
+        if (y < drawData.pathLowest.y) drawData.pathLowest.y = y;
+        else if (y > drawData.pathHighest.y) drawData.pathHighest.y = y;
       }
     }
     //frames.push(temp);
-    framePush(temp);
+    drawData.framePush(temp);
   }
   //redraw = true;
-  setRedraw(true);
+  drawData.setRedraw(true);
 }
 
 export function nodePoll() {
@@ -123,9 +128,10 @@ export function nodePoll() {
       if (scaleID !== null) scaleID!.classList.remove("path-floor");
     }
     //floors = [];
-    clearFloors();
-    path.forEach((node) => {
-      if (!floors.includes(node.floor)) floors.push(node.floor);
+    drawData.clearFloors();
+    drawData.path.forEach((node) => {
+      if (!drawData.floors.includes(node.floor))
+        drawData.floors.push(node.floor);
     });
     setFloorButtons();
   }
@@ -135,7 +141,7 @@ export function nodePoll() {
     endNode !== undefined &&
     (prevStart !== startNode || prevEnd !== endNode)
   ) {
-    resetPath();
+    drawData.resetPath();
     searchAlg();
   }
 }

@@ -1,108 +1,80 @@
 import { MapNode } from "./MapNode.ts";
 
-export let floors: string[] = [];
-export const pathLowest = { x: 0, y: 0 };
-export const pathHighest = { x: 0, y: 0 };
+class DrawData {
+  public floors: string[] = [];
+  public pathLowest: { x: number; y: number } = { x: 0, y: 0 };
+  public pathHighest: { x: number; y: number } = { x: 0, y: 0 };
+  public currentFloor: string = "L1";
+  public path: MapNode[] = [];
+  public frames: number[][][] = [[[]]];
+  public redraw: boolean = true;
+  public scalar: number = 1;
+  public offset: { x: number; y: number } = { x: 0, y: 0 };
+  public upleftCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+  public downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
+  public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
+  public image = new Image();
+  //image.src = "00_thelowerlevel1.png";
+  public ctx: CanvasRenderingContext2D | null = null;
 
-export let currentFloor = "L1";
-
-export let path: MapNode[] = [];
-
-export let frames: number[][][] = [[[]]];
-
-export let redraw = true;
-
-export let scalar = 1;
-
-export const offset = { x: 0, y: 0 };
-
-export const upleftCorner: { x: number; y: number } | undefined = {
-  x: 0,
-  y: 0,
-};
-
-export let downrightCorner: { x: number; y: number } | undefined = {
-  x: 0,
-  y: 0,
-};
-
-export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
-
-export let image = new Image();
-image.src = "00_thelowerlevel1.png";
-
-export function setImage(imageSrc: string) {
-  image = new Image();
-  image.src = imageSrc;
-}
-
-export let ctx: CanvasRenderingContext2D | null;
-
-export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
-  ctx = ctxRef;
-}
-
-// converts coordinates from page frame to image frame
-export function tfPoint(x: number, y: number) {
-  if (ctx === null) {
-    return undefined;
+  setImage(imageSrc: string) {
+    this.image = new Image();
+    this.image.src = imageSrc;
   }
-  const origin = new DOMPoint(x, y);
-  return ctx!.getTransform().invertSelf().transformPoint(origin);
+  initCTX(ctxRef: CanvasRenderingContext2D | null) {
+    this.ctx = ctxRef;
+  }
+  // converts coordinates from page frame to image frame
+  tfPoint(x: number, y: number) {
+    if (this.ctx === null) {
+      return undefined;
+    }
+    const origin = new DOMPoint(x, y);
+    return this.ctx!.getTransform().invertSelf().transformPoint(origin);
+  }
+  // updates coordinate points for map panning and zooming
+  updateCoords() {
+    this.centerPos = this.tfPoint(
+      (window.innerWidth - this.offset.x) / 2,
+      (window.innerHeight - this.offset.y) / 2,
+    );
+    //upleftCorner = tfPoint(0, 0);
+    this.upleftCorner!.x = this.tfPoint(0, 0)!.x;
+    this.upleftCorner!.y = this.tfPoint(0, 0)!.y;
+    this.downrightCorner = this.tfPoint(window.innerWidth, window.innerHeight);
+  }
+  setOffset(top: number, left: number) {
+    this.offset.y = top;
+    this.offset.x = left;
+  }
+  setScalar(value: number) {
+    this.scalar = value;
+  }
+  setCurrentFloor(value: string) {
+    this.currentFloor = value;
+  }
+  clearFloors() {
+    this.floors = [];
+  }
+  resetPath() {
+    this.path = [];
+    this.frames = [[[]]];
+  }
+  framePush(temp: number[][]) {
+    this.frames.push(temp);
+  }
+  setRedraw(value: boolean) {
+    this.redraw = value;
+  }
+  resetMap() {
+    this.resetPath();
+    this.ctx!.scale(1 / this.scalar, 1 / this.scalar);
+    this.setScalar(1);
+    this.updateCoords();
+    this.ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
+    this.updateCoords();
+    this.setRedraw(true);
+  }
 }
 
-// updates coordinate points for map panning and zooming
-export function updateCoords() {
-  centerPos = tfPoint(
-    (window.innerWidth - offset.x) / 2,
-    (window.innerHeight - offset.y) / 2,
-  );
-  //upleftCorner = tfPoint(0, 0);
-  upleftCorner!.x = tfPoint(0, 0)!.x;
-  upleftCorner!.y = tfPoint(0, 0)!.y;
-  downrightCorner = tfPoint(window.innerWidth, window.innerHeight);
-}
-
-export function setOffset(top: number, left: number) {
-  offset.y = top;
-  offset.x = left;
-}
-
-export function setScalar(value: number) {
-  scalar = value;
-}
-
-export function setCurrentFloor(value: string) {
-  currentFloor = value;
-}
-
-export function clearFloors() {
-  floors = [];
-}
-
-export function resetPath() {
-  path = [];
-  frames = [[[]]];
-}
-
-export function framePush(temp: number[][]) {
-  frames.push(temp);
-}
-
-export function setRedraw(value: boolean) {
-  redraw = value;
-}
-
-export function resetMap() {
-  //frames = [[[]]];
-  resetPath();
-  //drawStep = 0;
-  ctx!.scale(1 / scalar, 1 / scalar);
-  //scalar *= 1 / scalar;
-  setScalar(1);
-  updateCoords();
-  ctx!.translate(upleftCorner!.x, upleftCorner!.y);
-  updateCoords();
-  //redraw = true;
-  setRedraw(true);
-}
+export const drawData = new DrawData();
