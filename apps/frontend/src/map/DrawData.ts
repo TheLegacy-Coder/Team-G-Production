@@ -28,6 +28,20 @@ export let downrightCorner: { x: number; y: number } | undefined = {
 
 export let centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 
+export let image = new Image();
+image.src = "00_thelowerlevel1.png";
+
+export function setImage(imageSrc: string) {
+  image = new Image();
+  image.src = imageSrc;
+}
+
+export let ctx: CanvasRenderingContext2D | null;
+
+export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
+  ctx = ctxRef;
+}
+
 // converts coordinates from page frame to image frame
 export function tfPoint(x: number, y: number) {
   if (ctx === null) {
@@ -47,20 +61,6 @@ export function updateCoords() {
   upleftCorner!.x = tfPoint(0, 0)!.x;
   upleftCorner!.y = tfPoint(0, 0)!.y;
   downrightCorner = tfPoint(window.innerWidth, window.innerHeight);
-}
-
-export let image = new Image();
-image.src = "00_thelowerlevel1.png";
-
-export let ctx: CanvasRenderingContext2D | null;
-
-export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
-  ctx = ctxRef;
-}
-
-export function setImage(imageSrc: string) {
-  image = new Image();
-  image.src = imageSrc;
 }
 
 export function setOffset(top: number, left: number) {
