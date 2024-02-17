@@ -1,5 +1,11 @@
 import { MapNode } from "./MapNode.ts";
 
+export let ctx: CanvasRenderingContext2D | null;
+
+export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
+  ctx = ctxRef;
+}
+
 class DrawData {
   public floors: string[] = [];
   public pathLowest: { x: number; y: number } = { x: 0, y: 0 };
@@ -14,23 +20,19 @@ class DrawData {
   public downrightCorner: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
-  //image.src = "00_thelowerlevel1.png";
-  public ctx: CanvasRenderingContext2D | null = null;
 
   setImage(imageSrc: string) {
     this.image = new Image();
     this.image.src = imageSrc;
   }
-  initCTX(ctxRef: CanvasRenderingContext2D | null) {
-    this.ctx = ctxRef;
-  }
+
   // converts coordinates from page frame to image frame
   tfPoint(x: number, y: number) {
-    if (this.ctx === null) {
+    if (ctx === null) {
       return undefined;
     }
     const origin = new DOMPoint(x, y);
-    return this.ctx!.getTransform().invertSelf().transformPoint(origin);
+    return ctx!.getTransform().invertSelf().transformPoint(origin);
   }
   // updates coordinate points for map panning and zooming
   updateCoords() {
@@ -68,13 +70,15 @@ class DrawData {
   }
   resetMap() {
     this.resetPath();
-    this.ctx!.scale(1 / this.scalar, 1 / this.scalar);
+    ctx!.scale(1 / this.scalar, 1 / this.scalar);
     this.setScalar(1);
     this.updateCoords();
-    this.ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
+    ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
     this.updateCoords();
     this.setRedraw(true);
   }
 }
 
 export const drawData = new DrawData();
+
+drawData.image.src = "00_thelowerlevel1.png";

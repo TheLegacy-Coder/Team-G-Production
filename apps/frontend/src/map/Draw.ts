@@ -27,6 +27,7 @@ import {
   image,
   ctx,*/
   drawData,
+  ctx,
 } from "./DrawData.ts";
 
 /**
@@ -57,33 +58,33 @@ function draw() {
   if (drawData.redraw) {
     // verifies canvas context is set up
     //ctx = canvasCtxRef.current;
-    if (drawData.ctx == null) {
+    if (ctx == null) {
       return;
     }
 
     drawStep = drawStep - 1 >= 1 ? drawStep - 1 : 50;
     // save the context data for tf
-    drawData.ctx!.save();
-    drawData.ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    drawData.ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    drawData.ctx!.restore();
+    ctx!.save();
+    ctx!.setTransform(1, 0, 0, 1, 0, 0);
+    ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx!.restore();
     // draws image
-    drawData.ctx!.drawImage(drawData.image, 0, 0);
+    ctx!.drawImage(drawData.image, 0, 0);
 
     //if draw edges
     if (showEdges) {
       mapNodes.forEach((node) => {
         if (node.floor === drawData.currentFloor) {
-          drawData.ctx!.lineWidth = 3;
-          drawData.ctx!.strokeStyle = "#AAAAAA";
+          ctx!.lineWidth = 3;
+          ctx!.strokeStyle = "#AAAAAA";
           node.edges.forEach((edge) => {
             if (edge.floor === drawData.currentFloor) {
               // Start a new Path
-              drawData.ctx!.beginPath();
-              drawData.ctx!.moveTo(node.xcoord, node.ycoord);
-              drawData.ctx!.lineTo(edge.xcoord, edge.ycoord);
+              ctx!.beginPath();
+              ctx!.moveTo(node.xcoord, node.ycoord);
+              ctx!.lineTo(edge.xcoord, edge.ycoord);
               // Draw the Path
-              drawData.ctx!.stroke();
+              ctx!.stroke();
             }
           });
         }
@@ -93,18 +94,18 @@ function draw() {
     // draws the path trail
     if (drawData.frames[drawStep] != undefined) {
       drawData.frames[drawStep].forEach((frame) => {
-        drawData.ctx!.beginPath();
-        drawData.ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
-        drawData.ctx!.fillStyle = "#0000FF";
-        drawData.ctx!.fill();
+        ctx!.beginPath();
+        ctx!.arc(frame[0], frame[1], 5, 0, 2 * Math.PI, false);
+        ctx!.fillStyle = "#0000FF";
+        ctx!.fill();
       });
     }
 
     mapNodes.forEach((node) => {
       if (node.floor === drawData.currentFloor) {
-        drawData.ctx!.beginPath();
-        drawData.ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-        drawData.ctx!.fillStyle =
+        ctx!.beginPath();
+        ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+        ctx!.fillStyle =
           getStartNode() == node
             ? "#00FF00"
             : getEndNode() == node
@@ -112,10 +113,10 @@ function draw() {
               : hoverNode == node
                 ? "#0000FF"
                 : "#FF0000";
-        drawData.ctx!.fill();
-        drawData.ctx!.lineWidth = 5;
-        drawData.ctx!.strokeStyle = "#330000";
-        drawData.ctx!.stroke();
+        ctx!.fill();
+        ctx!.lineWidth = 5;
+        ctx!.strokeStyle = "#330000";
+        ctx!.stroke();
       }
     });
 
@@ -149,9 +150,9 @@ function getContentWidth(prevNum: number, inString: string): number {
 }
 
 function drawNodeDetails(node: MapNode) {
-  drawData.ctx!.fillStyle = "#FFFFFF";
-  drawData.ctx!.strokeStyle = "#000000";
-  drawData.ctx!.lineWidth = 5 / drawData.scalar;
+  ctx!.fillStyle = "#FFFFFF";
+  ctx!.strokeStyle = "#000000";
+  ctx!.lineWidth = 5 / drawData.scalar;
   const content: string[] = [];
   let contentWidth: number = node.shortName.length;
   content.push(node.shortName);
@@ -191,24 +192,23 @@ function drawNodeDetails(node: MapNode) {
     contentWidth = getContentWidth(contentWidth, lineContent);
   }
 
-  drawData.ctx!.fillRect(
+  ctx!.fillRect(
     node.xcoord - (contentWidth * 9) / 2 / drawData.scalar,
     node.ycoord + 15,
     (contentWidth * 9) / drawData.scalar,
     5 + (15 / drawData.scalar) * lineCount,
   );
-  drawData.ctx!.strokeRect(
+  ctx!.strokeRect(
     node.xcoord - (contentWidth * 9) / 2 / drawData.scalar,
     node.ycoord + 15,
     (contentWidth * 9) / drawData.scalar,
     5 + (15 / drawData.scalar) * lineCount,
   );
-  drawData.ctx!.font =
-    "bold " + (10 / drawData.scalar).toString() + "pt Courier";
-  drawData.ctx!.textAlign = "center";
-  drawData.ctx!.fillStyle = "#550000";
+  ctx!.font = "bold " + (10 / drawData.scalar).toString() + "pt Courier";
+  ctx!.textAlign = "center";
+  ctx!.fillStyle = "#550000";
   for (let i = 0; i < lineCount; i++) {
-    drawData.ctx!.fillText(
+    ctx!.fillText(
       content[i],
       node.xcoord,
       node.ycoord + 14 + (14 / drawData.scalar) * (i + 1),

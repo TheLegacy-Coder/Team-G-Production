@@ -17,16 +17,26 @@ import {
   initCTX,
   resetMap,*/
   drawData,
+  initCTX,
 } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  drawData.initCTX(canvasCtxRef.current);
+  initCTX(canvasCtxRef.current);
 
   const imageWidth = 5000;
   const imageHeight = 3400;
+
+  /*function initContext() {
+      if (canvasRef.current) {
+          const rect = canvasRef.current?.getBoundingClientRect();
+          drawData.setOffset(rect.top, rect.left);
+          canvasCtxRef.current = canvasRef.current.getContext("2d");
+      }
+      initCTX(canvasCtxRef.current);
+  }*/
 
   // initializes canvas variables
   useEffect(() => {
@@ -36,7 +46,11 @@ export const InteractableMap = () => {
       drawData.setOffset(rect.top, rect.left);
       canvasCtxRef.current = canvasRef.current.getContext("2d");
     }
-    drawData.initCTX(canvasCtxRef.current);
+    initCTX(canvasCtxRef.current);
+    /*setTimeout(() => {
+        initContext();
+        drawData.setRedraw(true);
+    }, 1000);*/
   }, []);
 
   /*const aStar = */ useCallback(searchAlg, [imageWidth, imageHeight]);

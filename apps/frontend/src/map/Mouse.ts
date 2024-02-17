@@ -36,6 +36,7 @@ import {
   centerPos,
   tfPoint,*/
   drawData,
+  ctx,
 } from "./DrawData.ts";
 
 /**
@@ -74,9 +75,9 @@ function zoom(zoom: number, xCoord: number, yCoord: number) {
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = drawData.scalar.toFixed(2).toString();
 
-    drawData.ctx!.translate(xCoord, yCoord);
-    drawData.ctx!.scale(zoom, zoom);
-    drawData.ctx!.translate(-xCoord, -yCoord);
+    ctx!.translate(xCoord, yCoord);
+    ctx!.scale(zoom, zoom);
+    ctx!.translate(-xCoord, -yCoord);
   }
   drawData.updateCoords();
   boundCoords();
@@ -128,7 +129,7 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
     delta.x = evt.pageX - pageStart!.x;
     delta.y = evt.pageY - pageStart!.y;
     if (delta.x !== currDelta.x || delta.y !== currDelta.y) moveRedraw = true;
-    drawData.ctx!.translate(
+    ctx!.translate(
       tfCursor.x + drawData.offset.x / drawData.scalar - startPos.x,
       tfCursor.y + drawData.offset.y / drawData.scalar - startPos.y,
     );
@@ -214,14 +215,14 @@ export function setMap(floor: string, imageSrc: string) {
   if (newMap) {
     newMap = false;
     const tempScalar = drawData.scalar;
-    drawData.ctx!.save();
+    ctx!.save();
     drawData.resetMap();
     //currentFloor = floor;
     drawData.setCurrentFloor(floor);
     drawData.setImage(imageSrc);
     homePosition();
     newMap = true;
-    drawData.ctx!.restore();
+    ctx!.restore();
     drawData.setScalar(tempScalar);
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -233,14 +234,14 @@ export function setMap(floor: string, imageSrc: string) {
 
 // resets map position to a default position
 export function homePosition() {
-  if (drawData.ctx === null) {
+  if (ctx === null) {
     return;
   }
-  drawData.ctx!.translate(-1200, -400);
+  ctx!.translate(-1200, -400);
   drawData.updateCoords();
   //scalar = 0.75;
   drawData.setScalar(0.75);
-  drawData.ctx!.scale(0.75, 0.75);
+  ctx!.scale(0.75, 0.75);
   drawData.updateCoords();
   boundCoords();
   const scaleID = document.querySelector("#scalar");
@@ -255,9 +256,9 @@ export function boundCoords() {
     return null;
   if (drawData.downrightCorner.x - drawData.upleftCorner.x > imageWidth) {
     // centers canvas along x axis
-    drawData.ctx!.translate(drawData.upleftCorner.x, 0);
+    ctx!.translate(drawData.upleftCorner.x, 0);
     drawData.updateCoords();
-    drawData.ctx!.translate(
+    ctx!.translate(
       (drawData.downrightCorner.x -
         imageWidth -
         drawData.offset.x / drawData.scalar) /
@@ -267,13 +268,13 @@ export function boundCoords() {
   } else {
     if (drawData.upleftCorner.x < 0) {
       // aligns canvas along left side
-      drawData.ctx!.translate(drawData.upleftCorner.x, 0);
+      ctx!.translate(drawData.upleftCorner.x, 0);
     } else if (
       drawData.downrightCorner.x >
       imageWidth + drawData.offset.x / drawData.scalar
     ) {
       // aligns canvas along right side
-      drawData.ctx!.translate(
+      ctx!.translate(
         -imageWidth -
           drawData.offset.x / drawData.scalar +
           drawData.downrightCorner.x,
@@ -283,9 +284,9 @@ export function boundCoords() {
   }
   if (drawData.downrightCorner.y - drawData.upleftCorner.y > imageHeight) {
     // centers canvas along y axis
-    drawData.ctx!.translate(0, drawData.upleftCorner.y);
+    ctx!.translate(0, drawData.upleftCorner.y);
     drawData.updateCoords();
-    drawData.ctx!.translate(
+    ctx!.translate(
       0,
       (drawData.downrightCorner.y -
         imageHeight -
@@ -295,13 +296,13 @@ export function boundCoords() {
   } else {
     if (drawData.upleftCorner.y < 0) {
       // aligns canvas along top side
-      drawData.ctx!.translate(0, drawData.upleftCorner.y);
+      ctx!.translate(0, drawData.upleftCorner.y);
     } else if (
       drawData.downrightCorner.y >
       imageHeight + drawData.offset.y / drawData.scalar
     ) {
       // aligns canvas along bottom side
-      drawData.ctx!.translate(
+      ctx!.translate(
         0,
         -imageHeight -
           drawData.offset.y / drawData.scalar +
