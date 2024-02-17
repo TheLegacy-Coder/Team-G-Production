@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles/ViewEmployees.css";
 import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
@@ -31,11 +31,12 @@ export const ViewEmployees = () => {
       if (list !== undefined) {
         setEmployees(list.data);
       }
+      console.log(employees);
     });
   };
 
   // Fetch the employees from the server on load
-  useEffect(getAndSetEmployees, []);
+  //useEffect(getAndSetEmployees, []);
 
   // Set the employeeID of the employee being hovered over
   const handleMouseEnter = (employeeID: string) => {
@@ -159,6 +160,7 @@ export const ViewEmployees = () => {
           importedMapEmployees.push(employee);
         }
       }
+      console.log(importedMapEmployees);
       axios
         .post("http://localhost:3000/api/employees", {
           deleteAll: true,
@@ -168,6 +170,7 @@ export const ViewEmployees = () => {
         .then(() => {
           getAndSetEmployees();
         });
+      e.target.value = "";
     };
     reader.readAsText(file);
 
