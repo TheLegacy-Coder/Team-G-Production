@@ -1,14 +1,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { toggleEdges } from "../map/Draw";
-import {
-  mouseScroll,
-  mouseMove,
-  mouseUp,
-  mouseDown,
-  buttonZoom,
-  setMap,
-  homePosition,
-} from "../map/Mouse";
+import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
@@ -46,7 +38,7 @@ export const InteractableMap = () => {
   }, [poll]);
 
   function changeMap(floor: string, imageSrc: string) {
-    if (setMap(floor, imageSrc)) {
+    if (mouse.setMap(floor, imageSrc)) {
       algorithm.searchAlg();
       setTimeout(() => {
         //redraw = true;
@@ -67,7 +59,7 @@ export const InteractableMap = () => {
     >
       <button
         className={"zoom-button plus-button"}
-        onClick={() => buttonZoom(true)}
+        onClick={() => mouse.buttonZoom(true)}
       >
         +
       </button>
@@ -76,7 +68,7 @@ export const InteractableMap = () => {
       </button>
       <button
         className={"zoom-button minus-button"}
-        onClick={() => buttonZoom(false)}
+        onClick={() => mouse.buttonZoom(false)}
       >
         -
       </button>
@@ -84,7 +76,7 @@ export const InteractableMap = () => {
         className={"zoom-button home-button"}
         onClick={() => {
           drawData.resetMap();
-          homePosition();
+          mouse.homePosition();
         }}
       >
         ↺
@@ -143,10 +135,10 @@ export const InteractableMap = () => {
         L2
       </button>
       <canvas
-        onMouseMove={mouseMove}
-        onMouseUp={mouseUp}
-        onMouseDown={mouseDown}
-        onWheel={mouseScroll}
+        onMouseMove={mouse.mouseMove}
+        onMouseUp={mouse.mouseUp}
+        onMouseDown={mouse.mouseDown}
+        onWheel={mouse.mouseScroll}
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}

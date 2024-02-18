@@ -6,7 +6,7 @@ import {
   getEndNode,
 } from "./MapNode.ts";
 
-import { hoverNode, inView, homePosition } from "./Mouse.ts";
+import { hoverNode, mouse } from "./Mouse.ts";
 
 import { drawData, ctx } from "./DrawData.ts";
 
@@ -14,6 +14,7 @@ import { drawData, ctx } from "./DrawData.ts";
  * Issues that are occurring
  * swapping between clicking nodes and selecting nodes not causing side buttons to update
  * pathInView causing bottom path from L2 to F3 to not draw
+ * path frames get reset on home position
  */
 
 let drawStep = 0;
@@ -90,7 +91,7 @@ function draw() {
       if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
       let pathInView = false;
-      if (inView()) {
+      if (mouse.inView()) {
         pathInView = true;
       }
 
@@ -187,7 +188,7 @@ function drawNodeDetails(node: MapNode) {
 //Draws on canvas when map image loaded
 drawData.image.onload = () => {
   setTimeout(() => {
-    homePosition();
+    mouse.homePosition();
     draw();
     drawData.setRedraw(true);
   }, 50);
