@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { toggleEdges } from "../map/Draw";
+import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
@@ -84,7 +84,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button whole-graph-button"}
         onClick={() => {
-          toggleEdges();
+          draw.toggleEdges();
         }}
       >
         O
