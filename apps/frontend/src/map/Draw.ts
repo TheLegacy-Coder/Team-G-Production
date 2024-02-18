@@ -89,9 +89,9 @@ function draw() {
 
       if (hoverNode !== undefined) drawNodeDetails(hoverNode);
 
-      //let pathInView = false;
+      let pathInView = false;
       if (inView()) {
-        //pathInView = true;
+        pathInView = true;
       }
 
       let currentSelectedFloor = drawData.currentFloor;
@@ -101,8 +101,8 @@ function draw() {
       if (
         getStartNode() === undefined ||
         getEndNode() === undefined ||
-        !drawData.floors.includes(currentSelectedFloor) /* ||
-                    !pathInView*/
+        !drawData.floors.includes(currentSelectedFloor) ||
+        !pathInView
       )
         drawData.setRedraw(false);
     }

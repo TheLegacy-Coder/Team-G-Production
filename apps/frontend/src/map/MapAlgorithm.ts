@@ -27,10 +27,8 @@ class MapAlgorithm {
     //floors = [];
     drawData.clearFloors();
 
-    drawData.pathLowest.x = this.imageWidth;
-    drawData.pathLowest.y = this.imageHeight;
-    drawData.pathHighest.x = this.imageWidth;
-    drawData.pathHighest.y = this.imageHeight;
+    drawData.setPathLowest(this.imageWidth, this.imageHeight);
+    drawData.setPathHighest(0, 0);
 
     unfilteredPath.forEach((node) => {
       if (node.floor === drawData.currentFloor) drawData.path.push(node);
@@ -45,7 +43,7 @@ class MapAlgorithm {
     let last: MapNode | undefined = undefined;
     // gets distance based on connected nodes
     drawData.path.forEach((node) => {
-      if (last != undefined /* && node.edges.includes(last)*/) {
+      if (last != undefined) {
         const length = Math.sqrt(
           Math.pow(last.ycoord - node.ycoord, 2) +
             Math.pow(last.xcoord - node.xcoord, 2),
@@ -80,10 +78,16 @@ class MapAlgorithm {
           const x = drawData.path[s].xcoord - Math.cos(angleRadians) * prog;
           const y = drawData.path[s].ycoord - Math.sin(angleRadians) * prog;
           temp.push([x, y]);
-          if (x < drawData.pathLowest.x) drawData.pathLowest.x = x;
-          else if (x > drawData.pathHighest.x) drawData.pathHighest.x = x;
-          if (y < drawData.pathLowest.y) drawData.pathLowest.y = y;
-          else if (y > drawData.pathHighest.y) drawData.pathHighest.y = y;
+          if (x < drawData.pathLowest.x) {
+            drawData.setPathLowest(x, drawData.pathLowest.y);
+          } else if (x > drawData.pathHighest.x) {
+            drawData.setPathHighest(x, drawData.pathHighest.y);
+          }
+          if (y < drawData.pathLowest.y) {
+            drawData.setPathLowest(drawData.pathLowest.x, y);
+          } else if (y > drawData.pathHighest.y) {
+            drawData.setPathHighest(drawData.pathHighest.x, y);
+          }
         }
       }
       //frames.push(temp);

@@ -24,50 +24,65 @@ let moveMap = false;
 // start position in image frame for translating when panning
 let startPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
 // coordinates of mouse in map frame
-let tfCursor: { x: number; y: number } | undefined = { x: 0, y: 0 };
+let tfCursor: { x: number; y: number } | undefined = {
+  x: window.innerWidth - drawData.offset.x,
+  y: window.innerHeight - drawData.offset.y,
+};
 const zoomAmount = 0.1;
 let newMap = true;
 
-// zooms to a point
-function zoom(zoom: number, xCoord: number, yCoord: number) {
-  if (drawData.scalar * zoom > 0.3 && drawData.scalar * zoom < 2) {
-    //scalar *= zoom;
-    drawData.setScalar(drawData.scalar * zoom);
-    const scaleID = document.querySelector("#scalar");
-    scaleID!.textContent = drawData.scalar.toFixed(2).toString();
+class Mouse {
+  // zooms to a point
+  public zoom(zoom: number, xCoord: number, yCoord: number) {
+    if (drawData.scalar * zoom > 0.3 && drawData.scalar * zoom < 2) {
+      //scalar *= zoom;
+      drawData.setScalar(drawData.scalar * zoom);
+      const scaleID = document.querySelector("#scalar");
+      scaleID!.textContent = drawData.scalar.toFixed(2).toString();
 
-    ctx!.translate(xCoord, yCoord);
-    ctx!.scale(zoom, zoom);
-    ctx!.translate(-xCoord, -yCoord);
+      ctx!.translate(xCoord, yCoord);
+      ctx!.scale(zoom, zoom);
+      ctx!.translate(-xCoord, -yCoord);
+    }
+    drawData.updateCoords();
+    boundCoords();
+    //redraw = true;
+    drawData.setRedraw(true);
   }
-  drawData.updateCoords();
-  boundCoords();
-  //redraw = true;
-  drawData.setRedraw(true);
+  public updateMousePos(pageX: number, pageY: number) {
+    tfCursor = drawData.tfPoint(
+      pageX - drawData.offset.x,
+      pageY - drawData.offset.y,
+    );
+  }
 }
+
 export function inView(): boolean {
-  return (
+  const result =
     drawData.pathHighest.x > drawData.upleftCorner!.x &&
     drawData.pathLowest.x < drawData.downrightCorner!.x &&
     drawData.pathHighest.y > drawData.upleftCorner!.y &&
-    drawData.pathLowest.y < drawData.downrightCorner!.y
-  );
+    drawData.pathLowest.y < drawData.downrightCorner!.y;
+  return result;
 }
+
+export const mouse = new Mouse();
 
 export function buttonZoom(input: boolean) {
   let zoomIncrement: number;
   if (input) zoomIncrement = 1 + zoomAmount;
   else zoomIncrement = 1 - zoomAmount;
-  zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
+  mouse.zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
 }
 
 //Adjusts zoom according to scroll
 export function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
+  mouse.updateMousePos(evt.pageX, evt.pageY);
   if (tfCursor === undefined) {
     return null;
   }
   const zoomDelta = evt.deltaY < 0 ? 1 + zoomAmount : 1 - zoomAmount;
-  zoom(zoomDelta, tfCursor.x, tfCursor.y);
+  mouse.zoom(zoomDelta, tfCursor.x, tfCursor.y);
   //redraw = true;
   drawData.setRedraw(true);
 }
@@ -75,10 +90,7 @@ export function mouseScroll(evt: React.WheelEvent<HTMLCanvasElement>) {
 // runs for moving mouse
 export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
   let moveRedraw = false;
-  tfCursor = drawData.tfPoint(
-    evt.pageX - drawData.offset.x,
-    evt.pageY - drawData.offset.y,
-  );
+  mouse.updateMousePos(evt.pageX, evt.pageY);
 
   if (delta === undefined || tfCursor === undefined || startPos === undefined) {
     return null;
@@ -121,6 +133,7 @@ export function mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
 
 //Starts moving map according to mouse drag
 export function mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
+  mouse.updateMousePos(evt.pageX, evt.pageY);
   if (pageStart === undefined) {
     return null;
   }

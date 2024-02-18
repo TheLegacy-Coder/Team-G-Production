@@ -21,6 +21,28 @@ class DrawData {
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
 
+  public setPathLowest(pathX: number, pathY: number) {
+    this.pathLowest.x = pathX;
+    this.pathLowest.y = pathY;
+  }
+
+  public setPathHighest(pathX: number, pathY: number) {
+    this.pathHighest.x = pathX;
+    this.pathHighest.y = pathY;
+  }
+
+  public setUpLeft(xPos: number, yPos: number) {
+    this.upleftCorner = { x: xPos, y: yPos };
+  }
+
+  public setDownRight(xPos: number, yPos: number) {
+    this.downrightCorner = { x: xPos, y: yPos };
+  }
+
+  public setCenterPos(xPos: number, yPos: number) {
+    this.centerPos = { x: xPos, y: yPos };
+  }
+
   public setImage(imageSrc: string) {
     this.image = new Image();
     this.image.src = imageSrc;
@@ -36,14 +58,23 @@ class DrawData {
   }
   // updates coordinate points for map panning and zooming
   public updateCoords() {
-    this.centerPos = this.tfPoint(
+    const center = this.tfPoint(
       (window.innerWidth - this.offset.x) / 2,
       (window.innerHeight - this.offset.y) / 2,
     );
-    //upleftCorner = tfPoint(0, 0);
-    this.upleftCorner!.x = this.tfPoint(0, 0)!.x;
-    this.upleftCorner!.y = this.tfPoint(0, 0)!.y;
-    this.downrightCorner = this.tfPoint(window.innerWidth, window.innerHeight);
+
+    if (center !== undefined) {
+      this.setCenterPos(center.x, center.y);
+    }
+    const upLeft = this.tfPoint(0, 0);
+    if (upLeft !== undefined) {
+      this.setUpLeft(upLeft.x, upLeft.y);
+    }
+
+    const downRight = this.tfPoint(window.innerWidth, window.innerHeight);
+    if (downRight !== undefined) {
+      this.setDownRight(downRight.x, downRight.y);
+    }
   }
   public setOffset(top: number, left: number) {
     this.offset.y = top;
