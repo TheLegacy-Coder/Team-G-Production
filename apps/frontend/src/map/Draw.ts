@@ -27,7 +27,6 @@ class Draw {
   private showEdges = false;
   public drawCanvas() {
     if (drawData.redraw) {
-      console.log("redraw");
       // verifies canvas context is set up
       //ctx = canvasCtxRef.current;
       if (ctx !== null) {

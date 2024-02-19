@@ -69,7 +69,7 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    console.log(
+    /*console.log(
       "In view X:\nPath lowest: " +
         drawData.pathLowest.x +
         "\nPath Highest: " +
@@ -86,7 +86,7 @@ class Mouse {
         drawData.upleftCorner!.y +
         "\nDown right: " +
         drawData.downrightCorner!.y,
-    );
+    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
@@ -286,7 +286,7 @@ class Mouse {
     mouse.moveMap = true;
     const posStart = drawData.tfPoint(evt.pageX, evt.pageY);
     mouse.setStartPos(posStart!.x, posStart!.y);
-    this.boundCoords();
+    mouse.boundCoords();
   }
   // runs when mouse released
   public mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
