@@ -264,6 +264,7 @@ class Mouse {
   // runs when mouse released
   public mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     if (tfCursor === undefined || delta === undefined) {
+      console.log("null mouse up");
       return null;
     }
     mouse.moveMap = false;
@@ -295,7 +296,7 @@ class Mouse {
       drawData.resetPath();
     }
     mouse.setDelta(0, 0);
-    this.boundCoords();
+    mouse.boundCoords();
     drawData.setRedraw(true);
   }
 }
