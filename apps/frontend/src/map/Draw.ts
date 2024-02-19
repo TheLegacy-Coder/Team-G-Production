@@ -5,16 +5,12 @@ import {
   getStartNode,
   getEndNode,
 } from "./MapNode.ts";
-
 import { hoverNode, mouse } from "./Mouse.ts";
-
 import { drawData, ctx } from "./DrawData.ts";
 
 /**
  * Issues that are occurring
- * swapping between clicking nodes and selecting nodes not causing side buttons to update
- * pathInView causing bottom path from L2 to F3 to not draw
- * start node not clearing on click when only start is selected
+ * pathInView causing bottom path from L2 to F3 to not draw from path in view function
  */
 
 //Draws on canvas when map image loaded
@@ -31,6 +27,7 @@ class Draw {
   private showEdges = false;
   public drawCanvas() {
     if (drawData.redraw) {
+      console.log("redraw");
       // verifies canvas context is set up
       //ctx = canvasCtxRef.current;
       if (ctx !== null) {
@@ -94,7 +91,7 @@ class Draw {
 
         if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
 
-        let pathInView = false;
+        let pathInView = true;
         if (mouse.inView()) {
           pathInView = true;
         }

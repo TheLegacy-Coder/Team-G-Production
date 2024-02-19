@@ -24,7 +24,6 @@ class MapAlgorithm {
     // filters path not on floor
     const unfilteredPath = AStarSearch(this.startNode, this.endNode);
 
-    //floors = [];
     drawData.clearFloors();
 
     drawData.setPathLowest(this.imageWidth, this.imageHeight);
@@ -93,7 +92,18 @@ class MapAlgorithm {
       //frames.push(temp);
       drawData.framePush(temp);
     }
-    //redraw = true;
+    if (drawData.pathLowest.x === this.imageWidth) {
+      drawData.setPathLowest(0, drawData.pathLowest.y);
+    }
+    if (drawData.pathHighest.x === 0) {
+      drawData.setPathLowest(this.imageWidth, drawData.pathLowest.y);
+    }
+    if (drawData.pathLowest.y === this.imageHeight) {
+      drawData.setPathLowest(drawData.pathLowest.x, 0);
+    }
+    if (drawData.pathHighest.y === 0) {
+      drawData.setPathLowest(drawData.pathLowest.x, this.imageHeight);
+    }
     drawData.setRedraw(true);
   }
 
@@ -108,7 +118,6 @@ class MapAlgorithm {
         const scaleID = document.querySelector("#" + floorNames[i]);
         if (scaleID !== null) scaleID!.classList.remove("path-floor");
       }
-      //floors = [];
       drawData.clearFloors();
       drawData.path.forEach((node) => {
         if (!drawData.floors.includes(node.floor))

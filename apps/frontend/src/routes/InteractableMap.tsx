@@ -41,7 +41,6 @@ export const InteractableMap = () => {
     if (mouse.setMap(floor, imageSrc)) {
       algorithm.searchAlg();
       setTimeout(() => {
-        //redraw = true;
         drawData.setRedraw(true);
       }, 100);
     }

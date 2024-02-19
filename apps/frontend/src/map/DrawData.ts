@@ -22,25 +22,23 @@ class DrawData {
   public image = new Image();
 
   public setPathLowest(pathX: number, pathY: number) {
-    this.pathLowest.x = pathX;
-    this.pathLowest.y = pathY;
+    drawData.pathLowest = { x: pathX, y: pathY };
   }
 
   public setPathHighest(pathX: number, pathY: number) {
-    this.pathHighest.x = pathX;
-    this.pathHighest.y = pathY;
+    drawData.pathHighest = { x: pathX, y: pathY };
   }
 
   public setUpLeft(xPos: number, yPos: number) {
-    this.upleftCorner = { x: xPos, y: yPos };
+    drawData.upleftCorner = { x: xPos, y: yPos };
   }
 
   public setDownRight(xPos: number, yPos: number) {
-    this.downrightCorner = { x: xPos, y: yPos };
+    drawData.downrightCorner = { x: xPos, y: yPos };
   }
 
   public setCenterPos(xPos: number, yPos: number) {
-    this.centerPos = { x: xPos, y: yPos };
+    drawData.centerPos = { x: xPos, y: yPos };
   }
 
   public setImage(imageSrc: string) {
