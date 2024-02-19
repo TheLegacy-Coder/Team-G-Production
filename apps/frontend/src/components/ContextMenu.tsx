@@ -60,7 +60,7 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<ServiceRequests />}
-          lable={"Make Request"}
+          lable={"Make Service Request"}
           protected={true}
           style={"context-menu-tab"}
         />
@@ -91,7 +91,7 @@ export function ContextMenu() {
             )}
             <ContextMenuRouterButton
               content={<ViewRequests />}
-              lable={"Requests"}
+              lable={"View Requests"}
               protected={true}
               admin={true}
               style={"context-menu-tab-admin"}
