@@ -36,14 +36,15 @@
   display: none !important;
 }
 
-.auth0-lock.auth0-lock .auth0-lock-tabs li a {
-  background: #00284f !important;
-  color: #aaaaaa !important;
-  font-size: 18px;
-}
 .auth0-lock.auth0-lock .auth0-lock-tabs li.auth0-lock-tabs-current span {
   background: #00284f !important;
   color: white !important;
+  font-size: 18px;
+}
+
+.auth0-lock.auth0-lock .auth0-lock-tabs li a {
+  background: #00284f !important;
+  color: #aaaaaa !important;
   font-size: 18px;
 }
 
