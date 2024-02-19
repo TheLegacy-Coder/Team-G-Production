@@ -41,14 +41,16 @@ const TextDirections: React.FC = () => {
       return "Turn right";
     } else if (angleDeg < 0) {
       return "Turn left";
+    } else {
+      return "Continue straight";
     }
   };
 
   const directions = path.map((mapNode: MapNode, index: number) => {
     if (index === 0) {
-      return `Start at ${mapNode.shortName}`;
+      return `Start at ${mapNode.longName}`;
     } else if (index === path.length - 1) {
-      return `End at ${mapNode.shortName}`;
+      return `End at ${mapNode.longName}`;
     } else {
       const prevNode = path[index - 1];
       const nextNode = path[index + 1];
@@ -57,10 +59,13 @@ const TextDirections: React.FC = () => {
   });
 
   return (
-    <div className={"container-div"}>
-      <div className={"asdf2-text-directions-container"}>
+    <div className={"container-div"} style={{ maxHeight: "450px" }}>
+      <div
+        className={"asdf2-text-directions-container"}
+        style={{ maxHeight: "450px" }}
+      >
         {directions.map((direction, index) => (
-          <p key={index}>{direction}</p>
+          <p key={index}>{direction} </p>
         ))}
       </div>
     </div>
