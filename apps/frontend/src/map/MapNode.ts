@@ -269,7 +269,7 @@ export function AStarSearch(
 // }
 // console.log(mapNodes);
 
-export function DFS(
+export function DepthFirstSearch(
   start: MapNode | undefined,
   end: MapNode | undefined,
 ): MapNode[] | undefined {
