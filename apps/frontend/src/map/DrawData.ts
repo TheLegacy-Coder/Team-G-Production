@@ -99,8 +99,10 @@ class DrawData {
   public setRedraw(value: boolean) {
     this.redraw = value;
   }
-  public resetMap() {
-    this.resetPath();
+  public resetMap(newFloor: boolean) {
+    if (newFloor) {
+      this.resetPath();
+    }
     ctx!.scale(1 / this.scalar, 1 / this.scalar);
     this.setScalar(1);
     this.updateCoords();

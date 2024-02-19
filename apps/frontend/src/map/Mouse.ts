@@ -102,7 +102,11 @@ class Mouse {
       mouse.newMap = false;
       const tempScalar = drawData.scalar;
       ctx!.save();
-      drawData.resetMap();
+      let newFloor = true;
+      if (drawData.currentFloor === floor) {
+        newFloor = false;
+      }
+      drawData.resetMap(newFloor);
       //currentFloor = floor;
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);

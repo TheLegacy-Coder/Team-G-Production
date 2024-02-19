@@ -14,7 +14,7 @@ import { drawData, ctx } from "./DrawData.ts";
  * Issues that are occurring
  * swapping between clicking nodes and selecting nodes not causing side buttons to update
  * pathInView causing bottom path from L2 to F3 to not draw
- * path frames get reset on home position
+ * start node not clearing on click when only start is selected
  */
 
 //Draws on canvas when map image loaded

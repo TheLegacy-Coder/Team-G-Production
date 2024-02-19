@@ -75,7 +75,7 @@ export const InteractableMap = () => {
       <button
         className={"zoom-button home-button"}
         onClick={() => {
-          drawData.resetMap();
+          drawData.resetMap(false);
           mouse.homePosition();
         }}
       >
