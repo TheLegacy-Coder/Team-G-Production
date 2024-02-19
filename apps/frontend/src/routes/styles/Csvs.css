@@ -2,6 +2,8 @@
   overflow-y: scroll;
   min-height: calc(100% - 90px);
   max-height: calc(100% - 90px);
+  background: #e9d3b7;
+  padding-bottom: 65px;
 }
 
 .float-buttons {
@@ -44,9 +46,10 @@ th {
   padding: 5px;
   cursor: pointer;
   margin-top: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   margin-left: 8px;
   border: 2px solid white;
+  border-radius: 5px;
   background-color: #00284f;
   color: white;
 }
