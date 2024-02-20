@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
-import axios, { AxiosResponse } from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
   AllServiceRequests,
@@ -12,6 +11,11 @@ import {
   ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
+import {
+  changeStatus,
+  getAll,
+  getFromEmployee,
+} from "../DataAsObject/serviceRequestsAxios.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -29,20 +33,9 @@ export const RequestsTable = ({
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
-    axios
-      .patch("http://localhost:3000/api/services/requests", {
-        requestID: requestID,
-        status: newStatus,
-      })
-      .then((response) => {
-        // Update the requests in state
-        updateRequests();
-        return response.data;
-      })
-      .catch((error) => {
-        console.error("Error fetching service requests:", error);
-        return undefined;
-      });
+    changeStatus(requestID, newStatus).then(() => {
+      updateRequests();
+    });
   };
 
   // Render a select element for the status cell of a request
@@ -184,21 +177,13 @@ export const ViewRequests = () => {
   // Get requests from DB and store them in state
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
-      axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { getAll: true },
-        })
-        .then((res: AxiosResponse<AllServiceRequests>) => {
-          setRequests(res.data);
-        });
+      getAll().then((res) => {
+        setRequests(res.data);
+      });
     } else {
-      axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { employeeID: currentEmployee?.employeeID },
-        })
-        .then((res: AxiosResponse<AllServiceRequests>) => {
-          setRequests(res.data);
-        });
+      getFromEmployee(currentEmployee?.employeeID as string).then((res) => {
+        setRequests(res.data);
+      });
     }
   };
 
