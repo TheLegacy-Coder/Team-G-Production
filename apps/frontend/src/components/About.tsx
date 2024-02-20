@@ -30,13 +30,13 @@ export const About = () => {
           <table>
             <thead>
               <tr>
-                <th>Position</th>
+                <th>Team Member</th>
                 <th>Role</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Tommy Branchaud</td>
+                <td>Thomas Branchaud</td>
                 <td>Scrum Master</td>
               </tr>
               <tr>
@@ -61,7 +61,7 @@ export const About = () => {
               </tr>
               <tr>
                 <td>Noah Newton</td>
-                <td>Full-Time Software Engineer (Back-End))</td>
+                <td>Full-Time Software Engineer (Back-End)</td>
               </tr>
               <tr>
                 <td>Dimitri Saliba</td>

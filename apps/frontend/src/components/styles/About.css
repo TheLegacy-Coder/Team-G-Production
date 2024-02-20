@@ -3,7 +3,7 @@
   align-content: center;
 }
 
-.help-page-container {
+.about-page-container {
   overflow-y: scroll;
   justify-content: center;
   text-align: center;
@@ -20,11 +20,16 @@
   font-weight: bold;
 }
 
-.help-page-container div {
-  margin-bottom: 20px;
+.about-page-container th {
+  border-color: black;
+  border-bottom-color: white;
 }
 
-.help-page-container div:last-child {
+.about-page-container div {
+  margin-bottom: 10px;
+}
+
+.about-page-container div:last-child {
   margin-bottom: 0; /* Remove bottom margin for the last div */
 }
 
