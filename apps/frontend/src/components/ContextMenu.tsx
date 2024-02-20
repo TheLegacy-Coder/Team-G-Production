@@ -11,7 +11,6 @@ import { ViewEmployees } from "../routes/ViewEmployees.tsx";
 import { HelpPage } from "./HelpPage.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
-import TextDirections from "./TextDirections.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -54,11 +53,7 @@ export function ContextMenu() {
         )}
 
         <ContextMenuRouterButton
-          content={
-            <div>
-              <LocationDropdown /> <TextDirections />
-            </div>
-          }
+          content={<LocationDropdown />}
           lable={"Location Dropdown"}
           style={"context-menu-tab"}
         />

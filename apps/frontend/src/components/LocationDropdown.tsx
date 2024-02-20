@@ -8,6 +8,7 @@ import {
   MapNode,
   mapNodes,
 } from "../map/MapNode.ts"; // Importing MapNode type
+import TextDirections from "./TextDirections.tsx";
 
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
@@ -123,6 +124,9 @@ const LocationDropdown: React.FC = () => {
           ))}
         </select>
       </div>
+      <br />
+      <b>Text Directions:</b>
+      <TextDirections />
     </div>
   );
 };

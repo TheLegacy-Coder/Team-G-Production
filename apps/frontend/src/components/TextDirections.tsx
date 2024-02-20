@@ -5,6 +5,7 @@ import {
   AStarSearch,
   MapNode,
 } from "../map/MapNode.ts";
+import "./styles/TextDirections.css";
 
 const TextDirections: React.FC = () => {
   const [path, setPath] = useState<MapNode[]>([]);
@@ -59,7 +60,7 @@ const TextDirections: React.FC = () => {
   });
 
   return (
-    <div className={"container-div"} style={{ maxHeight: "450px" }}>
+    <div className={"container-div"}>
       <div
         className={"asdf2-text-directions-container"}
         style={{ maxHeight: "450px" }}
