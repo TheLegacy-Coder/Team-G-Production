@@ -70,12 +70,14 @@
   background-color: lightblue;
 }
 
+/* Overall Toggle Button*/
 .toggle-button {
   position: fixed;
   transform: translate(20px, 50px);
   cursor: pointer;
 }
 
+/* Hide the default checkbox*/
 .toggle-button input {
   position: absolute;
   opacity: 0;
@@ -84,6 +86,11 @@
   width: 0;
 }
 
+.toggle-button input:checked ~ .checkmark {
+  background-color: #ffffff;
+}
+
+/* toggle edges checkbox*/
 .toggle-nodes {
   cursor: pointer;
   position: absolute;
