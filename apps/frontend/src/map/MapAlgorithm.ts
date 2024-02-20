@@ -21,7 +21,9 @@ class MapAlgorithm {
       if (drawData.floors[i].length === 1)
         drawData.floors[i] = "F" + drawData.floors[i];
       const scaleID = document.querySelector("#" + drawData.floors[i]);
-      scaleID!.classList.add("path-floor");
+      if (scaleID !== null) {
+        scaleID!.classList.add("path-floor");
+      }
     }
   }
 
@@ -29,16 +31,32 @@ class MapAlgorithm {
     // filters path not on floor
     const unfilteredPath = DepthFirstSearch(this.startNode, this.endNode);
 
+    const switchedNodes: MapNode[] = [];
+    const switchedFloors: string[] = [];
+
     drawData.clearFloors();
 
     drawData.setPathLowest(this.imageWidth, this.imageHeight);
     drawData.setPathHighest(0, 0);
 
+    let prevNode: undefined | MapNode = undefined;
     unfilteredPath.forEach((node) => {
       if (node.floor === drawData.currentFloor) drawData.path.push(node);
       if (!drawData.floors.includes(node.floor))
         drawData.floors.push(node.floor);
+      if (node.floor !== prevNode?.floor && prevNode !== undefined) {
+        if (drawData.currentFloor === node.floor) {
+          switchedNodes.push(node);
+          switchedFloors.push(prevNode.floor);
+        } else {
+          switchedNodes.push(prevNode);
+          switchedFloors.push(node.floor);
+        }
+      }
+      prevNode = node;
     });
+
+    drawData.setSwitchNodes(switchedNodes, switchedFloors);
 
     this.setFloorButtons();
 

@@ -95,7 +95,7 @@ export const InteractableMap = () => {
           changeMap("3", "03_thethirdfloor.png");
         }}
       >
-        F3
+        3
       </button>
       <button
         id={"F2"}
@@ -104,7 +104,7 @@ export const InteractableMap = () => {
           changeMap("2", "02_thesecondfloor.png");
         }}
       >
-        F2
+        2
       </button>
       <button
         id={"F1"}
@@ -113,7 +113,7 @@ export const InteractableMap = () => {
           changeMap("1", "01_thefirstfloor.png");
         }}
       >
-        F1
+        1
       </button>
       <button
         id={"L1"}

@@ -80,13 +80,17 @@ class Draw {
                   ? "#00ffff"
                   : hoverNode == node
                     ? "#0000FF"
-                    : "#FF0000";
+                    : drawData.getSwitchNodes().includes(node)
+                      ? "#ffff00"
+                      : "#FF0000";
             ctx!.fill();
             ctx!.lineWidth = 5;
             ctx!.strokeStyle = "#330000";
             ctx!.stroke();
           }
         });
+
+        draw.drawFloorChange();
 
         if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
 
@@ -119,6 +123,32 @@ class Draw {
       return inString.length;
     }
     return prevNum;
+  }
+
+  private drawFloorChange() {
+    ctx!.font = "bold 12pt Courier";
+    let index = 0;
+    drawData.getSwitchNodes().forEach((node) => {
+      if (node.floor === drawData.currentFloor) {
+        ctx!.beginPath();
+        ctx!.fillStyle = "#ffffff";
+        ctx!.strokeStyle = "#000000";
+        ctx!.fillRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.strokeRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.fill();
+        ctx!.stroke();
+        ctx!.beginPath();
+        ctx!.textAlign = "center";
+        ctx!.fillStyle = "#000000";
+        ctx!.fillText(
+          "Floor: " + drawData.getSwitchFloors()[index],
+          node.xcoord,
+          node.ycoord - 25,
+        );
+        ctx!.fill();
+      }
+      index++;
+    });
   }
   private drawNodeDetails(node: MapNode) {
     ctx!.fillStyle = "#FFFFFF";
