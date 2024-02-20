@@ -99,17 +99,30 @@ router.get("/", async function (req: Request, res: Response) {
 
 router.post("/", async function (req: Request, res: Response) {
   console.log("req");
-  const empAttempt: Prisma.EmployeeCreateInput = req.body;
+  console.log(req.body.deleteAll);
+  if (req.body.deleteAll) {
+    try {
+      await PrismaClient.employee.deleteMany({});
+      console.log("All Employees have been deleted");
+    } catch (error) {
+      console.log("Unable to delete Employees");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+  }
+
+  const employeeAttempt: Prisma.EmployeeCreateManyInput = req.body.employees;
 
   try {
-    await PrismaClient.employee.create({ data: empAttempt });
-    console.log("Successfully created Employee");
+    await PrismaClient.employee.createMany({ data: employeeAttempt });
+    console.log("Successfully created Employees");
   } catch (error) {
-    console.error("Unable to create Employee");
+    console.log("Failed to input employees");
+    console.log(error);
     res.sendStatus(204);
     return;
   }
-
   res.sendStatus(200);
 });
 

@@ -294,7 +294,7 @@ INSERT INTO dev."ServiceRequest" ("requestID", "requestType", "priority", "locat
 CREATE TABLE dev."Announcement"(
     "announcementID" text NOT NULL, --primary key
     "desc" text NOT NULL,
-    "requester" text NOT NULL, --references employee
+    "requester" text, --references employee
     "emergency" bool NOT NULL,
     "time" timestamp
 );
@@ -320,7 +320,7 @@ ALTER TABLE ONLY dev."Announcement"
 --
 
 ALTER TABLE ONLY dev."Announcement"
-    ADD CONSTRAINT "Announcement_fk1" FOREIGN KEY ("requester") REFERENCES dev."Employee" ("employeeID");
+    ADD CONSTRAINT "Announcement_fk1" FOREIGN KEY ("requester") REFERENCES dev."Employee" ("employeeID") ON DELETE SET NULL;
 
 
 --

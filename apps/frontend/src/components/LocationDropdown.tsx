@@ -114,7 +114,6 @@ const LocationDropdown: React.FC = () => {
           onChange={handleEndLocationChange}
         >
           <option value="">Select end location</option>
-          <br />
           {/* Render options for end location */}
           {endLocations.map((node) => (
             <option key={node.nodeID} value={node.nodeID}>
