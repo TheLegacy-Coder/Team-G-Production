@@ -38,8 +38,7 @@ class NodeStore {
 
 export const nodeStore = new NodeStore();
 
-//getMapNodesEdges();
-setTimeout(getMapNodesEdges, 1);
+getMapNodesEdges();
 
 export function getMapNodesEdges() {
   mapNodes.clear();
