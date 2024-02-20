@@ -103,6 +103,99 @@ export const RequestsTable = ({
       (filter === "In Progress" && request.status === "In Progress") ||
       (filter === "Completed" && request.status === "Completed")
     ) {
+      const extraCols = [];
+      const extraInfo = [];
+      switch (type) {
+        case "All":
+          switch (request.requestType) {
+            case "Flowers":
+              extraInfo.push(
+                <p>
+                  Flower Type: {(request as ServiceRequestFlowers).flowerType}
+                </p>,
+                <p>Amount: {(request as ServiceRequestFlowers).amount}</p>,
+              );
+              break;
+            case "Religious":
+              extraInfo.push(
+                <p>Faith: {(request as ServiceRequestReligious).faith}</p>,
+              );
+              break;
+            case "Sanitation":
+              extraInfo.push(
+                <p>
+                  Hazardous:{" "}
+                  {(request as ServiceRequestSanitation).hazardous.toString()}
+                </p>,
+                <p>
+                  Mess Type: {(request as ServiceRequestSanitation).messType}
+                </p>,
+              );
+              break;
+            case "Interpreter":
+              extraInfo.push(
+                <p>
+                  Language: {(request as ServiceRequestInterpreter).language}
+                </p>,
+              );
+              break;
+            case "Transport":
+              extraInfo.push(
+                <p>
+                  Vehicle:{" "}
+                  {(request as ServiceRequestExternalTransport).vehicle}
+                </p>,
+                <p>
+                  Destination:{" "}
+                  {(request as ServiceRequestExternalTransport).destination}
+                </p>,
+              );
+              break;
+          }
+          extraCols.push(<td key="extra info">{extraInfo}</td>);
+          break;
+        case "Flowers":
+          extraCols.push(
+            <td key="flowerType">
+              {(request as ServiceRequestFlowers).flowerType}
+            </td>,
+            <td key="amount">{(request as ServiceRequestFlowers).amount}</td>,
+          );
+          break;
+        case "Religious":
+          extraCols.push(
+            <td key="faith">{(request as ServiceRequestReligious).faith}</td>,
+          );
+          break;
+        case "Sanitation":
+          extraCols.push(
+            <td key="hazardous">
+              {(request as ServiceRequestSanitation).hazardous.toString()}
+            </td>,
+            <td key="messType">
+              {(request as ServiceRequestSanitation).messType}
+            </td>,
+          );
+          break;
+        case "Interpreter":
+          extraCols.push(
+            <td key="language">
+              {(request as ServiceRequestInterpreter).language}
+            </td>,
+          );
+          break;
+        case "Transport":
+          extraCols.push(
+            <td key="vehicle">
+              {(request as ServiceRequestExternalTransport).vehicle}
+            </td>,
+            <td key="destination">
+              {(request as ServiceRequestExternalTransport).destination}
+            </td>,
+          );
+          break;
+      }
+
       rows.push(
         <tr key={request.requestID}>
           <td>{request.requestID}</td>
@@ -113,38 +206,42 @@ export const RequestsTable = ({
           <td>{request.helpingEmployee}</td>
           <td>{request.desc}</td>
           <td>{request.time}</td>
-          {type === "Flowers" && (
-            <>
-              <td>{(request as ServiceRequestFlowers).flowerType}</td>
-              <td>{(request as ServiceRequestFlowers).amount}</td>
-            </>
-          )}
-          {type === "Religious" && (
-            <td>{(request as ServiceRequestReligious).faith}</td>
-          )}
-          {type === "Sanitation" && (
-            <>
-              <td>
-                {(request as ServiceRequestSanitation).hazardous.toString()}
-              </td>
-              <td>{(request as ServiceRequestSanitation).messType}</td>
-            </>
-          )}
-          {type === "Interpreter" && (
-            <td>{(request as ServiceRequestInterpreter).language}</td>
-          )}
-          {type === "Transport" && (
-            <>
-              <td>{(request as ServiceRequestExternalTransport).vehicle}</td>
-              <td>
-                {(request as ServiceRequestExternalTransport).destination}
-              </td>
-            </>
-          )}
+          {extraCols}
         </tr>,
       );
     }
   });
+
+  const extraHeaders = [];
+  switch (type) {
+    case "All":
+      extraHeaders.push(<th key="extra">Extra Info</th>);
+      break;
+    case "Flowers":
+      extraHeaders.push(
+        <th key="flowerType">Flower Type</th>,
+        <th key="amount">Amount</th>,
+      );
+      break;
+    case "Religious":
+      extraHeaders.push(<th key="faith">Faith</th>);
+      break;
+    case "Sanitation":
+      extraHeaders.push(
+        <th key="hazardous">Hazardous</th>,
+        <th key="messType">Mess Type</th>,
+      );
+      break;
+    case "Interpreter":
+      extraHeaders.push(<th key="language">Language</th>);
+      break;
+    case "Transport":
+      extraHeaders.push(
+        <th key="vehicle">Vehicle</th>,
+        <th key="destination">Destination</th>,
+      );
+      break;
+  }
 
   return (
     <>
@@ -194,26 +291,7 @@ export const RequestsTable = ({
             <th>Employee</th>
             <th>Description</th>
             <th>Time</th>
-            {type === "Flowers" && (
-              <>
-                <th>Flower Type</th>
-                <th>Amount</th>
-              </>
-            )}
-            {type === "Religious" && <th>Faith</th>}
-            {type === "Sanitation" && (
-              <>
-                <th>Hazardous</th>
-                <th>Mess Type</th>
-              </>
-            )}
-            {type === "Interpreter" && <th>Language</th>}
-            {type === "Transport" && (
-              <>
-                <th>Vehicle</th>
-                <th>Destination</th>
-              </>
-            )}
+            {extraHeaders}
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -249,10 +327,28 @@ export const ViewRequests = () => {
   // Fetch the requests from the server on load
   useEffect(updateRequests, []);
 
+  let allRequests: Array<
+    | ServiceRequestFlowers
+    | ServiceRequestReligious
+    | ServiceRequestSanitation
+    | ServiceRequestInterpreter
+    | ServiceRequestExternalTransport
+  > = [];
+  if (requests !== undefined) {
+    allRequests = allRequests.concat(
+      requests.flowers,
+      requests.religious,
+      requests.sanitation,
+      requests.interpreter,
+      requests.transport,
+    );
+  }
+
   return (
     <div className={"view-requests-page"}>
       <TabSwitcher
         titles={[
+          "All",
           "Flowers",
           "Religious",
           "Sanitation",
@@ -260,6 +356,11 @@ export const ViewRequests = () => {
           "Transport",
         ]}
         components={[
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={allRequests}
+            type={"All"}
+          />,
           <RequestsTable
             updateRequests={updateRequests}
             requests={requests?.flowers}
