@@ -20,10 +20,6 @@
   transform: translate(10px, 10px);
 }
 
-.whole-graph-button {
-  transform: translate(190px, 10px);
-}
-
 .zoom-amount {
   transform: translate(50px, 10px);
   width: 50px;
@@ -104,4 +100,12 @@
 
 .toggle-nodes-text {
   transform: translateX(40px);
+}
+
+.trans-edges {
+  transform: translate(10px, 90px);
+}
+
+.trans-halls {
+  transform: translate(10px, 130px);
 }

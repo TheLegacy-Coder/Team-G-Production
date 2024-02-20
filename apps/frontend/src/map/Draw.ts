@@ -24,7 +24,10 @@ drawData.image.onload = () => {
 
 class Draw {
   private drawStep = 0;
-  private showEdges = false;
+  //private showEdges = false;
+  public showNodes = true;
+  public showEdges = false;
+  public showHalls = false;
   public drawCanvas() {
     if (drawData.redraw) {
       // verifies canvas context is set up
