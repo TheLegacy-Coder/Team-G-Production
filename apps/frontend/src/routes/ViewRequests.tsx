@@ -149,7 +149,7 @@ export const RequestsTable = ({
   return (
     <>
       <div className="filter">
-        <label htmlFor="statusFilter" className="filterText">
+        <label htmlFor="statusFilter" className="filterTextStatus">
           Filter by Status:
         </label>
         <select
@@ -165,7 +165,7 @@ export const RequestsTable = ({
           <option value="Completed">Completed</option>
         </select>
         <br />
-        <label className={"filterText"}>Filter by Employee:</label>
+        <label className={"filterTextEmployees"}>Filter by Employee:</label>
         <select
           name="employeeFilter"
           className="statusFilter"
