@@ -72,30 +72,32 @@ class Draw {
           });
         }
 
-        mapNodes.forEach((node) => {
-          if (node.floor === drawData.currentFloor) {
-            ctx!.beginPath();
-            ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-            ctx!.fillStyle =
-              getStartNode() == node
-                ? "#00FF00"
-                : getEndNode() == node
-                  ? "#00ffff"
-                  : hoverNode == node
-                    ? "#0000FF"
-                    : drawData.getSwitchNodes().includes(node)
-                      ? "#ffff00"
-                      : "#FF0000";
-            ctx!.fill();
-            ctx!.lineWidth = 5;
-            ctx!.strokeStyle = "#330000";
-            ctx!.stroke();
-          }
-        });
+        if (draw.showNodes) {
+          mapNodes.forEach((node) => {
+            if (node.floor === drawData.currentFloor) {
+              ctx!.beginPath();
+              ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+              ctx!.fillStyle =
+                getStartNode() == node
+                  ? "#00FF00"
+                  : getEndNode() == node
+                    ? "#00ffff"
+                    : hoverNode == node
+                      ? "#0000FF"
+                      : drawData.getSwitchNodes().includes(node)
+                        ? "#ffff00"
+                        : "#FF0000";
+              ctx!.fill();
+              ctx!.lineWidth = 5;
+              ctx!.strokeStyle = "#330000";
+              ctx!.stroke();
+            }
+          });
+        }
 
         draw.drawFloorChange();
-
-        if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
+        if (hoverNode !== undefined && draw.showNodes)
+          draw.drawNodeDetails(hoverNode);
 
         let pathInView = true;
         if (mouse.inView()) {
@@ -117,10 +119,7 @@ class Draw {
     }
     setTimeout(draw.drawCanvas, 16);
   }
-  public toggleEdges() {
-    draw.showEdges = !draw.showEdges;
-    drawData.setRedraw(true);
-  }
+
   public getContentWidth(prevNum: number, inString: string): number {
     if (inString.length > prevNum) {
       return inString.length;
