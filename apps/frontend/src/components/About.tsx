@@ -1,29 +1,95 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./styles/About.css";
 
 export const About = () => {
+  const container = useRef<HTMLDivElement>(null);
+  const scroll = useRef<HTMLDivElement>(null);
+
+  const [scrollHeight, setScrollHeight] = useState<string>("");
+
+  useEffect(() => {
+    console.log(container.current ? container.current.clientHeight : 0);
+    setScrollHeight(
+      container.current
+        ? container.current.clientHeight.toString()
+        : "0" + "px",
+    );
+  }, []);
+
   return (
-    <div className="about-page-container">
-      <div>
-        Brigham and Women’s Hospital is a world-class academic medical center
-        based in Boston, Massachusetts. The Brigham serves patients from New
-        England, across the United States and from 120 countries around the
-        world. A major teaching hospital of Harvard Medical School, Brigham and
-        Women’s Hospital has a legacy of clinical excellence that continues to
-        grow year after year.
-      </div>
-      <div>
-        The Brigham network includes 1,200 doctors throughout New England
-        working across 150 outpatient practices. An international leader in
-        virtually every area of medicine, the Brigham has led numerous medical
-        and scientific breakthroughs that have improved lives around the world.
-      </div>
-      <div>
-        U.S. News & World Report recognizes Brigham and Women’s Hospital among
-        the best hospitals in many specialty areas, including cancer, heart and
-        vascular, diabetes and endocrine disorders, ear, nose and throat,
-        gastroenterology and GI surgery, geriatric care, gynecology, neurology
-        and neurosurgery, orthopedics, pulmonology, rheumatology, and urology.
+    <div className="encompassing-div" ref={container}>
+      <div
+        className="about-page-container"
+        ref={scroll}
+        style={{ height: scrollHeight }}
+      >
+        <div>WPI Computer Science Department</div>
+        <div>CS3733-C24 Software Engineering, Prof. Wilson Wong</div>
+        <div>Team Coach: Mike Wilkinson</div>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tommy Branchaud</td>
+                <td>Scrum Master</td>
+              </tr>
+              <tr>
+                <td>Camren Chraplak</td>
+                <td>Product Owner</td>
+              </tr>
+              <tr>
+                <td>Klaudio Fusha</td>
+                <td>Assistant Lead Software Engineer</td>
+              </tr>
+              <tr>
+                <td>Tyler Giroux</td>
+                <td>Project Manager</td>
+              </tr>
+              <tr>
+                <td>Silas Joy</td>
+                <td>Full-Time Software Engineer (Front/Back-End)</td>
+              </tr>
+              <tr>
+                <td>Zachary Medailleu</td>
+                <td>Full-Time Software Engineer (Algorithms)</td>
+              </tr>
+              <tr>
+                <td>Noah Newton</td>
+                <td>Full-Time Software Engineer (Back-End))</td>
+              </tr>
+              <tr>
+                <td>Dimitri Saliba</td>
+                <td>Lead Developer</td>
+              </tr>
+              <tr>
+                <td>Gabriel Shiu</td>
+                <td>Assistant Lead Software Engineer</td>
+              </tr>
+              <tr>
+                <td>Istan Slamet</td>
+                <td>Documentation Analyst</td>
+              </tr>
+              <tr>
+                <td>Jason Zhang</td>
+                <td>Full-Time Software Engineer (Front-End)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          We would like to thank Brigham and Women's Hospital and their
+          representative, Andrew Shinn.
+        </div>
+        <div>
+          The Brigham & Women's Hospital maps and data used in this application
+          are copyrighted and provided for the sole use of educational purposes.
+        </div>
       </div>
     </div>
   );
