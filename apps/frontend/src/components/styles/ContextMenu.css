@@ -2,8 +2,8 @@
   position: fixed;
   top: 10%;
   right: 0;
-  width: 850px;
-  height: 80%;
+  width: 50vw;
+  height: 80vh;
   animation: slide-in 1s;
 }
 
