@@ -12,6 +12,15 @@ import {
   ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
+import { EmployeeWrapper } from "./ViewEmployees.tsx";
+import { Employee } from "common/src/Employee.ts";
+//import {number} from "prop-types";
+
+async function getEmployees(): Promise<EmployeeWrapper> {
+  return axios.get("http://localhost:3000/api/employees", {
+    params: { getAll: true },
+  });
+}
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -26,7 +35,18 @@ export const RequestsTable = ({
 }: RequestsTableProps) => {
   const [stati] = useState(new Map<string, string>());
   const [filter, setFilter] = useState<string>("All");
-
+  const [employeeFilter, setEmployeeFilter] = useState<string>("All");
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  // Get employees from DB and store them in state
+  const getAndSetEmployees = () => {
+    getEmployees().then((list) => {
+      if (list !== undefined) {
+        setEmployees(list.data);
+      }
+    });
+  };
+  // Fetch the employees from the server on load
+  useEffect(getAndSetEmployees, []);
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
     axios
@@ -71,6 +91,12 @@ export const RequestsTable = ({
   // Render rows for requests based on the selected filter
   const rows: React.ReactElement[] = [];
   requests?.forEach((request) => {
+    if (
+      employeeFilter !== request.helpingEmployee &&
+      employeeFilter !== "All"
+    ) {
+      return;
+    }
     if (
       filter === "All" ||
       (filter === "Assigned" && request.status === "Assigned") ||
@@ -123,7 +149,7 @@ export const RequestsTable = ({
   return (
     <>
       <div className="filter">
-        <label htmlFor="statusFilter" className="filterText">
+        <label htmlFor="statusFilter" className="filterTextStatus">
           Filter by Status:
         </label>
         <select
@@ -137,6 +163,24 @@ export const RequestsTable = ({
           <option value="Assigned">Assigned</option>
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
+        </select>
+        <br />
+        <label className={"filterTextEmployees"}>Filter by Employee:</label>
+        <select
+          name="employeeFilter"
+          className="statusFilter"
+          id="employeeFilter"
+          value={employeeFilter}
+          onChange={(e) => {
+            setEmployeeFilter(e.target.value);
+          }}
+        >
+          <option value={"All"}>All</option>
+          {employees.map((emp) => (
+            <option id={emp.employeeID} value={emp.employeeID}>
+              {emp.firstName + " " + emp.lastName}
+            </option>
+          ))}
         </select>
       </div>
       <table>
