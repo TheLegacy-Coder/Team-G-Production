@@ -317,6 +317,7 @@ class Mouse {
       }
     });
     if (emptyClick && delta.x === 0 && delta.y === 0) {
+      drawData.setSwitchNodes([], []);
       setStartNode(undefined);
       setEndNode(undefined);
       nodeStore.setSelectedNode(undefined);

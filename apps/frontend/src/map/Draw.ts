@@ -80,7 +80,9 @@ class Draw {
                   ? "#00ffff"
                   : hoverNode == node
                     ? "#0000FF"
-                    : "#FF0000";
+                    : drawData.getSwitchNodes().includes(node)
+                      ? "#ffff00"
+                      : "#FF0000";
             ctx!.fill();
             ctx!.lineWidth = 5;
             ctx!.strokeStyle = "#330000";
