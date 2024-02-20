@@ -20,11 +20,14 @@ const TextDirections: React.FC = () => {
         currentNode.ycoord - prevNode.ycoord,
         currentNode.xcoord - prevNode.xcoord,
       );
-    const angleDeg = (angle * 180) / Math.PI;
+    let angleDeg = (angle * 180) / Math.PI;
 
-    if (angleDeg < 0) {
+    if (angleDeg < -180) angleDeg += 360;
+    if (angleDeg > 180) angleDeg -= 360;
+
+    if (angleDeg > 20) {
       return "Turn right";
-    } else if (angleDeg > 0) {
+    } else if (angleDeg < -20) {
       return "Turn left";
     } else {
       return "Continue straight";
