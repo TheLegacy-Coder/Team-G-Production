@@ -47,8 +47,12 @@ class Mouse {
 
   // zooms to a point
   public zoom(zoom: number, xCoord: number, yCoord: number) {
-    if (drawData.scalar * zoom > 0.3 && drawData.scalar * zoom < 2) {
-      //scalar *= zoom;
+    if (
+      (drawData.scalar * zoom * this.imageWidth > window.innerWidth ||
+        drawData.scalar * zoom * this.imageHeight > window.innerHeight) &&
+      (drawData.scalar * zoom * this.imageWidth < window.innerWidth * 10 ||
+        drawData.scalar * zoom * this.imageHeight < window.innerHeight * 10)
+    ) {
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -112,6 +116,9 @@ class Mouse {
     let posY = 0;
     let posScale = 1;
 
+    //const screenWidth = 2144;
+    //const screenHeight = 1051;
+
     if (homeFloor === "3") {
       posX = -1200;
       posY = -250;
@@ -133,6 +140,8 @@ class Mouse {
       posY = -300;
       posScale = 0.45;
     }
+    //posX += (window.innerWidth - screenWidth)*posScale;
+    //posY += (window.innerHeight - screenHeight)*posScale;
     ctx!.translate(posX, posY);
     drawData.updateCoords();
     drawData.setScalar(posScale);
