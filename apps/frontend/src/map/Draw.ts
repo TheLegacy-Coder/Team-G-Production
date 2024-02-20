@@ -24,7 +24,10 @@ drawData.image.onload = () => {
 
 class Draw {
   private drawStep = 0;
-  private showEdges = false;
+  //private showEdges = false;
+  public showNodes = true;
+  public showEdges = false;
+  public showHalls = false;
   public drawCanvas() {
     if (drawData.redraw) {
       // verifies canvas context is set up
@@ -70,7 +73,11 @@ class Draw {
         }
 
         mapNodes.forEach((node) => {
-          if (node.floor === drawData.currentFloor) {
+          if (
+            node.floor === drawData.currentFloor &&
+            ((draw.showNodes && node.nodeType !== "HALL") ||
+              (draw.showHalls && node.nodeType === "HALL"))
+          ) {
             ctx!.beginPath();
             ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
             ctx!.fillStyle =
@@ -91,8 +98,12 @@ class Draw {
         });
 
         draw.drawFloorChange();
-
-        if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
+        if (
+          hoverNode !== undefined &&
+          ((draw.showNodes && hoverNode.nodeType !== "HALL") ||
+            (draw.showHalls && hoverNode.nodeType === "HALL"))
+        )
+          draw.drawNodeDetails(hoverNode);
 
         let pathInView = true;
         if (mouse.inView()) {
@@ -104,20 +115,18 @@ class Draw {
           currentSelectedFloor = "F" + currentSelectedFloor;
         }
         if (
-          getStartNode() === undefined ||
-          getEndNode() === undefined ||
-          !drawData.floors.includes(currentSelectedFloor) ||
-          !pathInView
+          (getStartNode() === undefined ||
+            getEndNode() === undefined ||
+            !drawData.floors.includes(currentSelectedFloor) ||
+            !pathInView) &&
+          mapNodes.size !== 0
         )
           drawData.setRedraw(false);
       }
     }
     setTimeout(draw.drawCanvas, 16);
   }
-  public toggleEdges() {
-    draw.showEdges = !draw.showEdges;
-    drawData.setRedraw(true);
-  }
+
   public getContentWidth(prevNum: number, inString: string): number {
     if (inString.length > prevNum) {
       return inString.length;

@@ -2,7 +2,7 @@
   position: fixed;
   width: 30px;
   height: 30px;
-  border-radius: 25px;
+  border-radius: 30px;
   color: white;
   background-color: #00284f;
   border: 2px solid black;
@@ -18,10 +18,6 @@
 
 .plus-button {
   transform: translate(10px, 10px);
-}
-
-.whole-graph-button {
-  transform: translate(190px, 10px);
 }
 
 .zoom-amount {
@@ -68,4 +64,74 @@
 
 .path-floor {
   background-color: lightblue;
+}
+
+/* Overall Toggle Button*/
+.toggle-button {
+  position: fixed;
+  transform: translate(10px, 50px);
+  cursor: pointer;
+}
+
+/* Hide the default checkbox*/
+.toggle-button input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.toggle-button input:checked ~ .toggle-nodes {
+  background-color: #00284f;
+}
+
+.toggle-button input:checked ~ .toggle-nodes:after {
+  display: block;
+}
+
+/* toggle edges checkbox*/
+.toggle-nodes {
+  cursor: pointer;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  color: white;
+  background-color: #ffffff;
+  border-radius: 25px;
+  border: 2px solid black;
+}
+
+.toggle-nodes:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.toggle-button .toggle-nodes:after {
+  left: 12px;
+  top: 9px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.toggle-nodes-text {
+  transform: translateX(40px);
+  background-color: #00284f;
+  border-radius: 5px;
+  color: white;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 2px solid black;
+}
+
+.trans-edges {
+  transform: translate(10px, 90px);
+}
+
+.trans-halls {
+  transform: translate(10px, 130px);
 }

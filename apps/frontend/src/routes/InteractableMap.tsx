@@ -53,6 +53,18 @@ export const InteractableMap = () => {
     }
   }
 
+  function toggleButtons(id: string) {
+    const toggle = document.getElementById(id) as HTMLInputElement;
+    if (id === "nodes") {
+      draw.showNodes = toggle.checked;
+    } else if (id === "edges") {
+      draw.showEdges = toggle.checked;
+    } else if (id === "halls") {
+      draw.showHalls = toggle.checked;
+    }
+    drawData.setRedraw(true);
+  }
+
   function changeAlgorithm(newAlg: string) {
     if (newAlg === "BFS") {
       algorithm.setSearchStrategy(new BreadthFirstSearch());
@@ -98,14 +110,42 @@ export const InteractableMap = () => {
       >
         ↺
       </button>
-      <button
-        className={"zoom-button whole-graph-button"}
-        onClick={() => {
-          draw.toggleEdges();
-        }}
-      >
-        O
-      </button>
+      <label className={"toggle-button"}>
+        <input
+          type="checkbox"
+          id={"nodes"}
+          defaultChecked={draw.showNodes}
+          onChange={() => {
+            toggleButtons("nodes");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Nodes</p>
+      </label>
+      <label className={"toggle-button trans-edges"}>
+        <input
+          type="checkbox"
+          id={"edges"}
+          defaultChecked={draw.showEdges}
+          onChange={() => {
+            toggleButtons("edges");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Edges</p>
+      </label>
+      <label className={"toggle-button trans-halls"}>
+        <input
+          type="checkbox"
+          id={"halls"}
+          defaultChecked={draw.showHalls}
+          onChange={() => {
+            toggleButtons("halls");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Halls</p>
+      </label>
       <button
         id={"F3"}
         className={"zoom-button third-floor"}
