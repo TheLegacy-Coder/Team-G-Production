@@ -50,10 +50,18 @@ export const InteractableMap = () => {
     const toggle = document.getElementById(id) as HTMLInputElement;
     if (id === "nodes") {
       draw.showNodes = toggle.checked;
+
+      const halls = document.getElementById("halls") as HTMLInputElement;
+      halls.checked = false;
+      draw.showHalls = false;
     } else if (id === "edges") {
       draw.showEdges = toggle.checked;
     } else if (id === "halls") {
-      draw.showHalls = toggle.checked;
+      if (draw.showNodes) {
+        draw.showHalls = toggle.checked;
+      } else {
+        toggle.checked = false;
+      }
     }
     drawData.setRedraw(true);
   }
