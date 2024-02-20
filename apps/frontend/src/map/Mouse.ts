@@ -157,14 +157,14 @@ class Mouse {
       if (drawData.currentFloor === floor) {
         newFloor = false;
       }
-      drawData.resetMap(newFloor);
+      const hasPath = drawData.resetMap(newFloor);
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);
       this.homePosition(floor);
       mouse.newMap = true;
       ctx!.restore();
       drawData.setScalar(tempScalar);
-      if (drawData.path.length === 0) {
+      if (!hasPath) {
         drawData.resetMap(newFloor);
         this.homePosition(floor);
       }

@@ -30,9 +30,7 @@ class NodeStore {
 
   setSelectedNode(node: MapNode | undefined) {
     this.selectedNode = node;
-    // console.log(this.currentRefresh);
     if (this.currentRefresh !== undefined) {
-      // console.log("refreshing");
       this.currentRefresh();
     }
   }
@@ -49,7 +47,6 @@ export function getMapNodesEdges() {
     axios
       .get("http://localhost:3000/api/map/nodes")
       .then((response: AxiosResponse<MapNode[]>) => {
-        // console.log(response.data);
         response.data.forEach((node) => {
           node.edges = [];
           mapNodes.set(node.nodeID, node);
@@ -58,13 +55,10 @@ export function getMapNodesEdges() {
         axios
           .get("http://localhost:3000/api/map/edges")
           .then((response: AxiosResponse<Edge[]>) => {
-            // console.log(response.data);
             response.data.forEach((edge) => {
               const n1 = mapNodes.get(edge.startNode);
               const n2 = mapNodes.get(edge.endNode);
-              if (n1 == undefined || n2 == undefined) {
-                // console.log("bad edge");
-              } else {
+              if (n1 !== undefined && n2 !== undefined) {
                 n1.edges.push(n2);
                 n2.edges.push(n1);
               }
@@ -101,57 +95,6 @@ export function setEndNode(node: MapNode | undefined) {
 export function getEndNode(): MapNode | undefined {
   return endNode;
 }
-
-//TODO: remove this and replace with an actual backend
-//
-// fetch(rawNodes)
-//   .then((r) => r.text())
-//   .then((text) => {
-//     let headers = true;
-//     text.split("\n").forEach((line) => {
-//       if (headers) {
-//         headers = false;
-//       } else {
-//         const fields: string[] = line.split(",");
-//         const newNode: MapNode = {
-//           nodeID: fields[0],
-//           xcoord: parseInt(fields[1]),
-//           ycoord: parseInt(fields[2]),
-//           floor: fields[3],
-//           buidling: fields[4],
-//           nodeType: fields[5],
-//           longName: fields[6],
-//           shortName: fields[7],
-//           edges: [],
-//         };
-//         mapNodes.set(fields[0], newNode);
-//       }
-//     });
-//   });
-
-// fetch(rawEdges)
-//   .then((r) => r.text())
-//   .then((text) => {
-//     let headers = true;
-//     text.split("\n").forEach((line) => {
-//       if (headers) {
-//         headers = false;
-//       } else {
-//         const fields: string[] = line.split(",");
-//         if (fields[2] != undefined) {
-//           fields[2] = fields[2].replace("\r", "");
-//           const n1 = mapNodes.get(fields[1]);
-//           const n2 = mapNodes.get(fields[2]);
-//           if (n1 == undefined || n2 == undefined) {
-//             console.log("bad edge");
-//           } else {
-//             n1.edges.push(n2);
-//             n2.edges.push(n1);
-//           }
-//         }
-//       }
-//     });
-//   });
 
 export interface SearchStrategy {
   pathfindingAlgorithm: (
@@ -191,8 +134,6 @@ export class AStarSearch implements SearchStrategy {
       frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
 
       const current = frontier.shift() as MapNode;
-      // console.log(current);
-      // console.log(fScore);
 
       if (current === undefined) {
         return [];
@@ -260,12 +201,9 @@ export class BreadthFirstSearch implements SearchStrategy {
       });
       frontier.shift();
     }
-    console.log(seen);
     const path: MapNode[] = [];
     let current = end;
     while (seen.get(current) != current) {
-      console.log(current);
-      console.log(seen.get(current));
       path.push(current);
       const next = seen.get(current);
       current = next == undefined ? current : next;
