@@ -126,6 +126,7 @@ class Draw {
   }
 
   private drawFloorChange() {
+    ctx!.font = "bold 12pt Courier";
     let index = 0;
     drawData.getSwitchNodes().forEach((node) => {
       if (node.floor === drawData.currentFloor) {
