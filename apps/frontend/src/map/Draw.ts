@@ -72,37 +72,36 @@ class Draw {
           });
         }
 
-        if (draw.showNodes) {
-          mapNodes.forEach((node) => {
-            if (
-              node.floor === drawData.currentFloor &&
-              (draw.showHalls || node.nodeType !== "HALL")
-            ) {
-              ctx!.beginPath();
-              ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
-              ctx!.fillStyle =
-                getStartNode() == node
-                  ? "#00FF00"
-                  : getEndNode() == node
-                    ? "#00ffff"
-                    : hoverNode == node
-                      ? "#0000FF"
-                      : drawData.getSwitchNodes().includes(node)
-                        ? "#ffff00"
-                        : "#FF0000";
-              ctx!.fill();
-              ctx!.lineWidth = 5;
-              ctx!.strokeStyle = "#330000";
-              ctx!.stroke();
-            }
-          });
-        }
+        mapNodes.forEach((node) => {
+          if (
+            node.floor === drawData.currentFloor &&
+            ((draw.showNodes && node.nodeType !== "HALL") ||
+              (draw.showHalls && node.nodeType === "HALL"))
+          ) {
+            ctx!.beginPath();
+            ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
+            ctx!.fillStyle =
+              getStartNode() == node
+                ? "#00FF00"
+                : getEndNode() == node
+                  ? "#00ffff"
+                  : hoverNode == node
+                    ? "#0000FF"
+                    : drawData.getSwitchNodes().includes(node)
+                      ? "#ffff00"
+                      : "#FF0000";
+            ctx!.fill();
+            ctx!.lineWidth = 5;
+            ctx!.strokeStyle = "#330000";
+            ctx!.stroke();
+          }
+        });
 
         draw.drawFloorChange();
         if (
           hoverNode !== undefined &&
-          draw.showNodes &&
-          (draw.showHalls || hoverNode.nodeType !== "HALL")
+          ((draw.showNodes && hoverNode.nodeType !== "HALL") ||
+            (draw.showHalls && hoverNode.nodeType === "HALL"))
         )
           draw.drawNodeDetails(hoverNode);
 
