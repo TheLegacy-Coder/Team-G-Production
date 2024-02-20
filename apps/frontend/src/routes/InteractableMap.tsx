@@ -12,11 +12,23 @@ import {
 } from "../map/MapNode.ts";
 import { Dash, EyeFill, EyeSlashFill, Plus } from "react-bootstrap-icons";
 
+interface Visibility {
+  nodes: boolean;
+  edges: boolean;
+  halls: boolean;
+}
+
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
   const [currentAlg, setCurrentAlg] = useState<string>("BFS");
+  const [visibilities, setVisibilities] = useState<Visibility>({
+    nodes: draw.showNodes,
+    edges: draw.showEdges,
+    halls: draw.showHalls,
+  });
+  const [floor, setFloor] = useState<string>(drawData.currentFloor);
 
   function initContext() {
     if (canvasRef.current) {
@@ -47,6 +59,7 @@ export const InteractableMap = () => {
 
   function changeMap(floor: string, imageSrc: string) {
     if (mouse.setMap(floor, imageSrc)) {
+      setFloor(floor);
       algorithm.searchAlg();
       setTimeout(() => {
         drawData.setRedraw(true);
@@ -57,10 +70,13 @@ export const InteractableMap = () => {
   function toggleButtons(type: string) {
     if (type === "nodes") {
       draw.showNodes = !draw.showNodes;
+      setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
     } else if (type === "edges") {
       draw.showEdges = !draw.showEdges;
+      setVisibilities({ ...visibilities, edges: !visibilities.edges });
     } else if (type === "halls") {
       draw.showHalls = !draw.showHalls;
+      setVisibilities({ ...visibilities, halls: !visibilities.halls });
     }
     drawData.setRedraw(true);
   }
@@ -131,6 +147,9 @@ export const InteractableMap = () => {
             >
               ↺
             </button>
+            <button className={"zoom-button zoom-amount"}>
+              <div id={"scalar"}></div>
+            </button>
             <button
               className={"zoom-button"}
               onClick={() => mouse.buttonZoom(true)}
@@ -153,68 +172,71 @@ export const InteractableMap = () => {
         <div className={"toggle-button-container"}>
           <ToggleButton
             title={"Nodes"}
-            value={draw.showNodes}
+            value={visibilities.nodes}
             onClick={() => toggleButtons("nodes")}
           />
           <ToggleButton
             title={"Edges"}
-            value={draw.showEdges}
+            value={visibilities.edges}
             onClick={() => toggleButtons("edges")}
           />
           <ToggleButton
             title={"Halls"}
-            value={draw.showHalls}
+            value={visibilities.halls}
             onClick={() => toggleButtons("halls")}
           />
         </div>
       </div>
 
       <div className={"map-bottom-left-buttons"}>
-        <button
-          id={"F3"}
-          className={"zoom-button"}
-          onClick={() => {
-            changeMap("3", "03_thethirdfloor.png");
-          }}
-        >
-          3
-        </button>
-        <button
-          id={"F2"}
-          className={"zoom-button"}
-          onClick={() => {
-            changeMap("2", "02_thesecondfloor.png");
-          }}
-        >
-          2
-        </button>
-        <button
-          id={"F1"}
-          className={"zoom-button"}
-          onClick={() => {
-            changeMap("1", "01_thefirstfloor.png");
-          }}
-        >
-          1
-        </button>
-        <button
-          id={"L1"}
-          className={"zoom-button"}
-          onClick={() => {
-            changeMap("L1", "00_thelowerlevel1.png");
-          }}
-        >
-          L1
-        </button>
-        <button
-          id={"L2"}
-          className={"zoom-button"}
-          onClick={() => {
-            changeMap("L2", "00_thelowerlevel2.png");
-          }}
-        >
-          L2
-        </button>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <button
+            id={"F3"}
+            className={"zoom-button"}
+            onClick={() => {
+              changeMap("3", "03_thethirdfloor.png");
+            }}
+          >
+            3
+          </button>
+          <button
+            id={"F2"}
+            className={"zoom-button"}
+            onClick={() => {
+              changeMap("2", "02_thesecondfloor.png");
+            }}
+          >
+            2
+          </button>
+          <button
+            id={"F1"}
+            className={"zoom-button"}
+            onClick={() => {
+              changeMap("1", "01_thefirstfloor.png");
+            }}
+          >
+            1
+          </button>
+          <button
+            id={"L1"}
+            className={"zoom-button"}
+            onClick={() => {
+              changeMap("L1", "00_thelowerlevel1.png");
+            }}
+          >
+            L1
+          </button>
+          <button
+            id={"L2"}
+            className={"zoom-button"}
+            onClick={() => {
+              changeMap("L2", "00_thelowerlevel2.png");
+            }}
+          >
+            L2
+          </button>
+        </div>
+        <h1 style={{ marginTop: "auto" }}>Floor {floor}</h1>
       </div>
       <canvas
         onMouseMove={mouse.mouseMove}
@@ -224,7 +246,7 @@ export const InteractableMap = () => {
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}
-      ></canvas>
+      />
     </div>
   );
 };

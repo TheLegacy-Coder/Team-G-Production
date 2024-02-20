@@ -12,8 +12,6 @@
   bottom: 55px;
   margin: 8px;
   display: flex;
-  align-items: center;
-  flex-direction: column;
   z-index: 100;
   gap: 8px;
 }
@@ -42,6 +40,10 @@
 
 .zoom-button:active {
   background-color: #99a9b8;
+}
+
+.zoom-amount {
+  display: none;
 }
 
 .path-floor {
