@@ -110,14 +110,76 @@ export const ViewEmployees = () => {
       }
     } else if (state === "add") {
       try {
-        axios.post("http://localhost:3000/api/employees", data, {}).then(() => {
-          getAndSetEmployees();
-          setState("none");
-        });
+        axios
+          .post(
+            "http://localhost:3000/api/employees",
+            { employees: [data] },
+            {},
+          )
+          .then(() => {
+            getAndSetEmployees();
+            setState("none");
+          });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
     }
+  };
+
+  const handleExportEmployees = () => {
+    const rows: string[] = [];
+    rows.push("employeeID,firstName,lastName,email,job,accessLevel");
+    employees.forEach((row: Employee) => {
+      rows.push(Object.values(row).slice(0, 6).join(","));
+    });
+    const csvArray = rows.join("\r\n");
+    const a = document.createElement("a");
+    a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+    a.target = "_blank";
+    a.download = "employees.csv";
+    document.body.appendChild(a);
+    a.click();
+  };
+
+  const handleImportEmployees = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const importedMapEmployees: Employee[] = [];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target) {
+        const content = event.target.result;
+        const lines = (content as string).split("\n");
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].replace("\r", "").split(",");
+          if (line[0] === "") continue;
+          const employee: Employee = {
+            employeeID: line[0],
+            firstName: line[1],
+            lastName: line[2],
+            email: line[3],
+            job: line[4],
+            accessLevel: line[5],
+          };
+          importedMapEmployees.push(employee);
+        }
+      }
+      console.log(importedMapEmployees);
+
+      // post all new employees & replace all old ones
+      axios
+        .post("http://localhost:3000/api/employees", {
+          deleteAll: true,
+          employees: importedMapEmployees,
+        })
+        .then(() => {
+          // update local store
+          getAndSetEmployees();
+        });
+      e.target.value = "";
+    };
+    reader.readAsText(file);
   };
 
   // Render rows for each employee
@@ -225,16 +287,17 @@ export const ViewEmployees = () => {
       <table>
         <thead>
           <tr>
-            <th>employeeID</th>
-            <th>firstName</th>
-            <th>lastName</th>
-            <th>email</th>
-            <th>job</th>
-            <th>accessLevel</th>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Job</th>
+            <th>Access Level</th>
           </tr>
         </thead>
         <tbody onMouseLeave={handleMouseLeave}>{rows}</tbody>
       </table>
+
       {state === "add" || state === "edit" ? (
         // If the state is "add" or "edit", render a submit button and a cancel button
 
@@ -249,11 +312,30 @@ export const ViewEmployees = () => {
           </button>
         </div>
       ) : (
-        <div className={"float-buttons"}>
-          <button className="add-button" onClick={addEmployee}>
-            Add Employee
-          </button>
-        </div>
+        <>
+          <div className={"float-buttons-right"}>
+            <button
+              className={"import-export-buttons"}
+              onClick={handleExportEmployees}
+            >
+              Export CSV
+            </button>
+            <label className={"import-export-buttons"}>
+              <input
+                onChange={handleImportEmployees}
+                type={"file"}
+                accept={".csv"}
+                hidden
+              />
+              Import CSV
+            </label>
+          </div>
+          <div className={"float-buttons-left"}>
+            <button className="add-button" onClick={addEmployee}>
+              Add Employee
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
