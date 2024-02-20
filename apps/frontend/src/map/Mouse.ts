@@ -104,15 +104,39 @@ class Mouse {
     return result;
   }
   // resets map position to a default position
-  public homePosition() {
+  public homePosition(homeFloor: string) {
     if (ctx === null) {
       return;
     }
-    ctx!.translate(-1200, -400);
+    let posX = 0;
+    let posY = 0;
+    let posScale = 1;
+
+    if (homeFloor === "3") {
+      posX = -1200;
+      posY = -250;
+      posScale = 0.4;
+    } else if (homeFloor === "2") {
+      posX = -1200;
+      posY = -120;
+      posScale = 0.4;
+    } else if (homeFloor === "1") {
+      posX = -1200;
+      posY = -300;
+      posScale = 0.45;
+    } else if (homeFloor === "L1") {
+      posX = -1200;
+      posY = -300;
+      posScale = 0.55;
+    } else if (homeFloor === "L2") {
+      posX = -1200;
+      posY = -300;
+      posScale = 0.45;
+    }
+    ctx!.translate(posX, posY);
     drawData.updateCoords();
-    //scalar = 0.75;
-    drawData.setScalar(0.75);
-    ctx!.scale(0.75, 0.75);
+    drawData.setScalar(posScale);
+    ctx!.scale(posScale, posScale);
     drawData.updateCoords();
     this.boundCoords();
     const scaleID = document.querySelector("#scalar");
@@ -134,16 +158,20 @@ class Mouse {
         newFloor = false;
       }
       drawData.resetMap(newFloor);
-      //currentFloor = floor;
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);
-      this.homePosition();
+      this.homePosition(floor);
       mouse.newMap = true;
       ctx!.restore();
       drawData.setScalar(tempScalar);
+      if (drawData.path.length === 0) {
+        drawData.resetMap(newFloor);
+        this.homePosition(floor);
+      }
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
       drawData.resetPath();
+
       return true;
     }
     return false;
