@@ -1,4 +1,7 @@
 .profile {
+  overflow-y: auto;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,7 +10,6 @@
   color: white;
   margin-left: 5px;
   margin-right: 5px;
-  min-height: 100vh;
 }
 
 .profile img {
