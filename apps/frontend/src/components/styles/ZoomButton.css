@@ -69,3 +69,26 @@
 .path-floor {
   background-color: lightblue;
 }
+
+.toggle-button {
+  position: fixed;
+  transform: translate(20px, 50px);
+  cursor: pointer;
+}
+
+.toggle-button input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.toggle-nodes {
+  cursor: pointer;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  color: white;
+  background-color: #00284f;
+}

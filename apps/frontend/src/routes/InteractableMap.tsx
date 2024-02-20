@@ -88,6 +88,11 @@ export const InteractableMap = () => {
       >
         O
       </button>
+      <label className={"toggle-button"}>
+        One
+        <input type="checkbox" defaultChecked={true} />
+        <span className={"toggle-nodes"}></span>
+      </label>
       <button
         id={"F3"}
         className={"zoom-button third-floor"}
