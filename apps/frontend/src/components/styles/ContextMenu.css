@@ -20,8 +20,8 @@
   position: fixed;
   top: 10%;
   right: 0;
-  width: 1500px;
-  height: 80%;
+  width: 97vw;
+  height: 80vh;
   animation: slide-in-to-long 1s;
 }
 
@@ -29,8 +29,8 @@
   position: fixed;
   top: 10%;
   right: 0;
-  width: 1500px;
-  height: 80%;
+  width: 97vw;
+  height: 80vh;
   animation: slide-out-to-long 1s;
 }
 
