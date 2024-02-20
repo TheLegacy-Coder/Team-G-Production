@@ -5,6 +5,11 @@ import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 import { PathfindingButton } from "../components/PathfindingButton.tsx";
+import {
+  AStarSearch,
+  BreadthFirstSearch,
+  DepthFirstSearch,
+} from "../map/MapNode.ts";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -46,6 +51,17 @@ export const InteractableMap = () => {
         drawData.setRedraw(true);
       }, 100);
     }
+  }
+
+  function changeAlgorithm(newAlg: string) {
+    if (newAlg === "BFS") {
+      algorithm.setSearchStrategy(new BreadthFirstSearch());
+    } else if (newAlg === "A*") {
+      algorithm.setSearchStrategy(new AStarSearch());
+    } else if (newAlg === "DFS") {
+      algorithm.setSearchStrategy(new DepthFirstSearch());
+    }
+    setCurrentAlg(newAlg);
   }
 
   return (
@@ -137,7 +153,7 @@ export const InteractableMap = () => {
       </button>
       <PathfindingButton
         algorithm={currentAlg}
-        handleChange={(newAlg) => setCurrentAlg(newAlg)}
+        handleChange={changeAlgorithm}
       />
       <canvas
         onMouseMove={mouse.mouseMove}
