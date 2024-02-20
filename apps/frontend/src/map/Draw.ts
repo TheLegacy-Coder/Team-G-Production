@@ -116,10 +116,11 @@ class Draw {
           currentSelectedFloor = "F" + currentSelectedFloor;
         }
         if (
-          getStartNode() === undefined ||
-          getEndNode() === undefined ||
-          !drawData.floors.includes(currentSelectedFloor) ||
-          !pathInView
+          (getStartNode() === undefined ||
+            getEndNode() === undefined ||
+            !drawData.floors.includes(currentSelectedFloor) ||
+            !pathInView) &&
+          mapNodes.size !== 0
         )
           drawData.setRedraw(false);
       }
