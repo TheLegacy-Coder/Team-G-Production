@@ -1,4 +1,9 @@
-import { AStarSearch, getEndNode, getStartNode, MapNode } from "./MapNode.ts";
+import {
+  DepthFirstSearch,
+  getEndNode,
+  getStartNode,
+  MapNode,
+} from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
 
@@ -22,7 +27,7 @@ class MapAlgorithm {
 
   public searchAlg() {
     // filters path not on floor
-    const unfilteredPath = AStarSearch(this.startNode, this.endNode);
+    const unfilteredPath = DepthFirstSearch(this.startNode, this.endNode);
 
     drawData.clearFloors();
 

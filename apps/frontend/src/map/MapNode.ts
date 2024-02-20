@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { DispatchWithoutAction } from "react";
+
 export type MapNode = {
   nodeID: string;
   xcoord: number;
@@ -26,6 +27,7 @@ export const mapEdges: Map<string, Edge> = new Map([]);
 class NodeStore {
   public selectedNode: MapNode | undefined = undefined;
   public currentRefresh: DispatchWithoutAction | undefined;
+
   setSelectedNode(node: MapNode | undefined) {
     this.selectedNode = node;
     // console.log(this.currentRefresh);
@@ -232,82 +234,72 @@ export function AStarSearch(
   return [];
 }
 
-// export function BreadthFirstSearch(
-//   start: MapNode | undefined,
-//   end: MapNode | undefined,
-// ) {
-//   if (start == undefined || end == undefined) return [];
-//   const seen: Map<MapNode, MapNode> = new Map([]);
-//   seen.set(start, start);
-//   const frontier: MapNode[] = [start];
-//   let done = false;
-//   while (!done || frontier.length != 0) {
-//     //frontier [0] is dequed element
-//     frontier[0].edges.forEach((node) => {
-//       if (!seen.has(node)) {
-//         seen.set(node, frontier[0]);
-//         if (node == end) {
-//           done = true;
-//         }
-//         frontier.push(node);
-//       }
-//     });
-//     frontier.shift();
-//   }
-//   console.log(seen);
-//   const path: MapNode[] = [];
-//   let current = end;
-//   while (seen.get(current) != current) {
-//     console.log(current);
-//     console.log(seen.get(current));
-//     path.push(current);
-//     const next = seen.get(current);
-//     current = next == undefined ? current : next;
-//   }
-//   path.push(start);
-//   return path;
-// }
-// console.log(mapNodes);
+export function BreadthFirstSearch(
+  start: MapNode | undefined,
+  end: MapNode | undefined,
+) {
+  if (start == undefined || end == undefined) return [];
+  const seen: Map<MapNode, MapNode> = new Map([]);
+  seen.set(start, start);
+  const frontier: MapNode[] = [start];
+  let done = false;
+  while (!done || frontier.length != 0) {
+    //frontier [0] is dequed element
+    frontier[0].edges.forEach((node) => {
+      if (!seen.has(node)) {
+        seen.set(node, frontier[0]);
+        if (node == end) {
+          done = true;
+        }
+        frontier.push(node);
+      }
+    });
+    frontier.shift();
+  }
+  console.log(seen);
+  const path: MapNode[] = [];
+  let current = end;
+  while (seen.get(current) != current) {
+    console.log(current);
+    console.log(seen.get(current));
+    path.push(current);
+    const next = seen.get(current);
+    current = next == undefined ? current : next;
+  }
+  path.push(start);
+  return path;
+}
 
 export function DepthFirstSearch(
   start: MapNode | undefined,
   end: MapNode | undefined,
-): MapNode[] | undefined {
-  if (start === undefined || end === undefined) return undefined;
-
-  const visited = new Map<string, boolean>();
-  const parent = new Map<string, MapNode>();
-  const stack = [start];
-
-  while (stack.length > 0) {
-    const current = stack.pop() as MapNode;
-
-    // Mark the current node as visited
-    visited.set(current.nodeID, true);
-
-    // Check if we reached the end node
-    if (current === end) {
-      // Construct the path from the start to the end
-      const path = [];
-      let currentPathNode = end;
-      while (currentPathNode !== start) {
-        path.unshift(currentPathNode);
-        currentPathNode = parent.get(currentPathNode.nodeID) as MapNode;
-      }
-      path.unshift(start);
-      return path;
+) {
+  if (start == undefined || end == undefined) return [];
+  const seen: Map<MapNode, MapNode> = new Map([]);
+  seen.set(start, start);
+  const stack: MapNode[] = [start];
+  let done = false;
+  while (!done && stack.length != 0) {
+    const current = stack.pop();
+    if (current) {
+      current.edges.forEach((node) => {
+        if (!seen.has(node)) {
+          seen.set(node, current);
+          if (node == end) {
+            done = true;
+          }
+          stack.push(node);
+        }
+      });
     }
-
-    // Add unvisited neighbors to the stack
-    current.edges.forEach((neighbor) => {
-      if (!visited.get(neighbor.nodeID)) {
-        visited.set(neighbor.nodeID, true);
-        parent.set(neighbor.nodeID, current);
-        stack.push(neighbor);
-      }
-    });
   }
-
-  // If the loop completes without finding a path, return empty array
-  return [];
+  const path: MapNode[] = [];
+  let current = end;
+  while (seen.get(current) != current) {
+    path.push(current);
+    const next = seen.get(current);
+    current = next == undefined ? current : next;
+  }
+  path.push(start);
+  return path;
 }
