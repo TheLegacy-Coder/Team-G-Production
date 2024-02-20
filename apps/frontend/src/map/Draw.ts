@@ -74,7 +74,10 @@ class Draw {
 
         if (draw.showNodes) {
           mapNodes.forEach((node) => {
-            if (node.floor === drawData.currentFloor) {
+            if (
+              node.floor === drawData.currentFloor &&
+              (draw.showHalls || node.nodeType !== "HALL")
+            ) {
               ctx!.beginPath();
               ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
               ctx!.fillStyle =
@@ -96,7 +99,11 @@ class Draw {
         }
 
         draw.drawFloorChange();
-        if (hoverNode !== undefined && draw.showNodes)
+        if (
+          hoverNode !== undefined &&
+          draw.showNodes &&
+          (draw.showHalls || hoverNode.nodeType !== "HALL")
+        )
           draw.drawNodeDetails(hoverNode);
 
         let pathInView = true;
