@@ -1,14 +1,16 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
+import { PathfindingButton } from "../components/PathfindingButton.tsx";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
+  const [currentAlg, setCurrentAlg] = useState<string>("BFS");
 
   function initContext() {
     if (canvasRef.current) {
@@ -133,6 +135,10 @@ export const InteractableMap = () => {
       >
         L2
       </button>
+      <PathfindingButton
+        algorithm={currentAlg}
+        handleChange={(newAlg) => setCurrentAlg(newAlg)}
+      />
       <canvas
         onMouseMove={mouse.mouseMove}
         onMouseUp={mouse.mouseUp}
