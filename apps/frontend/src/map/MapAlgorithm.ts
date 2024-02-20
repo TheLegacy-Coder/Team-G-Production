@@ -1,8 +1,9 @@
 import {
-  DepthFirstSearch,
+  SearchStrategy,
   getEndNode,
   getStartNode,
   MapNode,
+  BreadthFirstSearch,
 } from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
@@ -15,6 +16,11 @@ class MapAlgorithm {
   private spacing = 50;
   private totalDistance = 0;
   private steps: number[] = [];
+  private searchStrategy: SearchStrategy = new BreadthFirstSearch();
+
+  public setSearchStrategy(searchStrategy: SearchStrategy) {
+    this.searchStrategy = searchStrategy;
+  }
 
   private setFloorButtons() {
     for (let i = 0; i < drawData.floors.length; i++) {
@@ -29,7 +35,10 @@ class MapAlgorithm {
 
   public searchAlg() {
     // filters path not on floor
-    const unfilteredPath = DepthFirstSearch(this.startNode, this.endNode);
+    const unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
+      this.startNode,
+      this.endNode,
+    );
 
     const switchedNodes: MapNode[] = [];
     const switchedFloors: string[] = [];

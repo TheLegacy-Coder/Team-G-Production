@@ -1,26 +1,10 @@
-import React, { useEffect, useState } from "react";
-import {
-  getStartNode,
-  getEndNode,
-  AStarSearch,
-  MapNode,
-} from "../map/MapNode.ts";
+import React from "react";
+import { MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
+import { drawData } from "../map/DrawData.ts";
 
 const TextDirections: React.FC = () => {
-  const [path, setPath] = useState<MapNode[]>([]);
-
-  useEffect(() => {
-    const intervalID = setInterval(() => {
-      const startNode = getStartNode();
-      const endNode = getEndNode();
-
-      const newPath = AStarSearch(startNode, endNode);
-      setPath(newPath.reverse());
-    }, 1000);
-
-    return () => clearInterval(intervalID);
-  }, []);
+  const path = drawData.path.slice().reverse();
 
   const getTurnDirection = (
     prevNode: MapNode,
@@ -36,11 +20,14 @@ const TextDirections: React.FC = () => {
         currentNode.ycoord - prevNode.ycoord,
         currentNode.xcoord - prevNode.xcoord,
       );
-    const angleDeg = (angle * 180) / Math.PI;
+    let angleDeg = (angle * 180) / Math.PI;
 
-    if (angleDeg > 0) {
+    if (angleDeg < -180) angleDeg += 360;
+    if (angleDeg > 180) angleDeg -= 360;
+
+    if (angleDeg > 20) {
       return "Turn right";
-    } else if (angleDeg < 0) {
+    } else if (angleDeg < -20) {
       return "Turn left";
     } else {
       return "Continue straight";

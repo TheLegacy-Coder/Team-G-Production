@@ -1,14 +1,21 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
+import { PathfindingButton } from "../components/PathfindingButton.tsx";
+import {
+  AStarSearch,
+  BreadthFirstSearch,
+  DepthFirstSearch,
+} from "../map/MapNode.ts";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
+  const [currentAlg, setCurrentAlg] = useState<string>("BFS");
 
   function initContext() {
     if (canvasRef.current) {
@@ -44,6 +51,17 @@ export const InteractableMap = () => {
         drawData.setRedraw(true);
       }, 100);
     }
+  }
+
+  function changeAlgorithm(newAlg: string) {
+    if (newAlg === "BFS") {
+      algorithm.setSearchStrategy(new BreadthFirstSearch());
+    } else if (newAlg === "A*") {
+      algorithm.setSearchStrategy(new AStarSearch());
+    } else if (newAlg === "DFS") {
+      algorithm.setSearchStrategy(new DepthFirstSearch());
+    }
+    setCurrentAlg(newAlg);
   }
 
   return (
@@ -133,6 +151,10 @@ export const InteractableMap = () => {
       >
         L2
       </button>
+      <PathfindingButton
+        algorithm={currentAlg}
+        handleChange={changeAlgorithm}
+      />
       <canvas
         onMouseMove={mouse.mouseMove}
         onMouseUp={mouse.mouseUp}
