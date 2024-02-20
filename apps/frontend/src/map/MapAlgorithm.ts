@@ -16,7 +16,9 @@ class MapAlgorithm {
       if (drawData.floors[i].length === 1)
         drawData.floors[i] = "F" + drawData.floors[i];
       const scaleID = document.querySelector("#" + drawData.floors[i]);
-      scaleID!.classList.add("path-floor");
+      if (scaleID !== null) {
+        scaleID!.classList.add("path-floor");
+      }
     }
   }
 

@@ -90,6 +90,8 @@ class Draw {
           }
         });
 
+        draw.drawFloorChange();
+
         if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
 
         let pathInView = true;
@@ -121,6 +123,31 @@ class Draw {
       return inString.length;
     }
     return prevNum;
+  }
+
+  private drawFloorChange() {
+    let index = 0;
+    drawData.getSwitchNodes().forEach((node) => {
+      if (node.floor === drawData.currentFloor) {
+        ctx!.beginPath();
+        ctx!.fillStyle = "#ffffff";
+        ctx!.strokeStyle = "#000000";
+        ctx!.fillRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.strokeRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.fill();
+        ctx!.stroke();
+        ctx!.beginPath();
+        ctx!.textAlign = "center";
+        ctx!.fillStyle = "#000000";
+        ctx!.fillText(
+          "Floor: " + drawData.getSwitchFloors()[index],
+          node.xcoord,
+          node.ycoord - 25,
+        );
+        ctx!.fill();
+      }
+      index++;
+    });
   }
   private drawNodeDetails(node: MapNode) {
     ctx!.fillStyle = "#FFFFFF";
