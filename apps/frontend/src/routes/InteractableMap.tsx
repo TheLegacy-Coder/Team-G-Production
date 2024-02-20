@@ -89,9 +89,18 @@ export const InteractableMap = () => {
         O
       </button>
       <label className={"toggle-button"}>
-        One
-        <input type="checkbox" defaultChecked={true} />
+        <input
+          type="checkbox"
+          id={"edges"}
+          defaultChecked={true}
+          onChange={() => {
+            console.log("Changed");
+            const edges = document.getElementById("edges") as HTMLInputElement;
+            console.log(edges.checked);
+          }}
+        />
         <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Nodes</p>
       </label>
       <button
         id={"F3"}

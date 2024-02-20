@@ -73,7 +73,7 @@
 /* Overall Toggle Button*/
 .toggle-button {
   position: fixed;
-  transform: translate(20px, 50px);
+  transform: translate(10px, 50px);
   cursor: pointer;
 }
 
@@ -86,8 +86,8 @@
   width: 0;
 }
 
-.toggle-button input:checked ~ .checkmark {
-  background-color: #ffffff;
+.toggle-button input:checked ~ .toggle-nodes {
+  background-color: #00284f;
 }
 
 /* toggle edges checkbox*/
@@ -97,5 +97,11 @@
   width: 30px;
   height: 30px;
   color: white;
-  background-color: #00284f;
+  background-color: #ffffff;
+  border-radius: 25px;
+  border: 2px solid black;
+}
+
+.toggle-nodes-text {
+  transform: translateX(40px);
 }
