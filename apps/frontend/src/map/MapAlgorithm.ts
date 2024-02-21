@@ -35,7 +35,7 @@ class MapAlgorithm {
 
   public searchAlg() {
     // filters path not on floor
-    const unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
+    drawData.unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
       this.startNode,
       this.endNode,
     );
@@ -49,7 +49,7 @@ class MapAlgorithm {
     drawData.setPathHighest(0, 0);
 
     let prevNode: undefined | MapNode = undefined;
-    unfilteredPath.forEach((node) => {
+    drawData.unfilteredPath.forEach((node) => {
       if (node.floor === drawData.currentFloor) drawData.path.push(node);
       if (!drawData.floors.includes(node.floor))
         drawData.floors.push(node.floor);

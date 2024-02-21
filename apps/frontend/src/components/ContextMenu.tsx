@@ -63,7 +63,7 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<LocationDropdown />}
-          lable={"Location Dropdown"}
+          lable={"Directions"}
           style={"context-menu-tab"}
         />
 

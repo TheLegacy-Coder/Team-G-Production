@@ -7,6 +7,7 @@ export function initCTX(ctxRef: CanvasRenderingContext2D | null) {
 }
 
 class DrawData {
+  public unfilteredPath: MapNode[] = [];
   public floors: string[] = [];
   public pathLowest: { x: number; y: number } = { x: 0, y: 0 };
   public pathHighest: { x: number; y: number } = { x: 0, y: 0 };

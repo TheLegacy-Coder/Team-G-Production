@@ -4,7 +4,7 @@ import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
 
 const TextDirections: React.FC = () => {
-  const path = drawData.path.slice().reverse();
+  const path = drawData.unfilteredPath.slice().reverse();
 
   const getTurnDirection = (
     prevNode: MapNode,
@@ -25,7 +25,13 @@ const TextDirections: React.FC = () => {
     if (angleDeg < -180) angleDeg += 360;
     if (angleDeg > 180) angleDeg -= 360;
 
-    if (angleDeg > 20) {
+    if (drawData.getSwitchNodes().includes(currentNode)) {
+      const switchFloor =
+        drawData.getSwitchFloors()[
+          drawData.getSwitchNodes().indexOf(currentNode)
+        ];
+      return `Go to Floor ${switchFloor}`;
+    } else if (angleDeg > 20) {
       return "Turn right";
     } else if (angleDeg < -20) {
       return "Turn left";
@@ -60,6 +66,12 @@ const TextDirections: React.FC = () => {
         return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
       } else if (mapNode.nodeType !== "HALL") {
         return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      } else if (drawData.getSwitchNodes().includes(mapNode)) {
+        const switchFloor =
+          drawData.getSwitchFloors()[
+            drawData.getSwitchNodes().indexOf(mapNode)
+          ];
+        return `Go to Floor ${switchFloor}`;
       } else {
         return "";
       }
