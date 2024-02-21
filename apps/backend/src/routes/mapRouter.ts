@@ -1,8 +1,14 @@
 import express, { Router, Request, Response } from "express";
 import PrismaClient from "../bin/database-connection.ts";
 import { Prisma } from "database";
+import { auth } from "express-oauth2-jwt-bearer";
 
 const router: Router = express.Router();
+
+const checkJwt = auth({
+  audience: "/api",
+  issuerBaseURL: `https://dev-1uv1d12i66i3umpd.us.auth0.com/`,
+});
 
 // router.post("/", async function (req: Request, res: Response) {
 //   const highScoreAttempt: Prisma.HighScoreCreateInput = req.body;
@@ -58,7 +64,7 @@ router.get("/nodes", async function (req: Request, res: Response) {
   }
 });
 
-router.post("/nodes", async function (req: Request, res: Response) {
+router.post("/nodes", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
   if (req.body.deleteAll) {
@@ -86,7 +92,7 @@ router.post("/nodes", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
-router.delete("/nodes", async function (req: Request, res: Response) {
+router.delete("/nodes", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
   console.log(req.body.deleteIDs);
@@ -135,7 +141,7 @@ router.get("/edges", async function (req: Request, res: Response) {
   }
 });
 
-router.post("/edges", async function (req: Request, res: Response) {
+router.post("/edges", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
   if (req.body.deleteAll) {
@@ -163,7 +169,7 @@ router.post("/edges", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
-router.delete("/edges", async function (req: Request, res: Response) {
+router.delete("/edges", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.body.deleteAll);
   console.log(req.body.deleteIDs);

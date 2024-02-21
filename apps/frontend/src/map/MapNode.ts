@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { DispatchWithoutAction } from "react";
+import { getEdgesAxios, getNodesAxios } from "../DataAsObject/mapNodesAxios.ts";
 
 export type MapNode = {
   nodeID: string;
@@ -44,16 +45,14 @@ export function getMapNodesEdges() {
   mapNodes.clear();
   mapEdges.clear();
   return new Promise((resolve, reject) => {
-    axios
-      .get("http://localhost:3000/api/map/nodes")
+    getNodesAxios()
       .then((response: AxiosResponse<MapNode[]>) => {
         response.data.forEach((node) => {
           node.edges = [];
           mapNodes.set(node.nodeID, node);
         });
 
-        axios
-          .get("http://localhost:3000/api/map/edges")
+        getEdgesAxios()
           .then((response: AxiosResponse<Edge[]>) => {
             response.data.forEach((edge) => {
               const n1 = mapNodes.get(edge.startNode);

@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
-import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
+import {
+  addEmployeeAxios,
+  addMultipleEmployeesAxios,
+  deleteEmployeeAxios,
+  editEmployeeAxios,
+  getEmployeesAxios,
+} from "../DataAsObject/employeesAxios.ts";
 
 type State = "none" | "add" | "edit";
 
@@ -10,9 +16,7 @@ export interface EmployeeWrapper {
 }
 
 async function getEmployees(): Promise<EmployeeWrapper> {
-  return axios.get("http://localhost:3000/api/employees", {
-    params: { getAll: true },
-  });
+  return getEmployeesAxios("true", "");
 }
 
 export const ViewEmployees = () => {
@@ -65,18 +69,10 @@ export const ViewEmployees = () => {
     if (
       window.confirm(`Are you sure you want to delete employee ${employeeID}?`)
     ) {
-      try {
-        axios
-          .delete("http://localhost:3000/api/employees", {
-            data: { employeeID: employeeID },
-          })
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
-      } catch (error) {
-        console.error("Error deleting employee:", error);
-      }
+      deleteEmployeeAxios(employeeID).then(() => {
+        getAndSetEmployees();
+        setState("none");
+      });
     }
   };
 
@@ -99,27 +95,19 @@ export const ViewEmployees = () => {
 
     if (state === "edit") {
       try {
-        axios
-          .patch("http://localhost:3000/api/employees", data, {})
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        editEmployeeAxios(data).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
     } else if (state === "add") {
       try {
-        axios
-          .post(
-            "http://localhost:3000/api/employees",
-            { employees: [data] },
-            {},
-          )
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        addEmployeeAxios([data]).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
@@ -168,15 +156,10 @@ export const ViewEmployees = () => {
       console.log(importedMapEmployees);
 
       // post all new employees & replace all old ones
-      axios
-        .post("http://localhost:3000/api/employees", {
-          deleteAll: true,
-          employees: importedMapEmployees,
-        })
-        .then(() => {
-          // update local store
-          getAndSetEmployees();
-        });
+      addMultipleEmployeesAxios("true", importedMapEmployees).then(() => {
+        // update local store
+        getAndSetEmployees();
+      });
       e.target.value = "";
     };
     reader.readAsText(file);
