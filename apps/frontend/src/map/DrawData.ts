@@ -25,9 +25,19 @@ class DrawData {
   public switchNodes: MapNode[] = [];
   public switchFloors: string[] = [];
 
+  public allSwitchNodes: MapNode[] = [];
+  public allSwitchFloors: string[] = [];
   public setSwitchNodes(switchedNodes: MapNode[], switchedFloors: string[]) {
     this.switchNodes = switchedNodes;
     this.switchFloors = switchedFloors;
+  }
+
+  public setAllSwitchNodes(
+    allSwitchNodes: MapNode[],
+    allSwitchFloors: string[],
+  ) {
+    this.allSwitchNodes = allSwitchNodes;
+    this.allSwitchFloors = allSwitchFloors;
   }
 
   public getSwitchNodes() {

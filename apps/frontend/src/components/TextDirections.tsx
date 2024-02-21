@@ -62,16 +62,18 @@ const TextDirections: React.FC = () => {
       if (angleDeg < -180) angleDeg += 360;
       if (angleDeg > 180) angleDeg -= 360;
 
-      if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
+      if (drawData.allSwitchNodes.includes(mapNode)) {
+        const switchFloor =
+          drawData.allSwitchFloors[drawData.allSwitchNodes.indexOf(mapNode)];
+        if (switchFloor === mapNode.floor) {
+          return `Exit ${mapNode.longName} onto floor ${switchFloor}`;
+        } else {
+          return `Go to Floor ${switchFloor} from ${mapNode.longName}`;
+        }
+      } else if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
         return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
       } else if (mapNode.nodeType !== "HALL") {
         return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
-      } else if (drawData.getSwitchNodes().includes(mapNode)) {
-        const switchFloor =
-          drawData.getSwitchFloors()[
-            drawData.getSwitchNodes().indexOf(mapNode)
-          ];
-        return `Go to Floor ${switchFloor}`;
       } else {
         return "";
       }

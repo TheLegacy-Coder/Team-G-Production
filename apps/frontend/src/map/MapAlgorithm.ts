@@ -43,6 +43,9 @@ class MapAlgorithm {
     const switchedNodes: MapNode[] = [];
     const switchedFloors: string[] = [];
 
+    const allSwitchNodes: MapNode[] = [];
+    const allSwitchFloors: string[] = [];
+
     drawData.clearFloors();
 
     drawData.setPathLowest(this.imageWidth, this.imageHeight);
@@ -61,11 +64,17 @@ class MapAlgorithm {
           switchedNodes.push(prevNode);
           switchedFloors.push(node.floor);
         }
+
+        allSwitchNodes.push(prevNode);
+        allSwitchFloors.push(prevNode.floor);
+        allSwitchNodes.push(node);
+        allSwitchFloors.push(prevNode.floor);
       }
       prevNode = node;
     });
 
     drawData.setSwitchNodes(switchedNodes, switchedFloors);
+    drawData.setAllSwitchNodes(allSwitchNodes, allSwitchFloors);
 
     this.setFloorButtons();
 
