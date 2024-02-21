@@ -76,7 +76,7 @@ export function ContextMenu() {
                   content={<Charts />}
                   lable={"Charts"}
                   protected={true}
-                  admin={true}
+                  admin={false}
                   style={"context-menu-tab-admin"}
                 />
                 <ContextMenuRouterButton

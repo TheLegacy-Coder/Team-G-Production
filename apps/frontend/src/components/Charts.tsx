@@ -49,13 +49,6 @@ export const Charts = () => {
     statsMap.set(employee.employeeID, { completed: 0 });
   });
   console.log(employeeRegistry);
-  // const serviceRequestType = [
-  //     { key: "Flowers", data: requestsTypes?.flowers.length },
-  //     { key: "Religious", data: requestsTypes?.religious.length },
-  //     { key: "Sanitation", data: requestsTypes?.sanitation.length },
-  //     { key: "Interpreter", data: requestsTypes?.interpreter.length },
-  //     { key: "Transport", data: requestsTypes?.transport.length },
-  // ];
 
   let serviceRequestType = [
     { key: "Flowers", data: 0 },
@@ -212,47 +205,54 @@ export const Charts = () => {
 
   return (
     <div className={"chart-container"}>
-      <div className={"request-type-container"}>
-        <h4>Service Request Type</h4>
-        <PieChart
-          className={"request-type-container"}
-          data={serviceRequestType}
-          series={
-            <PieArcSeries
-              colorScheme={[
-                "#065b1bFF",
-                "#6F2048FF",
-                "#20486FFF",
-                "#D4A261FF",
-                "#6F4886FF",
-              ]}
-            />
-          }
-        />
+      <div className={"first-row"}>
+        <div className={"request-type-container"}>
+          <h4>Service Request Type</h4>
+          <PieChart
+            className={"request-type-container"}
+            data={serviceRequestType}
+            series={
+              <PieArcSeries
+                colorScheme={[
+                  "#065b1bFF",
+                  "#6F2048FF",
+                  "#20486FFF",
+                  "#D4A261FF",
+                  "#6F4886FF",
+                ]}
+              />
+            }
+          />
+        </div>
       </div>
-      <div className={"request-status-container"}>
-        <h4>Service Request Status</h4>
-        <PieChart
-          className={"request-status-container"}
-          data={serviceRequestStatus}
-          series={
-            <PieArcSeries
-              colorScheme={["#6F2048FF", "#20486FFF", "#065b1bFF"]}
-            />
-          }
-        />
+      <div className={"second-row"}>
+        <div className={"request-status-container"}>
+          <h4>Service Request Status</h4>
+          <PieChart
+            className={"request-status-container"}
+            data={serviceRequestStatus}
+            series={
+              <PieArcSeries
+                colorScheme={["#6F2048FF", "#20486FFF", "#065b1bFF"]}
+              />
+            }
+          />
+        </div>
       </div>
-      <div className={"request-leaderboard-container"}>
-        <h4>Service Request Leaderboard</h4>
-        <RadialGauge
-          className={"request-leaderboard-container"}
-          data={topEmps}
-          startAngle={0}
-          endAngle={Math.PI * 2}
-          minValue={0}
-          maxValue={maxValue}
-          series={<RadialGaugeSeries colorScheme={colorScheme} />}
-        />
+      <div className={"third-row"}>
+        <div className={"request-leaderboard-container"}>
+          <h4>Service Request Leaderboard</h4>
+          <RadialGauge
+            className={"request-leaderboard-container"}
+            data={topEmps}
+            startAngle={0}
+            endAngle={Math.PI * 2}
+            minValue={0}
+            maxValue={maxValue}
+            height={200}
+            series={<RadialGaugeSeries colorScheme={colorScheme} />}
+          />
+        </div>
       </div>
     </div>
   );
