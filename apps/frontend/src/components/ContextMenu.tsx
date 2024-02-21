@@ -12,6 +12,7 @@ import { About } from "./About.tsx";
 import { HelpPage } from "./HelpPage.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
+import { Charts } from "./Charts.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -80,6 +81,13 @@ export function ContextMenu() {
           <>
             {loginStore.loginType === "admin" ? (
               <>
+                <ContextMenuRouterButton
+                  content={<Charts />}
+                  lable={"Charts"}
+                  protected={true}
+                  admin={false}
+                  style={"context-menu-tab-admin"}
+                />
                 <ContextMenuRouterButton
                   content={<Csvs />}
                   lable={"Nodes & Edges"}
