@@ -150,6 +150,8 @@ export const InteractableMap = () => {
 
   return (
     <div
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.mouseUp}
       id={"canvas-container"}
       style={
         {
@@ -200,10 +202,6 @@ export const InteractableMap = () => {
               <Plus size={50} />
             </button>
           </div>
-          <PathfindingButton
-            algorithm={currentAlg}
-            handleChange={changeAlgorithm}
-          />
         </div>
 
         <div className={"toggle-button-container"}>
@@ -223,6 +221,12 @@ export const InteractableMap = () => {
             onClick={() => toggleButtons("halls")}
           />
         </div>
+      </div>
+      <div className={"map-top-left-search-button"}>
+        <PathfindingButton
+          algorithm={currentAlg}
+          handleChange={changeAlgorithm}
+        />
       </div>
 
       <div className={"map-bottom-left-buttons"}>
@@ -281,8 +285,6 @@ export const InteractableMap = () => {
       </div>
       <canvas
         id={"map-canvas"}
-        onMouseMove={mouse.mouseMove}
-        onMouseUp={mouse.mouseUp}
         onMouseDown={mouse.mouseDown}
         onWheel={mouse.mouseScroll}
         ref={canvasRef}
@@ -292,3 +294,6 @@ export const InteractableMap = () => {
     </div>
   );
 };
+/* onMouseMove={mouse.mouseMove}
+        onMouseUp={mouse.mouseUp}
+        onWheel={mouse.mouseScroll}*/

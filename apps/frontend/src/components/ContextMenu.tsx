@@ -13,6 +13,7 @@ import { HelpPage } from "./HelpPage.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
 import { Charts } from "./Charts.tsx";
+import { mouse } from "../map/Mouse.ts";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -20,7 +21,12 @@ export function ContextMenu() {
   loginStore.navbarRefreshHook = forceUpdate;
   contextMenuState.render = forceUpdate;
   return (
-    <div className={contextMenuState.showingClass} style={{ display: "flex" }}>
+    <div
+      className={contextMenuState.showingClass}
+      style={{ display: "flex" }}
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.mouseUp}
+    >
       <div className={"context-menu-nav"}>
         <div
           className={"context-menu-toggle"}

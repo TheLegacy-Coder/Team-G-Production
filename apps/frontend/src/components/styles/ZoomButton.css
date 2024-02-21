@@ -7,6 +7,16 @@
   gap: 8px;
 }
 
+.map-top-left-search-button {
+  position: fixed;
+  margin-top: 8px;
+  margin-left: 196px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  gap: 8px;
+}
+
 .map-bottom-left-buttons {
   position: fixed;
   bottom: 55px;
