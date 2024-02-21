@@ -24,7 +24,10 @@ drawData.image.onload = () => {
 
 class Draw {
   private drawStep = 0;
-  private showEdges = false;
+  //private showEdges = false;
+  public showNodes = true;
+  public showEdges = false;
+  public showHalls = false;
   public drawCanvas() {
     if (drawData.redraw) {
       // verifies canvas context is set up
@@ -70,7 +73,11 @@ class Draw {
         }
 
         mapNodes.forEach((node) => {
-          if (node.floor === drawData.currentFloor) {
+          if (
+            node.floor === drawData.currentFloor &&
+            ((draw.showNodes && node.nodeType !== "HALL") ||
+              (draw.showHalls && node.nodeType === "HALL"))
+          ) {
             ctx!.beginPath();
             ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
             ctx!.fillStyle =
@@ -80,7 +87,9 @@ class Draw {
                   ? "#00ffff"
                   : hoverNode == node
                     ? "#0000FF"
-                    : "#FF0000";
+                    : drawData.getSwitchNodes().includes(node)
+                      ? "#ffff00"
+                      : "#FF0000";
             ctx!.fill();
             ctx!.lineWidth = 5;
             ctx!.strokeStyle = "#330000";
@@ -88,7 +97,13 @@ class Draw {
           }
         });
 
-        if (hoverNode !== undefined) draw.drawNodeDetails(hoverNode);
+        draw.drawFloorChange();
+        if (
+          hoverNode !== undefined &&
+          ((draw.showNodes && hoverNode.nodeType !== "HALL") ||
+            (draw.showHalls && hoverNode.nodeType === "HALL"))
+        )
+          draw.drawNodeDetails(hoverNode);
 
         let pathInView = true;
         if (mouse.inView()) {
@@ -100,25 +115,49 @@ class Draw {
           currentSelectedFloor = "F" + currentSelectedFloor;
         }
         if (
-          getStartNode() === undefined ||
-          getEndNode() === undefined ||
-          !drawData.floors.includes(currentSelectedFloor) ||
-          !pathInView
+          (getStartNode() === undefined ||
+            getEndNode() === undefined ||
+            !drawData.floors.includes(currentSelectedFloor) ||
+            !pathInView) &&
+          mapNodes.size !== 0
         )
           drawData.setRedraw(false);
       }
     }
     setTimeout(draw.drawCanvas, 16);
   }
-  public toggleEdges() {
-    draw.showEdges = !draw.showEdges;
-    drawData.setRedraw(true);
-  }
+
   public getContentWidth(prevNum: number, inString: string): number {
     if (inString.length > prevNum) {
       return inString.length;
     }
     return prevNum;
+  }
+
+  private drawFloorChange() {
+    ctx!.font = "bold 12pt Courier";
+    let index = 0;
+    drawData.getSwitchNodes().forEach((node) => {
+      if (node.floor === drawData.currentFloor) {
+        ctx!.beginPath();
+        ctx!.fillStyle = "#ffffff";
+        ctx!.strokeStyle = "#000000";
+        ctx!.fillRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.strokeRect(node.xcoord - 55, node.ycoord - 40, 110, 20);
+        ctx!.fill();
+        ctx!.stroke();
+        ctx!.beginPath();
+        ctx!.textAlign = "center";
+        ctx!.fillStyle = "#000000";
+        ctx!.fillText(
+          "Floor: " + drawData.getSwitchFloors()[index],
+          node.xcoord,
+          node.ycoord - 25,
+        );
+        ctx!.fill();
+      }
+      index++;
+    });
   }
   private drawNodeDetails(node: MapNode) {
     ctx!.fillStyle = "#FFFFFF";

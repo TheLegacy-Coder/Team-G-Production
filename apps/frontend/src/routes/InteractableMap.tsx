@@ -1,14 +1,21 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
+import { PathfindingButton } from "../components/PathfindingButton.tsx";
+import {
+  AStarSearch,
+  BreadthFirstSearch,
+  DepthFirstSearch,
+} from "../map/MapNode.ts";
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
+  const [currentAlg, setCurrentAlg] = useState<string>("BFS");
 
   function initContext() {
     if (canvasRef.current) {
@@ -46,6 +53,29 @@ export const InteractableMap = () => {
     }
   }
 
+  function toggleButtons(id: string) {
+    const toggle = document.getElementById(id) as HTMLInputElement;
+    if (id === "nodes") {
+      draw.showNodes = toggle.checked;
+    } else if (id === "edges") {
+      draw.showEdges = toggle.checked;
+    } else if (id === "halls") {
+      draw.showHalls = toggle.checked;
+    }
+    drawData.setRedraw(true);
+  }
+
+  function changeAlgorithm(newAlg: string) {
+    if (newAlg === "BFS") {
+      algorithm.setSearchStrategy(new BreadthFirstSearch());
+    } else if (newAlg === "A*") {
+      algorithm.setSearchStrategy(new AStarSearch());
+    } else if (newAlg === "DFS") {
+      algorithm.setSearchStrategy(new DepthFirstSearch());
+    }
+    setCurrentAlg(newAlg);
+  }
+
   return (
     <div
       style={
@@ -80,14 +110,42 @@ export const InteractableMap = () => {
       >
         ↺
       </button>
-      <button
-        className={"zoom-button whole-graph-button"}
-        onClick={() => {
-          draw.toggleEdges();
-        }}
-      >
-        O
-      </button>
+      <label className={"toggle-button"}>
+        <input
+          type="checkbox"
+          id={"nodes"}
+          defaultChecked={draw.showNodes}
+          onChange={() => {
+            toggleButtons("nodes");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Nodes</p>
+      </label>
+      <label className={"toggle-button trans-edges"}>
+        <input
+          type="checkbox"
+          id={"edges"}
+          defaultChecked={draw.showEdges}
+          onChange={() => {
+            toggleButtons("edges");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Edges</p>
+      </label>
+      <label className={"toggle-button trans-halls"}>
+        <input
+          type="checkbox"
+          id={"halls"}
+          defaultChecked={draw.showHalls}
+          onChange={() => {
+            toggleButtons("halls");
+          }}
+        />
+        <span className={"toggle-nodes"}></span>
+        <p className={"toggle-nodes-text"}>Toggle Halls</p>
+      </label>
       <button
         id={"F3"}
         className={"zoom-button third-floor"}
@@ -95,7 +153,7 @@ export const InteractableMap = () => {
           changeMap("3", "03_thethirdfloor.png");
         }}
       >
-        F3
+        3
       </button>
       <button
         id={"F2"}
@@ -104,7 +162,7 @@ export const InteractableMap = () => {
           changeMap("2", "02_thesecondfloor.png");
         }}
       >
-        F2
+        2
       </button>
       <button
         id={"F1"}
@@ -113,7 +171,7 @@ export const InteractableMap = () => {
           changeMap("1", "01_thefirstfloor.png");
         }}
       >
-        F1
+        1
       </button>
       <button
         id={"L1"}
@@ -133,6 +191,10 @@ export const InteractableMap = () => {
       >
         L2
       </button>
+      <PathfindingButton
+        algorithm={currentAlg}
+        handleChange={changeAlgorithm}
+      />
       <canvas
         onMouseMove={mouse.mouseMove}
         onMouseUp={mouse.mouseUp}

@@ -21,6 +21,22 @@ class DrawData {
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
 
+  public switchNodes: MapNode[] = [];
+  public switchFloors: string[] = [];
+
+  public setSwitchNodes(switchedNodes: MapNode[], switchedFloors: string[]) {
+    this.switchNodes = switchedNodes;
+    this.switchFloors = switchedFloors;
+  }
+
+  public getSwitchNodes() {
+    return this.switchNodes;
+  }
+
+  public getSwitchFloors() {
+    return this.switchFloors;
+  }
+
   public setPathLowest(pathX: number, pathY: number) {
     drawData.pathLowest = { x: pathX, y: pathY };
   }
