@@ -16,7 +16,7 @@ import { drawData, ctx } from "./DrawData.ts";
 //Draws on canvas when map image loaded
 drawData.image.onload = () => {
   setTimeout(() => {
-    mouse.homePosition();
+    mouse.homePosition(drawData.currentFloor);
     draw.drawCanvas();
     drawData.setRedraw(true);
   }, 50);

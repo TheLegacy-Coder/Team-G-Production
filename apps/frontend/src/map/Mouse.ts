@@ -47,8 +47,12 @@ class Mouse {
 
   // zooms to a point
   public zoom(zoom: number, xCoord: number, yCoord: number) {
-    if (drawData.scalar * zoom > 0.3 && drawData.scalar * zoom < 2) {
-      //scalar *= zoom;
+    if (
+      (drawData.scalar * zoom * this.imageWidth > window.innerWidth ||
+        drawData.scalar * zoom * this.imageHeight > window.innerHeight) &&
+      (drawData.scalar * zoom * this.imageWidth < window.innerWidth * 10 ||
+        drawData.scalar * zoom * this.imageHeight < window.innerHeight * 10)
+    ) {
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -69,7 +73,7 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
+    console.log(
       "In view X:\nPath lowest: " +
         drawData.pathLowest.x +
         "\nPath Highest: " +
@@ -86,7 +90,7 @@ class Mouse {
         drawData.upleftCorner!.y +
         "\nDown right: " +
         drawData.downrightCorner!.y,
-    );*/
+    );
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
@@ -103,16 +107,50 @@ class Mouse {
     }
     return result;
   }
+
+  private setDim(startX: number, endX: number, startY: number, endY: number) {
+    let posScale;
+    const annHeight = 55;
+    const heightDiff = endY - startY;
+    const widthDiff = endX - startX;
+    if (
+      (window.innerHeight - annHeight) / heightDiff <
+      window.innerWidth / widthDiff
+    ) {
+      posScale = (window.innerHeight - annHeight) / heightDiff;
+    } else {
+      posScale = window.innerWidth / widthDiff;
+    }
+    const posX =
+      -(startX - (window.innerWidth - widthDiff * posScale) / 2) * posScale;
+    const posY =
+      -(startY - (window.innerHeight + annHeight - heightDiff * posScale) / 2) *
+      posScale;
+    return { x: posX, y: posY, scale: posScale };
+  }
+
   // resets map position to a default position
-  public homePosition() {
+  public homePosition(homeFloor: string) {
     if (ctx === null) {
       return;
     }
-    ctx!.translate(-1200, -400);
+    let dim = { x: 0, y: 0, scale: 1 };
+
+    if (homeFloor === "3") {
+      dim = this.setDim(1210, 2890, 750, 3060);
+    } else if (homeFloor === "2") {
+      dim = this.setDim(1260, 4670, 350, 2880);
+    } else if (homeFloor === "1") {
+      dim = this.setDim(960, 3280, 680, 2980);
+    } else if (homeFloor === "L1") {
+      dim = this.setDim(1620, 2790, 820, 2400);
+    } else if (homeFloor === "L2") {
+      dim = this.setDim(1490, 2380, 780, 2930);
+    }
+    ctx!.translate(dim.x, dim.y);
     drawData.updateCoords();
-    //scalar = 0.75;
-    drawData.setScalar(0.75);
-    ctx!.scale(0.75, 0.75);
+    drawData.setScalar(dim.scale);
+    ctx!.scale(dim.scale, dim.scale);
     drawData.updateCoords();
     this.boundCoords();
     const scaleID = document.querySelector("#scalar");
@@ -133,17 +171,21 @@ class Mouse {
       if (drawData.currentFloor === floor) {
         newFloor = false;
       }
-      drawData.resetMap(newFloor);
-      //currentFloor = floor;
+      const hasPath = drawData.resetMap(newFloor);
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);
-      this.homePosition();
-      mouse.newMap = true;
+      this.homePosition(floor);
       ctx!.restore();
       drawData.setScalar(tempScalar);
+      if (!hasPath) {
+        drawData.resetMap(newFloor);
+        this.homePosition(floor);
+      }
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
       drawData.resetPath();
+      mouse.newMap = true;
+
       return true;
     }
     return false;

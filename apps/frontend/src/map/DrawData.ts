@@ -124,7 +124,11 @@ class DrawData {
   public setRedraw(value: boolean) {
     this.redraw = value;
   }
-  public resetMap(newFloor: boolean) {
+  public resetMap(newFloor: boolean): boolean {
+    let hasPath = false;
+    if (this.path.length > 0) {
+      hasPath = true;
+    }
     if (newFloor) {
       this.resetPath();
     }
@@ -134,6 +138,7 @@ class DrawData {
     ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
     this.updateCoords();
     this.setRedraw(true);
+    return hasPath;
   }
 }
 
