@@ -1,10 +1,14 @@
 import React from "react";
-import { MapNode } from "../map/MapNode.ts";
+import { getEndNode, getStartNode, MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
 
 const TextDirections: React.FC = () => {
-  const path = drawData.unfilteredPath.slice().reverse();
+  let path: MapNode[] = [];
+
+  if (getStartNode() && getEndNode()) {
+    path = drawData.unfilteredPath.slice().reverse();
+  }
 
   const getTurnDirection = (
     prevNode: MapNode,
