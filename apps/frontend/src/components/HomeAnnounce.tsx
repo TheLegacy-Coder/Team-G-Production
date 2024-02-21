@@ -23,7 +23,7 @@ export const HomeAnnounce = () => {
     }
     refreshAnnouncements();
 
-    setTimeout(checkUpdates, 10000);
+    setTimeout(checkUpdates, 600000);
   }
 
   const announcementArray = announcements;
@@ -44,7 +44,7 @@ export const HomeAnnounce = () => {
   const divWidth = divRef === null ? 100 : divRef.getBoundingClientRect().width;
   const pxps = 25;
   if (divRef === null) {
-    setTimeout(forceUpdate, 100);
+    setTimeout(forceUpdate, 1000);
   }
 
   const textLength = text.length * 9; //approximate pixel size for 32px font

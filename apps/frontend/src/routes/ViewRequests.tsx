@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
-import axios, { AxiosResponse } from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
   AllServiceRequests,
@@ -12,15 +11,13 @@ import {
   ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
-import { EmployeeWrapper } from "./ViewEmployees.tsx";
+import {
+  changeStatusAxios,
+  getAllAxios,
+  getFromEmployeeAxios,
+} from "../DataAsObject/serviceRequestsAxios.ts";
 import { Employee } from "common/src/Employee.ts";
-//import {number} from "prop-types";
-
-async function getEmployees(): Promise<EmployeeWrapper> {
-  return axios.get("http://localhost:3000/api/employees", {
-    params: { getAll: true },
-  });
-}
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -39,7 +36,7 @@ export const RequestsTable = ({
   const [employees, setEmployees] = useState<Employee[]>([]);
   // Get employees from DB and store them in state
   const getAndSetEmployees = () => {
-    getEmployees().then((list) => {
+    getEmployeesAxios("true", "").then((list) => {
       if (list !== undefined) {
         setEmployees(list.data);
       }
@@ -49,20 +46,9 @@ export const RequestsTable = ({
   useEffect(getAndSetEmployees, []);
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
-    axios
-      .patch("http://localhost:3000/api/services/requests", {
-        requestID: requestID,
-        status: newStatus,
-      })
-      .then((response) => {
-        // Update the requests in state
-        updateRequests();
-        return response.data;
-      })
-      .catch((error) => {
-        console.error("Error fetching service requests:", error);
-        return undefined;
-      });
+    changeStatusAxios(requestID, newStatus).then(() => {
+      updateRequests();
+    });
   };
 
   // Render a select element for the status cell of a request
@@ -242,7 +228,6 @@ export const RequestsTable = ({
       );
       break;
   }
-
   return (
     <>
       <div className="filter">
@@ -306,21 +291,15 @@ export const ViewRequests = () => {
   // Get requests from DB and store them in state
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
-      axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { getAll: true },
-        })
-        .then((res: AxiosResponse<AllServiceRequests>) => {
-          setRequests(res.data);
-        });
+      getAllAxios().then((res) => {
+        setRequests(res.data);
+      });
     } else {
-      axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { employeeID: currentEmployee?.employeeID },
-        })
-        .then((res: AxiosResponse<AllServiceRequests>) => {
+      getFromEmployeeAxios(currentEmployee?.employeeID as string).then(
+        (res) => {
           setRequests(res.data);
-        });
+        },
+      );
     }
   };
 
