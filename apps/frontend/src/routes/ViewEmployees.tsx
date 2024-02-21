@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
 import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
+import {
+  deleteEmployeeAxios,
+  getEmployeesAxios,
+} from "../DataAsObject/employeesAxios.ts";
 
 type State = "none" | "add" | "edit";
 
@@ -10,9 +14,7 @@ export interface EmployeeWrapper {
 }
 
 async function getEmployees(): Promise<EmployeeWrapper> {
-  return axios.get("http://localhost:3000/api/employees", {
-    params: { getAll: true },
-  });
+  return getEmployeesAxios("true", "");
 }
 
 export const ViewEmployees = () => {
@@ -66,14 +68,10 @@ export const ViewEmployees = () => {
       window.confirm(`Are you sure you want to delete employee ${employeeID}?`)
     ) {
       try {
-        axios
-          .delete("http://localhost:3000/api/employees", {
-            data: { employeeID: employeeID },
-          })
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        deleteEmployeeAxios(employeeID).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error deleting employee:", error);
       }

@@ -17,7 +17,7 @@ import "./styles/ServiceRequestForm.css";
 import { ServiceRequests } from "./ServiceRequests.tsx";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { serviceRequestPost } from "../DataAsObject/serviceRequestsAxios.ts";
-import { getEmployees } from "../DataAsObject/employeesAxios.ts";
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 export interface ServiceRequestProps {
   requestType: RequestType;
@@ -160,7 +160,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   useEffect(() => {
     // Fetch employee names using API call and update the state
     const fetchEmployeeNamesAndIDS = async () => {
-      getEmployees("false", jobs).then((res) => {
+      getEmployeesAxios("false", jobs).then((res) => {
         setEmployees(res.data);
       });
     };
