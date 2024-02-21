@@ -1,8 +1,14 @@
 import express, { Router, Request, Response } from "express";
 import PrismaClient from "../bin/database-connection.ts";
 import { Prisma } from "database";
+import { auth } from "express-oauth2-jwt-bearer";
 
 const router: Router = express.Router();
+
+const checkJwt = auth({
+  audience: "/api",
+  issuerBaseURL: `https://dev-1uv1d12i66i3umpd.us.auth0.com/`,
+});
 
 router.get("/", async function (req: Request, res: Response) {
   console.log("req");
@@ -16,7 +22,7 @@ router.get("/", async function (req: Request, res: Response) {
   }
 });
 
-router.post("/", async function (req: Request, res: Response) {
+router.post("/", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   const requestAttempt: Prisma.AnnouncementCreateInput = req.body;
 
@@ -33,7 +39,7 @@ router.post("/", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
-router.delete("/", async function (req: Request, res: Response) {
+router.delete("/", checkJwt, async function (req: Request, res: Response) {
   console.log(req);
 
   try {
