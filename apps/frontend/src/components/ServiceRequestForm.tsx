@@ -170,7 +170,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   return (
     <div className={"service-request-container"}>
       {submitted ? (
-        <>
+        <div className={"submitted-container"}>
           <svg
             className="checkmark"
             xmlns="http://www.w3.org/2000/svg"
@@ -197,10 +197,11 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
             content={<ServiceRequests />}
             lable={"Service Request"}
             protected={true}
-            style={"nav-button"}
+            style={"service-request-form-cancel"}
+            button={true}
             customText={"Back"}
           />
-        </>
+        </div>
       ) : (
         <div className={"service-request-form"}>
           <h3 className={"service-request-form-label"}>Description</h3>
