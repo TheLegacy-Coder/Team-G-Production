@@ -35,7 +35,7 @@ class MapAlgorithm {
 
   public searchAlg() {
     // filters path not on floor
-    const unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
+    drawData.unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
       this.startNode,
       this.endNode,
     );
@@ -43,13 +43,16 @@ class MapAlgorithm {
     const switchedNodes: MapNode[] = [];
     const switchedFloors: string[] = [];
 
+    const allSwitchNodes: MapNode[] = [];
+    const allSwitchFloors: string[] = [];
+
     drawData.clearFloors();
 
     drawData.setPathLowest(this.imageWidth, this.imageHeight);
     drawData.setPathHighest(0, 0);
 
     let prevNode: undefined | MapNode = undefined;
-    unfilteredPath.forEach((node) => {
+    drawData.unfilteredPath.forEach((node) => {
       if (node.floor === drawData.currentFloor) drawData.path.push(node);
       if (!drawData.floors.includes(node.floor))
         drawData.floors.push(node.floor);
@@ -61,11 +64,17 @@ class MapAlgorithm {
           switchedNodes.push(prevNode);
           switchedFloors.push(node.floor);
         }
+
+        allSwitchNodes.push(prevNode);
+        allSwitchFloors.push(prevNode.floor);
+        allSwitchNodes.push(node);
+        allSwitchFloors.push(prevNode.floor);
       }
       prevNode = node;
     });
 
     drawData.setSwitchNodes(switchedNodes, switchedFloors);
+    drawData.setAllSwitchNodes(allSwitchNodes, allSwitchFloors);
 
     this.setFloorButtons();
 

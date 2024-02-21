@@ -18,6 +18,7 @@ import {
 } from "../DataAsObject/serviceRequestsAxios.ts";
 import { Employee } from "common/src/Employee.ts";
 import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
+import { nodeStore } from "../map/MapNode.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -34,7 +35,18 @@ export const RequestsTable = ({
   const [filter, setFilter] = useState<string>("All");
   const [employeeFilter, setEmployeeFilter] = useState<string>("All");
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [roomLocation, setlocation] = useState<string>("Select Node");
   // Get employees from DB and store them in state
+
+  useEffect(() => {
+    if (nodeStore.selectedNode?.nodeID !== undefined) {
+      setlocation(nodeStore.selectedNode?.nodeID);
+    } else {
+      setlocation("Select Node");
+    }
+    updateRequests();
+  }, [updateRequests]);
+
   const getAndSetEmployees = () => {
     getEmployeesAxios("true", "").then((list) => {
       if (list !== undefined) {
@@ -77,6 +89,9 @@ export const RequestsTable = ({
   // Render rows for requests based on the selected filter
   const rows: React.ReactElement[] = [];
   requests?.forEach((request) => {
+    if (type === "AtNode" && roomLocation !== request.location) {
+      return;
+    }
     if (
       employeeFilter !== request.helpingEmployee &&
       employeeFilter !== "All"
@@ -93,6 +108,7 @@ export const RequestsTable = ({
       const extraInfo = [];
       switch (type) {
         case "All":
+        case "AtNode":
           switch (request.requestType) {
             case "Flowers":
               extraInfo.push(
@@ -201,6 +217,7 @@ export const RequestsTable = ({
   const extraHeaders = [];
   switch (type) {
     case "All":
+    case "AtNode":
       extraHeaders.push(<th key="extra">Extra Info</th>);
       break;
     case "Flowers":
@@ -287,6 +304,17 @@ export const RequestsTable = ({
 
 export const ViewRequests = () => {
   const [requests, setRequests] = useState<AllServiceRequests>();
+  const [roomLocation, setlocation] = useState<string>("Select Node");
+
+  const node = nodeStore.selectedNode?.nodeID;
+
+  useEffect(() => {
+    if (nodeStore.selectedNode?.nodeID !== undefined) {
+      setlocation(nodeStore.selectedNode?.nodeID);
+    } else {
+      setlocation("Select Node");
+    }
+  }, [node]);
 
   // Get requests from DB and store them in state
   const updateRequests = () => {
@@ -328,6 +356,7 @@ export const ViewRequests = () => {
       <TabSwitcher
         titles={[
           "All",
+          "At Node: " + roomLocation,
           "Flowers",
           "Religious",
           "Sanitation",
@@ -339,6 +368,11 @@ export const ViewRequests = () => {
             updateRequests={updateRequests}
             requests={allRequests}
             type={"All"}
+          />,
+          <RequestsTable
+            updateRequests={updateRequests}
+            requests={allRequests}
+            type={"AtNode"}
           />,
           <RequestsTable
             updateRequests={updateRequests}

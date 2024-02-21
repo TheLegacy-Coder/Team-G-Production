@@ -1,10 +1,14 @@
 import React from "react";
-import { MapNode } from "../map/MapNode.ts";
+import { getEndNode, getStartNode, MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
 
 const TextDirections: React.FC = () => {
-  const path = drawData.path.slice().reverse();
+  let path: MapNode[] = [];
+
+  if (getStartNode() && getEndNode()) {
+    path = drawData.unfilteredPath.slice().reverse();
+  }
 
   const getTurnDirection = (
     prevNode: MapNode,
@@ -25,7 +29,13 @@ const TextDirections: React.FC = () => {
     if (angleDeg < -180) angleDeg += 360;
     if (angleDeg > 180) angleDeg -= 360;
 
-    if (angleDeg > 20) {
+    if (drawData.getSwitchNodes().includes(currentNode)) {
+      const switchFloor =
+        drawData.getSwitchFloors()[
+          drawData.getSwitchNodes().indexOf(currentNode)
+        ];
+      return `Go to Floor ${switchFloor}`;
+    } else if (angleDeg > 20) {
       return "Turn right";
     } else if (angleDeg < -20) {
       return "Turn left";
@@ -42,7 +52,35 @@ const TextDirections: React.FC = () => {
     } else {
       const prevNode = path[index - 1];
       const nextNode = path[index + 1];
-      return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      const angle =
+        Math.atan2(
+          nextNode.ycoord - mapNode.ycoord,
+          nextNode.xcoord - mapNode.xcoord,
+        ) -
+        Math.atan2(
+          mapNode.ycoord - prevNode.ycoord,
+          mapNode.xcoord - prevNode.xcoord,
+        );
+      let angleDeg = (angle * 180) / Math.PI;
+
+      if (angleDeg < -180) angleDeg += 360;
+      if (angleDeg > 180) angleDeg -= 360;
+
+      if (drawData.allSwitchNodes.includes(mapNode)) {
+        const switchFloor =
+          drawData.allSwitchFloors[drawData.allSwitchNodes.indexOf(mapNode)];
+        if (switchFloor === mapNode.floor) {
+          return `Exit ${mapNode.longName} onto floor ${switchFloor}`;
+        } else {
+          return `Go to Floor ${switchFloor} from ${mapNode.longName}`;
+        }
+      } else if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
+        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      } else if (mapNode.nodeType !== "HALL") {
+        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      } else {
+        return "";
+      }
     }
   });
 
