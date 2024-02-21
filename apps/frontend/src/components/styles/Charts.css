@@ -1,0 +1,31 @@
+.chart-container {
+  display: inline-grid;
+  padding: 10px;
+}
+
+.request-type-container {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  width: 300px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.request-status-container {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  width: 300px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.request-leader-container {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  width: 400px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
