@@ -1,8 +1,14 @@
 import express, { Router, Request, Response } from "express";
 import PrismaClient from "../bin/database-connection.ts";
 import { Prisma } from "database";
+import { auth } from "express-oauth2-jwt-bearer";
 
 const router: Router = express.Router();
+
+const checkJwt = auth({
+  audience: "/api",
+  issuerBaseURL: `https://dev-1uv1d12i66i3umpd.us.auth0.com/`,
+});
 
 // router.post("/", async function (req: Request, res: Response) {
 //   const highScoreAttempt: Prisma.HighScoreCreateInput = req.body;
@@ -24,7 +30,7 @@ const router: Router = express.Router();
 // });
 
 // Whenever a get request is made, return the high score
-router.get("/", async function (req: Request, res: Response) {
+router.get("/", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   console.log(req.query.getAll); // string (true or false)
   // console.log((req.query.jobTypes as string).split(",")); // string[]
@@ -97,7 +103,7 @@ router.get("/", async function (req: Request, res: Response) {
   }
 });
 
-router.post("/", async function (req: Request, res: Response) {
+router.post("/", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   const empAttempt: Prisma.EmployeeCreateInput = req.body;
 
@@ -130,7 +136,7 @@ router.delete("/", async function (req: Request, res: Response) {
   res.sendStatus(200);
 });
 
-router.patch("/", async function (req: Request, res: Response) {
+router.patch("/", checkJwt, async function (req: Request, res: Response) {
   console.log("Patch");
   try {
     await PrismaClient.employee.updateMany({

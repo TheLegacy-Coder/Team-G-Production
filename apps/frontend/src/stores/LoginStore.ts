@@ -9,11 +9,14 @@ import { contextMenuState } from "./ContextMenuState.ts";
 export const lock = new Auth0Lock(
   "6pLipx9nvYgidSSoiuodUl23OMScUmgU",
   "dev-1uv1d12i66i3umpd.us.auth0.com",
+
   {
     container: "lock-container",
     rememberLastLogin: false,
     auth: {
-      redirect: false,
+      //redirect: false,
+      responseType: "token id_token",
+      audience: "/api",
     },
 
     theme: {
@@ -41,6 +44,7 @@ export let currentToken = undefined;
 // @ts-expect-error this will complain about no import but it runs due to index.html includes
 lock.on("authenticated", function (authResult) {
   // Use the token in authResult to getUserInfo() and save it if necessary
+  console.log(authResult);
   console.log(
     // @ts-expect-error this will complain about no import but it runs due to index.html includes
     lock.getUserInfo(authResult.accessToken, function (error, profile) {
@@ -52,7 +56,11 @@ lock.on("authenticated", function (authResult) {
       console.log(profile);
       currentProfile = profile as Profile;
       axios
-        .get("http://localhost:3000/api/employees/?getID=" + profile.sub)
+        .get("http://localhost:3000/api/employees/?getID=" + profile.sub, {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
+        })
         .then((response: AxiosResponse<Employee>) => {
           currentEmployee = response.data;
           console.log(currentEmployee);
