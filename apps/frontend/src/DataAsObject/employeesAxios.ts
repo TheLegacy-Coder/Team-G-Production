@@ -53,12 +53,16 @@ export function editEmployeeAxios(data: Employee) {
   });
 }
 
-export function addEmployeeAxios(data: Employee) {
+export function addEmployeeAxios(data: Employee[]) {
   return new Promise((resolve, reject) => {
     axios
-      .post("http://localhost:3000/api/employees", data, {
-        headers: { Authorization: `Bearer ${currentToken}` },
-      })
+      .post(
+        "http://localhost:3000/api/employees",
+        { employees: data },
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        },
+      )
       .then(() => {
         resolve("Edited Employee");
         return;
@@ -67,5 +71,42 @@ export function addEmployeeAxios(data: Employee) {
         reject(error);
         return;
       });
+  });
+}
+
+export function addMultipleEmployeesAxios(
+  deleteAll: string,
+  importedMapEmployees: Employee[],
+) {
+  return new Promise((resolve, reject) => {
+    if (deleteAll == "true") {
+      axios
+        .post("http://localhost:3000/api/employees", {
+          deleteAll: true,
+          employees: importedMapEmployees,
+        })
+        .then(() => {
+          resolve("Added Employees");
+          return;
+        })
+        .catch((error) => {
+          reject(error);
+          return;
+        });
+    } else {
+      axios
+        .post("http://localhost:3000/api/employees", {
+          deleteAll: false,
+          employees: importedMapEmployees,
+        })
+        .then(() => {
+          resolve("Added Employees");
+          return;
+        })
+        .catch((error) => {
+          reject(error);
+          return;
+        });
+    }
   });
 }

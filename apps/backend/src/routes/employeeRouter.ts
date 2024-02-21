@@ -121,7 +121,9 @@ router.post("/", checkJwt, async function (req: Request, res: Response) {
   const employeeAttempt: Prisma.EmployeeCreateManyInput = req.body.employees;
 
   try {
-    await PrismaClient.employee.createMany({ data: employeeAttempt });
+    await PrismaClient.employee.createMany({
+      data: employeeAttempt,
+    });
     console.log("Successfully created Employees");
   } catch (error) {
     console.log("Failed to input employees");

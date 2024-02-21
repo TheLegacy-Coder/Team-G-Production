@@ -16,7 +16,8 @@ import {
   getAllAxios,
   getFromEmployeeAxios,
 } from "../DataAsObject/serviceRequestsAxios.ts";
-
+import { Employee } from "common/src/Employee.ts";
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 interface RequestsTableProps {
   updateRequests: () => void;
@@ -35,7 +36,7 @@ export const RequestsTable = ({
   const [employees, setEmployees] = useState<Employee[]>([]);
   // Get employees from DB and store them in state
   const getAndSetEmployees = () => {
-    getEmployees().then((list) => {
+    getEmployeesAxios("true", "").then((list) => {
       if (list !== undefined) {
         setEmployees(list.data);
       }
@@ -227,7 +228,6 @@ export const RequestsTable = ({
       );
       break;
   }
-
   return (
     <>
       <div className="filter">

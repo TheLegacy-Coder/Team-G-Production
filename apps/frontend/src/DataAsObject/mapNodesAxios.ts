@@ -67,9 +67,7 @@ export function postNodesAxios(
 }
 
 export function getNodesAxios() {
-  return axios.get("http://localhost:3000/api/map/nodes", {
-    headers: { Authorization: `Bearer ${currentToken}` },
-  });
+  return axios.get("http://localhost:3000/api/map/nodes");
 }
 
 export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
@@ -123,7 +121,5 @@ export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
 }
 
 export function getEdgesAxios() {
-  return axios.get("http://localhost:3000/api/map/edges", {
-    headers: { Authorization: `Bearer ${currentToken}` },
-  });
+  return axios.get("http://localhost:3000/api/map/edges");
 }

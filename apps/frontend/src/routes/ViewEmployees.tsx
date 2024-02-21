@@ -3,6 +3,7 @@ import "./styles/ViewEmployees.css";
 import { Employee } from "common/src/Employee.ts";
 import {
   addEmployeeAxios,
+  addMultipleEmployeesAxios,
   deleteEmployeeAxios,
   editEmployeeAxios,
   getEmployeesAxios,
@@ -103,11 +104,10 @@ export const ViewEmployees = () => {
       }
     } else if (state === "add") {
       try {
-        addEmployeeAxios(data).then(() => {
+        addEmployeeAxios([data]).then(() => {
           getAndSetEmployees();
           setState("none");
         });
-
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
@@ -156,15 +156,10 @@ export const ViewEmployees = () => {
       console.log(importedMapEmployees);
 
       // post all new employees & replace all old ones
-      axios
-        .post("http://localhost:3000/api/employees", {
-          deleteAll: true,
-          employees: importedMapEmployees,
-        })
-        .then(() => {
-          // update local store
-          getAndSetEmployees();
-        });
+      addMultipleEmployeesAxios("true", importedMapEmployees).then(() => {
+        // update local store
+        getAndSetEmployees();
+      });
       e.target.value = "";
     };
     reader.readAsText(file);
