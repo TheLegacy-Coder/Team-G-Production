@@ -10,6 +10,12 @@ import {
   ServiceRequestExternalTransport,
   AllServiceRequests,
 } from "common/src/ServiceRequests.ts";
+import { auth } from "express-oauth2-jwt-bearer";
+
+const checkJwt = auth({
+  audience: "/api",
+  issuerBaseURL: `https://dev-1uv1d12i66i3umpd.us.auth0.com/`,
+});
 
 const router: Router = express.Router();
 
@@ -33,7 +39,7 @@ const router: Router = express.Router();
 // });
 
 // Whenever a get request is made, return the high score
-router.get("/requests", async function (req: Request, res: Response) {
+router.get("/requests", checkJwt, async function (req: Request, res: Response) {
   console.log("req");
   const getAll = req.query.getAll;
   const employeeID = req.query.employeeID;
@@ -242,45 +248,49 @@ router.get("/requests", async function (req: Request, res: Response) {
 });
 
 //SERVICE REQUEST POSTS
-router.post("/requests/flowers", async function (req: Request, res: Response) {
-  console.log("req");
+router.post(
+  "/requests/flowers",
+  checkJwt,
+  async function (req: Request, res: Response) {
+    console.log("req");
 
-  try {
-    const requestFull = req.body as ServiceRequestFlowers;
-    const coreRequest: ServiceRequest = {
-      desc: requestFull.desc,
-      helpingEmployee:
-        requestFull.helpingEmployee === undefined
-          ? null
-          : requestFull.helpingEmployee,
-      location: requestFull.location,
-      requestID: requestFull.requestID,
-      requestType: requestFull.requestType,
-      requester: requestFull.requester,
-      status: requestFull.status,
-      priority: requestFull.priority,
-    };
-    await PrismaClient.serviceRequest.create({
-      data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
-    });
-    await PrismaClient.serviceRequestFlowers.create({
-      data: {
-        requestID: coreRequest.requestID,
-        amount: requestFull.amount,
-        flowerType: requestFull.flowerType,
-      } as Prisma.ServiceRequestFlowersUncheckedCreateInput,
-    });
+    try {
+      const requestFull = req.body as ServiceRequestFlowers;
+      const coreRequest: ServiceRequest = {
+        desc: requestFull.desc,
+        helpingEmployee:
+          requestFull.helpingEmployee === undefined
+            ? null
+            : requestFull.helpingEmployee,
+        location: requestFull.location,
+        requestID: requestFull.requestID,
+        requestType: requestFull.requestType,
+        requester: requestFull.requester,
+        status: requestFull.status,
+        priority: requestFull.priority,
+      };
+      await PrismaClient.serviceRequest.create({
+        data: coreRequest as Prisma.ServiceRequestUncheckedCreateInput,
+      });
+      await PrismaClient.serviceRequestFlowers.create({
+        data: {
+          requestID: coreRequest.requestID,
+          amount: requestFull.amount,
+          flowerType: requestFull.flowerType,
+        } as Prisma.ServiceRequestFlowersUncheckedCreateInput,
+      });
 
-    console.log("Successfully created Service Request");
-  } catch (error) {
-    console.error("Unable to create Service Request");
-    console.log(error);
-    res.sendStatus(204);
-    return;
-  }
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
 
-  res.sendStatus(200);
-});
+    res.sendStatus(200);
+  },
+);
 
 router.post(
   "/requests/religious",
@@ -326,6 +336,7 @@ router.post(
 
 router.post(
   "/requests/sanitation",
+  checkJwt,
   async function (req: Request, res: Response) {
     console.log("req");
 
@@ -411,6 +422,7 @@ router.post(
 
 router.post(
   "/requests/transport",
+  checkJwt,
   async function (req: Request, res: Response) {
     console.log("req");
 
@@ -452,39 +464,47 @@ router.post(
   },
 );
 
-router.post("/requests", async function (req: Request, res: Response) {
-  console.log("req");
-  const requestAttempt: Prisma.ServiceRequestUncheckedCreateInput = req.body;
-  console.log(req.body);
-  try {
-    await PrismaClient.serviceRequest.create({ data: requestAttempt });
-    console.log("Successfully created Service Request");
-  } catch (error) {
-    console.error("Unable to create Service Request");
-    console.log(error);
-    res.sendStatus(204);
-    return;
-  }
+router.post(
+  "/requests",
+  checkJwt,
+  async function (req: Request, res: Response) {
+    console.log("req");
+    const requestAttempt: Prisma.ServiceRequestUncheckedCreateInput = req.body;
+    console.log(req.body);
+    try {
+      await PrismaClient.serviceRequest.create({ data: requestAttempt });
+      console.log("Successfully created Service Request");
+    } catch (error) {
+      console.error("Unable to create Service Request");
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
 
-  res.sendStatus(200);
-});
-
-router.patch("/requests", async function (req: Request, res: Response) {
-  console.log("patch");
-  try {
-    await PrismaClient.serviceRequest.update({
-      where: { requestID: req.body.requestID },
-      data: { status: req.body.status },
-    });
-    console.log(
-      "Updated " + req.body.requestID + " to status " + req.body.status,
-    );
     res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
-    res.sendStatus(204);
-    return;
-  }
-});
+  },
+);
+
+router.patch(
+  "/requests",
+  checkJwt,
+  async function (req: Request, res: Response) {
+    console.log("patch");
+    try {
+      await PrismaClient.serviceRequest.update({
+        where: { requestID: req.body.requestID },
+        data: { status: req.body.status },
+      });
+      console.log(
+        "Updated " + req.body.requestID + " to status " + req.body.status,
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      res.sendStatus(204);
+      return;
+    }
+  },
+);
 
 export default router;
