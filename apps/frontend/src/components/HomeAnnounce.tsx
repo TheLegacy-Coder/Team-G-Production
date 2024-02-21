@@ -6,6 +6,7 @@ import {
   clearAnnouncementFlag,
   refreshAnnouncements,
 } from "../stores/AnnouncementsStore.ts";
+import { mouse } from "../map/Mouse.ts";
 
 export const HomeAnnounce = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -59,7 +60,12 @@ export const HomeAnnounce = () => {
   const speed = marqueeLength / pxps;
 
   return (
-    <div className={"announcements-bar"} id={"marquee-content"}>
+    <div
+      className={"announcements-bar"}
+      id={"marquee-content"}
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.mouseUp}
+    >
       <style>
         {"@keyframes scroll-left {\n" +
           `  0% {\n` +
