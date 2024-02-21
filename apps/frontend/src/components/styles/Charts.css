@@ -44,7 +44,7 @@
 }
 
 .request-leader-container {
-  width: 400px;
+  width: 100%;
   height: 200px;
   justify-content: center;
   align-items: center;
@@ -52,6 +52,12 @@
 
 text {
   font-size: 18px;
+  color: black !important;
+  fill: black !important;
+  opacity: 1 !important;
+}
+.third-row > div > div > svg > g > g > text {
+  font-size: 20px;
   color: black !important;
   fill: black !important;
   opacity: 1 !important;
