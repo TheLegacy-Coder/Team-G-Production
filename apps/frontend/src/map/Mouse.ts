@@ -73,7 +73,7 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
+    console.log(
       "In view X:\nPath lowest: " +
         drawData.pathLowest.x +
         "\nPath Highest: " +
@@ -90,7 +90,7 @@ class Mouse {
         drawData.upleftCorner!.y +
         "\nDown right: " +
         drawData.downrightCorner!.y,
-    );*/
+    );
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
@@ -107,45 +107,50 @@ class Mouse {
     }
     return result;
   }
+
+  private setDim(startX: number, endX: number, startY: number, endY: number) {
+    let posScale;
+    const annHeight = 55;
+    const heightDiff = endY - startY;
+    const widthDiff = endX - startX;
+    if (
+      (window.innerHeight - annHeight) / heightDiff <
+      window.innerWidth / widthDiff
+    ) {
+      posScale = (window.innerHeight - annHeight) / heightDiff;
+    } else {
+      posScale = window.innerWidth / widthDiff;
+    }
+    const posX =
+      -(startX - (window.innerWidth - widthDiff * posScale) / 2) * posScale;
+    const posY =
+      -(startY - (window.innerHeight + annHeight - heightDiff * posScale) / 2) *
+      posScale;
+    return { x: posX, y: posY, scale: posScale };
+  }
+
   // resets map position to a default position
   public homePosition(homeFloor: string) {
     if (ctx === null) {
       return;
     }
-    let posX = 0;
-    let posY = 0;
-    let posScale = 1;
-
-    //const screenWidth = 2144;
-    //const screenHeight = 1051;
+    let dim = { x: 0, y: 0, scale: 1 };
 
     if (homeFloor === "3") {
-      posX = -1200;
-      posY = -250;
-      posScale = 0.4;
+      dim = this.setDim(1210, 2890, 750, 3060);
     } else if (homeFloor === "2") {
-      posX = -1200;
-      posY = -120;
-      posScale = 0.4;
+      dim = this.setDim(1260, 4670, 350, 2880);
     } else if (homeFloor === "1") {
-      posX = -1200;
-      posY = -300;
-      posScale = 0.45;
+      dim = this.setDim(960, 3280, 680, 2980);
     } else if (homeFloor === "L1") {
-      posX = -1200;
-      posY = -300;
-      posScale = 0.55;
+      dim = this.setDim(1620, 2790, 820, 2400);
     } else if (homeFloor === "L2") {
-      posX = -1200;
-      posY = -300;
-      posScale = 0.45;
+      dim = this.setDim(1490, 2380, 780, 2930);
     }
-    //posX += (window.innerWidth - screenWidth)*posScale;
-    //posY += (window.innerHeight - screenHeight)*posScale;
-    ctx!.translate(posX, posY);
+    ctx!.translate(dim.x, dim.y);
     drawData.updateCoords();
-    drawData.setScalar(posScale);
-    ctx!.scale(posScale, posScale);
+    drawData.setScalar(dim.scale);
+    ctx!.scale(dim.scale, dim.scale);
     drawData.updateCoords();
     this.boundCoords();
     const scaleID = document.querySelector("#scalar");
