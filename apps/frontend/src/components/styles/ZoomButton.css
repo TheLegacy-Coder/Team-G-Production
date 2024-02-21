@@ -1,11 +1,44 @@
-.zoom-button {
+.map-top-left-buttons {
   position: fixed;
-  width: 30px;
-  height: 30px;
-  border-radius: 25px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  gap: 8px;
+}
+
+.map-bottom-left-buttons {
+  position: fixed;
+  bottom: 55px;
+  margin: 8px;
+  display: flex;
+  z-index: 1;
+  gap: 8px;
+}
+
+.zoom-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-button {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
   color: white;
   background-color: #00284f;
   border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+}
+
+.selected-floor-button {
+  border-color: #ff0000;
+  font-weight: bold;
+  border-width: 4px;
 }
 
 .zoom-button:hover {
@@ -16,56 +49,42 @@
   background-color: #99a9b8;
 }
 
-.plus-button {
-  transform: translate(10px, 10px);
-}
-
-.whole-graph-button {
-  transform: translate(190px, 10px);
-}
-
 .zoom-amount {
-  transform: translate(50px, 10px);
-  width: 50px;
-}
-
-.minus-button {
-  transform: translate(110px, 10px);
-}
-
-.home-button {
-  transform: translate(150px, 10px);
-}
-
-.show-detail-button {
-  transform: translate(230px, 10px);
-}
-
-.third-floor {
-  transform: translateX(10px);
-  bottom: 240px;
-}
-
-.second-floor {
-  transform: translateX(10px);
-  bottom: 200px;
-}
-
-.first-floor {
-  transform: translateX(10px);
-  bottom: 160px;
-}
-
-.lower-floor {
-  transform: translateX(10px);
-  bottom: 120px;
-}
-
-.lowest-floor {
-  transform: translateX(10px);
-  bottom: 80px;
+  display: none;
 }
 
 .path-floor {
   background-color: lightblue;
+}
+
+.toggle-button-container {
+  width: 180px;
+  font-size: 30px;
+  background-color: #00284f;
+  cursor: pointer;
+  color: white;
+  border-radius: 16px;
+  border: 2px solid black;
+}
+
+/* Overall Toggle Button*/
+.toggle-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #00284f;
+  color: white;
+  border-radius: 25px;
+  border: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-button:hover {
+  background-color: #4c6883;
+}
+
+.toggle-button:active {
+  background-color: #99a9b8;
 }

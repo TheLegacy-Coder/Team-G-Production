@@ -8,6 +8,7 @@ import {
   MapNode,
   mapNodes,
 } from "../map/MapNode.ts"; // Importing MapNode type
+import TextDirections from "./TextDirections.tsx";
 
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
@@ -26,7 +27,9 @@ const LocationDropdown: React.FC = () => {
     const fetchMapNodes = async () => {
       try {
         // Fetch map nodes from the mapNodes variable
-        const nodes = Array.from(mapNodes.values());
+        const nodes = Array.from(mapNodes.values()).filter(
+          (node) => node.nodeType !== "HALL",
+        );
 
         // Set start and end locations
         setStartLocations(nodes);
@@ -114,7 +117,6 @@ const LocationDropdown: React.FC = () => {
           onChange={handleEndLocationChange}
         >
           <option value="">Select end location</option>
-          <br />
           {/* Render options for end location */}
           {endLocations.map((node) => (
             <option key={node.nodeID} value={node.nodeID}>
@@ -123,6 +125,9 @@ const LocationDropdown: React.FC = () => {
           ))}
         </select>
       </div>
+      <br />
+      <b>Text Directions:</b>
+      <TextDirections />
     </div>
   );
 };

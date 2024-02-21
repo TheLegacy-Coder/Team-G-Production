@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
+import { getAnnouncementsAxios } from "../DataAsObject/announcementsAxios.ts";
 
 export type Announcement = {
   announcementID: string;
@@ -17,13 +18,11 @@ export function clearAnnouncementFlag() {
 }
 refreshAnnouncements();
 export function refreshAnnouncements() {
-  axios
-    .get("http://localhost:3000/api/announcements")
-    .then((response: AxiosResponse<Announcement[]>) => {
-      announcements = response.data;
-      if (announcementsLength !== announcements.length) {
-        announcementsChanged = true;
-        announcementsLength = announcements.length;
-      }
-    });
+  getAnnouncementsAxios().then((response: AxiosResponse<Announcement[]>) => {
+    announcements = response.data;
+    if (announcementsLength !== announcements.length) {
+      announcementsChanged = true;
+      announcementsLength = announcements.length;
+    }
+  });
 }

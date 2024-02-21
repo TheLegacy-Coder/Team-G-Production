@@ -7,8 +7,11 @@ import {
   mapNodes,
 } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
-import axios from "axios";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
+import {
+  postEdgesAxios,
+  postNodesAxios,
+} from "../DataAsObject/mapNodesAxios.ts";
 
 const Nodes = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -66,17 +69,11 @@ const Nodes = () => {
         }
       }
 
-      axios
-        .post("http://localhost:3000/api/map/nodes", {
-          deleteAll: true,
-          nodes: importedMapNodes,
-        })
-        // update local store
-        .then(() => {
-          getMapNodesEdges().then(() => {
-            forceUpdate();
-          });
+      postNodesAxios("true", importedMapNodes).then(() => {
+        getMapNodesEdges().then(() => {
+          forceUpdate();
         });
+      });
     };
     reader.readAsText(file);
 
@@ -173,11 +170,7 @@ const Edges = () => {
           importedMapEdges.push(edge);
         }
       }
-      axios
-        .post("http://localhost:3000/api/map/edges", {
-          deleteAll: true,
-          edges: importedMapEdges,
-        })
+      postEdgesAxios("true", importedMapEdges)
         // update local store
         .then(() => {
           getMapNodesEdges().then(() => {

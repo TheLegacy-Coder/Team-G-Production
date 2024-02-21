@@ -10,9 +10,11 @@ import {
   AllServiceRequests,
   ServiceRequest,
 } from "common/src/ServiceRequests.ts";
-import axios, { AxiosResponse } from "axios";
 import "./styles/Charts.css";
 import { Employee } from "common/src/Employee.ts";
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
+import { getAllAxios } from "../DataAsObject/serviceRequestsAxios.ts";
+import { AxiosResponse } from "axios";
 
 interface EmployeeStats {
   completed: number;
@@ -27,20 +29,12 @@ export const Charts = () => {
   const statsMap = new Map<string, EmployeeStats>();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/employees/", {
-        params: { getAll: true },
-      })
-      .then((res: AxiosResponse<Employee[]>) => {
-        setEmployees(res.data);
-      });
-    axios
-      .get("http://localhost:3000/api/services/requests", {
-        params: { getAll: true },
-      })
-      .then((res: AxiosResponse<AllServiceRequests>) => {
-        setRequests(res.data);
-      });
+    getEmployeesAxios("true", "").then((res: AxiosResponse<Employee[]>) => {
+      setEmployees(res.data);
+    });
+    getAllAxios().then((res: AxiosResponse<AllServiceRequests>) => {
+      setRequests(res.data);
+    });
   }, []);
   console.log(employees);
 

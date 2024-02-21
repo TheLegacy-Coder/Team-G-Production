@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from "react";
 import {
   JobAssignments,
   RequestType,
-  ServiceRequestEndpoints,
   ServiceRequestExternalTransport,
   ServiceRequestFlowers,
   ServiceRequestInterpreter,
@@ -12,12 +11,13 @@ import {
 } from "common/src/ServiceRequests.ts";
 import { nodeStore } from "../map/MapNode.ts";
 
-import axios, { AxiosResponse } from "axios";
 import { Employee } from "common/src/Employee.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import "./styles/ServiceRequestForm.css";
 import { ServiceRequests } from "./ServiceRequests.tsx";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
+import { serviceRequestPostAxios } from "../DataAsObject/serviceRequestsAxios.ts";
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 export interface ServiceRequestProps {
   requestType: RequestType;
@@ -145,21 +145,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
         break;
     }
     console.log(req);
-    try {
-      axios
-        .post(
-          "http://localhost:3000/api/" +
-            ServiceRequestEndpoints.get(props.requestType),
-          req,
-        )
-        .then((response: AxiosResponse<Employee[]>) => {
-          console.log(response);
-        });
-
-      // Replace with the actual property holding employee names in the API response
-    } catch (error) {
-      console.error("Error fetching employee names:", error);
-    }
+    serviceRequestPostAxios(props.requestType, req);
     setSubmitted(true);
   }
 
@@ -174,17 +160,9 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   useEffect(() => {
     // Fetch employee names using API call and update the state
     const fetchEmployeeNamesAndIDS = async () => {
-      try {
-        axios
-          .get("http://localhost:3000/api/employees?jobTypes=" + jobs)
-          .then((response: AxiosResponse<Employee[]>) => {
-            setEmployees(response.data);
-          });
-
-        // Replace with the actual property holding employee names in the API response
-      } catch (error) {
-        console.error("Error fetching employee names:", error);
-      }
+      getEmployeesAxios("false", jobs).then((res) => {
+        setEmployees(res.data);
+      });
     };
     fetchEmployeeNamesAndIDS();
   }, [jobs]);
@@ -192,7 +170,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   return (
     <div className={"service-request-container"}>
       {submitted ? (
-        <>
+        <div className={"submitted-container"}>
           <svg
             className="checkmark"
             xmlns="http://www.w3.org/2000/svg"
@@ -219,10 +197,11 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
             content={<ServiceRequests />}
             lable={"Service Request"}
             protected={true}
-            style={"nav-button"}
+            style={"service-request-form-cancel"}
+            button={true}
             customText={"Back"}
           />
-        </>
+        </div>
       ) : (
         <div className={"service-request-form"}>
           <h3 className={"service-request-form-label"}>Description</h3>

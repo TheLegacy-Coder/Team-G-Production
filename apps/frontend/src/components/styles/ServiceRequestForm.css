@@ -78,6 +78,13 @@
   margin-right: 16px;
 }
 
+.submitted-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .checkmark__circle {
   stroke-dasharray: 166;
   stroke-dashoffset: 166;
