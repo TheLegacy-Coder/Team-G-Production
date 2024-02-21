@@ -28,7 +28,6 @@ export const InteractableMap = () => {
     edges: draw.showEdges,
     halls: draw.showHalls,
   });
-  const [floor, setFloor] = useState<string>(drawData.currentFloor);
 
   function initContext() {
     if (canvasRef.current) {
@@ -59,7 +58,6 @@ export const InteractableMap = () => {
 
   function changeMap(floor: string, imageSrc: string) {
     if (mouse.setMap(floor, imageSrc)) {
-      setFloor(floor);
       algorithm.searchAlg();
       setTimeout(() => {
         drawData.setRedraw(true);
@@ -110,6 +108,25 @@ export const InteractableMap = () => {
         </div>
       </button>
     );
+  }
+
+  function selectButton(currentFloor: string) {
+    const floor3ID = document.querySelector("#F3");
+    const floor2ID = document.querySelector("#F2");
+    const floor1ID = document.querySelector("#F1");
+    const floorL1ID = document.querySelector("#L1");
+    const floorL2ID = document.querySelector("#L2");
+    const floorIDs = [floor3ID, floor2ID, floor1ID, floorL1ID, floorL2ID];
+    //remove the selected floor class from any floor that has it
+    floorIDs.forEach(function (floorID) {
+      if (floorID !== null) {
+        floorID.classList.remove("selected-floor-button");
+        //only add selected floor class if thats the floor that the user is on
+        if (document.querySelector("#" + currentFloor) === floorID) {
+          floorID.classList.add("selected-floor-button");
+        }
+      }
+    });
   }
 
   return (
@@ -194,6 +211,7 @@ export const InteractableMap = () => {
             id={"F3"}
             className={"zoom-button"}
             onClick={() => {
+              selectButton("F3");
               changeMap("3", "03_thethirdfloor.png");
             }}
           >
@@ -203,6 +221,7 @@ export const InteractableMap = () => {
             id={"F2"}
             className={"zoom-button"}
             onClick={() => {
+              selectButton("F2");
               changeMap("2", "02_thesecondfloor.png");
             }}
           >
@@ -212,6 +231,7 @@ export const InteractableMap = () => {
             id={"F1"}
             className={"zoom-button"}
             onClick={() => {
+              selectButton("F1");
               changeMap("1", "01_thefirstfloor.png");
             }}
           >
@@ -219,8 +239,9 @@ export const InteractableMap = () => {
           </button>
           <button
             id={"L1"}
-            className={"zoom-button"}
+            className={"zoom-button selected-floor-button"}
             onClick={() => {
+              selectButton("L1");
               changeMap("L1", "00_thelowerlevel1.png");
             }}
           >
@@ -230,13 +251,13 @@ export const InteractableMap = () => {
             id={"L2"}
             className={"zoom-button"}
             onClick={() => {
+              selectButton("L2");
               changeMap("L2", "00_thelowerlevel2.png");
             }}
           >
             L2
           </button>
         </div>
-        <h1 style={{ marginTop: "auto" }}>Floor {floor}</h1>
       </div>
       <canvas
         onMouseMove={mouse.mouseMove}
