@@ -12,9 +12,9 @@ import {
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import {
-  changeStatus,
-  getAll,
-  getFromEmployee,
+  changeStatusAxios,
+  getAllAxios,
+  getFromEmployeeAxios,
 } from "../DataAsObject/serviceRequestsAxios.ts";
 
 interface RequestsTableProps {
@@ -33,7 +33,7 @@ export const RequestsTable = ({
 
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
-    changeStatus(requestID, newStatus).then(() => {
+    changeStatusAxios(requestID, newStatus).then(() => {
       updateRequests();
     });
   };
@@ -177,13 +177,15 @@ export const ViewRequests = () => {
   // Get requests from DB and store them in state
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
-      getAll().then((res) => {
+      getAllAxios().then((res) => {
         setRequests(res.data);
       });
     } else {
-      getFromEmployee(currentEmployee?.employeeID as string).then((res) => {
-        setRequests(res.data);
-      });
+      getFromEmployeeAxios(currentEmployee?.employeeID as string).then(
+        (res) => {
+          setRequests(res.data);
+        },
+      );
     }
   };
 

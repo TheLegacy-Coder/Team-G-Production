@@ -16,7 +16,7 @@ import { currentEmployee } from "../stores/LoginStore.ts";
 import "./styles/ServiceRequestForm.css";
 import { ServiceRequests } from "./ServiceRequests.tsx";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
-import { serviceRequestPost } from "../DataAsObject/serviceRequestsAxios.ts";
+import { serviceRequestPostAxios } from "../DataAsObject/serviceRequestsAxios.ts";
 import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 export interface ServiceRequestProps {
@@ -145,7 +145,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
         break;
     }
     console.log(req);
-    serviceRequestPost(props.requestType, req);
+    serviceRequestPostAxios(props.requestType, req);
     setSubmitted(true);
   }
 

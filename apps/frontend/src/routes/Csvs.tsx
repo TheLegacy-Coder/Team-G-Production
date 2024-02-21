@@ -8,7 +8,10 @@ import {
 } from "../map/MapNode.ts";
 import "./styles/Csvs.css";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
-import { postEdges, postNodes } from "../DataAsObject/mapNodesAxios.ts";
+import {
+  postEdgesAxios,
+  postNodesAxios,
+} from "../DataAsObject/mapNodesAxios.ts";
 
 const Nodes = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -66,7 +69,7 @@ const Nodes = () => {
         }
       }
 
-      postNodes("true", importedMapNodes).then(() => {
+      postNodesAxios("true", importedMapNodes).then(() => {
         getMapNodesEdges().then(() => {
           forceUpdate();
         });
@@ -167,7 +170,7 @@ const Edges = () => {
           importedMapEdges.push(edge);
         }
       }
-      postEdges("true", importedMapEdges)
+      postEdgesAxios("true", importedMapEdges)
         // update local store
         .then(() => {
           getMapNodesEdges().then(() => {

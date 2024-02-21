@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
-import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
 import {
+  addEmployeeAxios,
   deleteEmployeeAxios,
+  editEmployeeAxios,
   getEmployeesAxios,
 } from "../DataAsObject/employeesAxios.ts";
 
@@ -67,14 +68,10 @@ export const ViewEmployees = () => {
     if (
       window.confirm(`Are you sure you want to delete employee ${employeeID}?`)
     ) {
-      try {
-        deleteEmployeeAxios(employeeID).then(() => {
-          getAndSetEmployees();
-          setState("none");
-        });
-      } catch (error) {
-        console.error("Error deleting employee:", error);
-      }
+      deleteEmployeeAxios(employeeID).then(() => {
+        getAndSetEmployees();
+        setState("none");
+      });
     }
   };
 
@@ -97,18 +94,16 @@ export const ViewEmployees = () => {
 
     if (state === "edit") {
       try {
-        axios
-          .patch("http://localhost:3000/api/employees", data, {})
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        editEmployeeAxios(data).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
     } else if (state === "add") {
       try {
-        axios.post("http://localhost:3000/api/employees", data, {}).then(() => {
+        addEmployeeAxios(data).then(() => {
           getAndSetEmployees();
           setState("none");
         });
