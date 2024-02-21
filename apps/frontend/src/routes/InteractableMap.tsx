@@ -10,7 +10,13 @@ import {
   BreadthFirstSearch,
   DepthFirstSearch,
 } from "../map/MapNode.ts";
-import { Dash, EyeFill, EyeSlashFill, Plus } from "react-bootstrap-icons";
+import {
+  Dash,
+  EyeFill,
+  EyeSlashFill,
+  Plus,
+  HouseFill,
+} from "react-bootstrap-icons";
 
 interface Visibility {
   nodes: boolean;
@@ -101,9 +107,9 @@ export const InteractableMap = () => {
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
           {value ? (
-            <EyeFill color="white" size={25} />
+            <EyeFill color="white" size={35} />
           ) : (
-            <EyeSlashFill color="white" size={25} />
+            <EyeSlashFill color="white" size={35} />
           )}
         </div>
       </button>
@@ -152,7 +158,7 @@ export const InteractableMap = () => {
                 borderBottomLeftRadius: "16px",
               }}
             >
-              <Dash size={30} />
+              <Dash size={50} />
             </button>
             <button
               className={"zoom-button home-button"}
@@ -162,7 +168,7 @@ export const InteractableMap = () => {
               }}
               style={{ borderRadius: "0px" }}
             >
-              ↺
+              <HouseFill size={30} />
             </button>
             <button className={"zoom-button zoom-amount"}>
               <div id={"scalar"}></div>
@@ -177,7 +183,7 @@ export const InteractableMap = () => {
                 borderBottomLeftRadius: "0px",
               }}
             >
-              <Plus size={30} />
+              <Plus size={50} />
             </button>
           </div>
           <PathfindingButton
