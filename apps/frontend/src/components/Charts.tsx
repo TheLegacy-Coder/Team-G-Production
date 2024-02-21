@@ -66,107 +66,108 @@ export const Charts = () => {
   let assigned = 0;
   let inProgress = 0;
   let completed = 0;
-
-  requestTypes?.flowers.forEach((request: ServiceRequest) => {
-    switch (request.status) {
-      case "Assigned":
-        assigned++;
-        break;
-      case "In Progress":
-        inProgress++;
-        break;
-      case "Completed":
-        completed++;
-        if (request.helpingEmployee !== null) {
-          if (request.helpingEmployee !== undefined) {
-            (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
-              .completed++;
+  if (requestTypes !== undefined) {
+    requestTypes?.flowers.forEach((request: ServiceRequest) => {
+      switch (request.status) {
+        case "Assigned":
+          assigned++;
+          break;
+        case "In Progress":
+          inProgress++;
+          break;
+        case "Completed":
+          completed++;
+          if (request.helpingEmployee !== null) {
+            if (request.helpingEmployee !== undefined) {
+              (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
+                .completed++;
+            }
           }
-        }
 
-        break;
-    }
-  });
+          break;
+      }
+    });
 
-  requestTypes?.religious.forEach((request: ServiceRequest) => {
-    switch (request.status) {
-      case "Assigned":
-        assigned++;
-        break;
-      case "In Progress":
-        inProgress++;
-        break;
-      case "Completed":
-        completed++;
-        if (request.helpingEmployee !== null) {
-          if (request.helpingEmployee !== undefined) {
-            (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
-              .completed++;
+    requestTypes?.religious.forEach((request: ServiceRequest) => {
+      switch (request.status) {
+        case "Assigned":
+          assigned++;
+          break;
+        case "In Progress":
+          inProgress++;
+          break;
+        case "Completed":
+          completed++;
+          if (request.helpingEmployee !== null) {
+            if (request.helpingEmployee !== undefined) {
+              (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
+                .completed++;
+            }
           }
-        }
-        break;
-    }
-  });
+          break;
+      }
+    });
 
-  requestTypes?.sanitation.forEach((request: ServiceRequest) => {
-    switch (request.status) {
-      case "Assigned":
-        assigned++;
-        break;
-      case "In Progress":
-        inProgress++;
-        break;
-      case "Completed":
-        completed++;
-        if (request.helpingEmployee !== null) {
-          if (request.helpingEmployee !== undefined) {
-            (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
-              .completed++;
+    requestTypes?.sanitation.forEach((request: ServiceRequest) => {
+      switch (request.status) {
+        case "Assigned":
+          assigned++;
+          break;
+        case "In Progress":
+          inProgress++;
+          break;
+        case "Completed":
+          completed++;
+          if (request.helpingEmployee !== null) {
+            if (request.helpingEmployee !== undefined) {
+              (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
+                .completed++;
+            }
           }
-        }
-        break;
-    }
-  });
+          break;
+      }
+    });
 
-  requestTypes?.interpreter.forEach((request: ServiceRequest) => {
-    switch (request.status) {
-      case "Assigned":
-        assigned++;
-        break;
-      case "In Progress":
-        inProgress++;
-        break;
-      case "Completed":
-        completed++;
-        if (request.helpingEmployee !== null) {
-          if (request.helpingEmployee !== undefined) {
-            (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
-              .completed++;
+    requestTypes?.interpreter.forEach((request: ServiceRequest) => {
+      switch (request.status) {
+        case "Assigned":
+          assigned++;
+          break;
+        case "In Progress":
+          inProgress++;
+          break;
+        case "Completed":
+          completed++;
+          if (request.helpingEmployee !== null) {
+            if (request.helpingEmployee !== undefined) {
+              (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
+                .completed++;
+            }
           }
-        }
-        break;
-    }
-  });
+          break;
+      }
+    });
 
-  requestTypes?.transport.forEach((request: ServiceRequest) => {
-    switch (request.status) {
-      case "Assigned":
-        assigned++;
-        break;
-      case "In Progress":
-        inProgress++;
-        break;
-      case "Completed":
-        completed++;
-        if (request.helpingEmployee !== null) {
-          if (request.helpingEmployee !== undefined) {
-            (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
-              .completed++;
+    requestTypes?.transport.forEach((request: ServiceRequest) => {
+      switch (request.status) {
+        case "Assigned":
+          assigned++;
+          break;
+        case "In Progress":
+          inProgress++;
+          break;
+        case "Completed":
+          completed++;
+          if (request.helpingEmployee !== null) {
+            if (request.helpingEmployee !== undefined) {
+              (statsMap.get(request.helpingEmployee as string) as EmployeeStats)
+                .completed++;
+            }
           }
-        }
-        break;
-    }
-  });
+          break;
+      }
+    });
+  }
 
   const serviceRequestStatus = [
     { key: "Assigned", data: assigned },
@@ -176,18 +177,22 @@ export const Charts = () => {
 
   const topEmps: ChartDataShape[] = [];
   let maxValue = 0;
-  employees?.forEach((employee: Employee) => {
-    if (employeeRegistry.has(employee.employeeID)) {
-      const employeeStats = statsMap.get(employee.employeeID) as EmployeeStats;
-      topEmps.push({
-        key: employee.firstName + " " + employee.lastName,
-        data: employeeStats.completed,
-      });
-      if (employeeStats.completed > maxValue) {
-        maxValue = employeeStats.completed;
+  if (employees !== undefined) {
+    employees?.forEach((employee: Employee) => {
+      if (employeeRegistry.has(employee.employeeID)) {
+        const employeeStats = statsMap.get(
+          employee.employeeID,
+        ) as EmployeeStats;
+        topEmps.push({
+          key: employee.firstName + " " + employee.lastName,
+          data: employeeStats.completed,
+        });
+        if (employeeStats.completed > maxValue) {
+          maxValue = employeeStats.completed;
+        }
       }
-    }
-  });
+    });
+  }
 
   topEmps.sort((a: ChartDataShape, b: ChartDataShape) => {
     return (b.data as number) - (a.data as number);
