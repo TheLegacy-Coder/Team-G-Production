@@ -170,7 +170,6 @@ class Mouse {
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);
       this.homePosition(floor);
-      mouse.newMap = true;
       ctx!.restore();
       drawData.setScalar(tempScalar);
       if (!hasPath) {
@@ -180,6 +179,7 @@ class Mouse {
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
       drawData.resetPath();
+      mouse.newMap = true;
 
       return true;
     }

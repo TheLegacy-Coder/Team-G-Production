@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
-import { drawData, initCTX } from "../map/DrawData.ts";
+import { ctx, drawData, initCTX } from "../map/DrawData.ts";
 import "../components/styles/ZoomButton.css";
 import { PathfindingButton } from "../components/PathfindingButton.tsx";
 import {
@@ -16,6 +16,19 @@ export const InteractableMap = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
   const [currentAlg, setCurrentAlg] = useState<string>("BFS");
+
+  window.onresize = () => {
+    const canvasContainer = document.getElementById("canvas-container")!.style;
+    canvasContainer.width =
+      (window.innerWidth - drawData.offset.x).toString() + "px";
+    canvasContainer.height =
+      (window.innerHeight - drawData.offset.y).toString() + "px";
+    drawData.resetMap(false);
+    ctx!.canvas.width = window.innerWidth - drawData.offset.x;
+    ctx!.canvas.height = window.innerHeight - drawData.offset.y;
+    mouse.homePosition(drawData.currentFloor);
+    drawData.setRedraw(true);
+  };
 
   function initContext() {
     if (canvasRef.current) {
@@ -78,6 +91,7 @@ export const InteractableMap = () => {
 
   return (
     <div
+      id={"canvas-container"}
       style={
         {
           width: window.innerWidth - drawData.offset.x,
@@ -196,6 +210,7 @@ export const InteractableMap = () => {
         handleChange={changeAlgorithm}
       />
       <canvas
+        id={"map-canvas"}
         onMouseMove={mouse.mouseMove}
         onMouseUp={mouse.mouseUp}
         onMouseDown={mouse.mouseDown}
