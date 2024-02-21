@@ -64,7 +64,7 @@ export const HomeAnnounce = () => {
       className={"announcements-bar"}
       id={"marquee-content"}
       onMouseMove={mouse.mouseMove}
-      onMouseUp={mouse.mouseUp}
+      onMouseUp={mouse.divMouseUp}
     >
       <style>
         {"@keyframes scroll-left {\n" +

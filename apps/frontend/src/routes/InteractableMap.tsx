@@ -151,7 +151,6 @@ export const InteractableMap = () => {
   return (
     <div
       onMouseMove={mouse.mouseMove}
-      onMouseUp={mouse.mouseUp}
       id={"canvas-container"}
       style={
         {
@@ -161,7 +160,7 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
-      <div className={"map-top-left-buttons"}>
+      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
           <div className={"zoom-buttons"}>
             <button
@@ -222,14 +221,17 @@ export const InteractableMap = () => {
           />
         </div>
       </div>
-      <div className={"map-top-left-search-button"}>
+      <div
+        className={"map-top-left-search-button"}
+        onMouseUp={mouse.divMouseUp}
+      >
         <PathfindingButton
           algorithm={currentAlg}
           handleChange={changeAlgorithm}
         />
       </div>
 
-      <div className={"map-bottom-left-buttons"}>
+      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <button
             id={"F3"}
@@ -286,6 +288,7 @@ export const InteractableMap = () => {
       <canvas
         id={"map-canvas"}
         onMouseDown={mouse.mouseDown}
+        onMouseUp={mouse.mouseUp}
         onWheel={mouse.mouseScroll}
         ref={canvasRef}
         width={window.innerWidth}

@@ -330,6 +330,19 @@ class Mouse {
     mouse.setStartPos(posStart!.x, posStart!.y);
     mouse.boundCoords();
   }
+
+  public divMouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (tfCursor === undefined || delta === undefined) {
+      console.log("null mouse up");
+      return null;
+    }
+    evt.pageX;
+    mouse.moveMap = false;
+    mouse.setDelta(0, 0);
+    mouse.boundCoords();
+    drawData.setRedraw(true);
+  }
+
   // runs when mouse released
   public mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
     if (tfCursor === undefined || delta === undefined) {

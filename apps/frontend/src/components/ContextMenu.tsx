@@ -25,7 +25,7 @@ export function ContextMenu() {
       className={contextMenuState.showingClass}
       style={{ display: "flex" }}
       onMouseMove={mouse.mouseMove}
-      onMouseUp={mouse.mouseUp}
+      onMouseUp={mouse.divMouseUp}
     >
       <div className={"context-menu-nav"}>
         <div
