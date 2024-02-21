@@ -57,7 +57,7 @@ export const About = () => {
               </tr>
               <tr>
                 <td>Zachary Medailleu</td>
-                <td>Full-Time Software Engineer (Algorithms)</td>
+                <td>Full-Time Software Engineer (Front-End)</td>
               </tr>
               <tr>
                 <td>Noah Newton</td>

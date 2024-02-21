@@ -58,7 +58,8 @@
 }
 
 .toggle-button-container {
-  width: 120px;
+  width: 180px;
+  font-size: 30px;
   background-color: #00284f;
   cursor: pointer;
   color: white;
