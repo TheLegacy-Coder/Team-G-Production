@@ -42,7 +42,27 @@ const TextDirections: React.FC = () => {
     } else {
       const prevNode = path[index - 1];
       const nextNode = path[index + 1];
-      return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      const angle =
+        Math.atan2(
+          nextNode.ycoord - mapNode.ycoord,
+          nextNode.xcoord - mapNode.xcoord,
+        ) -
+        Math.atan2(
+          mapNode.ycoord - prevNode.ycoord,
+          mapNode.xcoord - prevNode.xcoord,
+        );
+      let angleDeg = (angle * 180) / Math.PI;
+
+      if (angleDeg < -180) angleDeg += 360;
+      if (angleDeg > 180) angleDeg -= 360;
+
+      if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
+        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      } else if (mapNode.nodeType !== "HALL") {
+        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
+      } else {
+        return "";
+      }
     }
   });
 

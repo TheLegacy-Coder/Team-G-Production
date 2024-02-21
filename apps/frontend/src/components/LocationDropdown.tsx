@@ -27,7 +27,9 @@ const LocationDropdown: React.FC = () => {
     const fetchMapNodes = async () => {
       try {
         // Fetch map nodes from the mapNodes variable
-        const nodes = Array.from(mapNodes.values());
+        const nodes = Array.from(mapNodes.values()).filter(
+          (node) => node.nodeType !== "HALL",
+        );
 
         // Set start and end locations
         setStartLocations(nodes);
