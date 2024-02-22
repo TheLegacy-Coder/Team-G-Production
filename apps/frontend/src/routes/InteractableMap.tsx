@@ -11,11 +11,11 @@ import {
   DepthFirstSearch,
 } from "../map/MapNode.ts";
 import {
-  Dash,
   EyeFill,
   EyeSlashFill,
-  Plus,
   HouseFill,
+  ZoomIn,
+  ZoomOut,
 } from "react-bootstrap-icons";
 
 interface Visibility {
@@ -165,15 +165,15 @@ export const InteractableMap = () => {
           <div className={"zoom-buttons"}>
             <button
               className={"zoom-button"}
-              onClick={() => mouse.buttonZoom(false)}
-              style={{
-                borderTopRightRadius: "0px",
-                borderBottomRightRadius: "0px",
-                borderTopLeftRadius: "16px",
-                borderBottomLeftRadius: "16px",
-              }}
+              onClick={() => mouse.buttonZoom(true)}
             >
-              <Dash size={50} />
+              <ZoomIn size={50} />
+            </button>
+            <button
+              className={"zoom-button"}
+              onClick={() => mouse.buttonZoom(false)}
+            >
+              <ZoomOut size={50} />
             </button>
             <button
               className={"zoom-button home-button"}
@@ -181,50 +181,14 @@ export const InteractableMap = () => {
                 drawData.resetMap(false);
                 mouse.homePosition(drawData.currentFloor);
               }}
-              style={{ borderRadius: "0px" }}
             >
               <HouseFill size={30} />
             </button>
             <button className={"zoom-button zoom-amount"}>
               <div id={"scalar"}></div>
             </button>
-            <button
-              className={"zoom-button"}
-              onClick={() => mouse.buttonZoom(true)}
-              style={{
-                borderTopRightRadius: "16px",
-                borderBottomRightRadius: "16px",
-                borderTopLeftRadius: "0px",
-                borderBottomLeftRadius: "0px",
-              }}
-            >
-              <Plus size={50} />
-            </button>
           </div>
         </div>
-
-        <div className={"toggle-button-container"}>
-          <ToggleButton
-            title={"Nodes"}
-            value={visibilities.nodes}
-            onClick={() => toggleButtons("nodes")}
-          />
-          <ToggleButton
-            title={"Edges"}
-            value={visibilities.edges}
-            onClick={() => toggleButtons("edges")}
-          />
-          <ToggleButton
-            title={"Halls"}
-            value={visibilities.halls}
-            onClick={() => toggleButtons("halls")}
-          />
-        </div>
-      </div>
-      <div
-        className={"map-top-left-search-button"}
-        onMouseUp={mouse.divMouseUp}
-      >
         <PathfindingButton
           algorithm={currentAlg}
           handleChange={changeAlgorithm}
@@ -283,6 +247,23 @@ export const InteractableMap = () => {
           >
             L2
           </button>
+        </div>
+        <div className={"toggle-button-container"}>
+          <ToggleButton
+            title={"Nodes"}
+            value={visibilities.nodes}
+            onClick={() => toggleButtons("nodes")}
+          />
+          <ToggleButton
+            title={"Edges"}
+            value={visibilities.edges}
+            onClick={() => toggleButtons("edges")}
+          />
+          <ToggleButton
+            title={"Halls"}
+            value={visibilities.halls}
+            onClick={() => toggleButtons("halls")}
+          />
         </div>
       </div>
       <canvas
