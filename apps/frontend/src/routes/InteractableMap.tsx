@@ -3,7 +3,7 @@ import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { ctx, drawData, initCTX } from "../map/DrawData.ts";
-import "../components/styles/ZoomButton.css";
+import "./styles/InteractableMap.css";
 import { PathfindingButton } from "../components/PathfindingButton.tsx";
 import {
   AStarSearch,
@@ -160,23 +160,23 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
-      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
+      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-          <div className={"zoom-buttons"}>
+          <div className={"group-buttons"}>
             <button
-              className={"zoom-button"}
+              className={"group-button top"}
               onClick={() => mouse.buttonZoom(true)}
             >
               <ZoomIn size={50} />
             </button>
             <button
-              className={"zoom-button"}
+              className={"group-button"}
               onClick={() => mouse.buttonZoom(false)}
             >
               <ZoomOut size={50} />
             </button>
             <button
-              className={"zoom-button home-button"}
+              className={"group-button bottom"}
               onClick={() => {
                 drawData.resetMap(false);
                 mouse.homePosition(drawData.currentFloor);
@@ -184,22 +184,18 @@ export const InteractableMap = () => {
             >
               <HouseFill size={30} />
             </button>
-            <button className={"zoom-button zoom-amount"}>
+            <button className={"group-button zoom-amount"}>
               <div id={"scalar"}></div>
             </button>
           </div>
         </div>
-        <PathfindingButton
-          algorithm={currentAlg}
-          handleChange={changeAlgorithm}
-        />
       </div>
 
-      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div className={"map-mid-left-buttons"} onMouseUp={mouse.divMouseUp}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <button
             id={"F3"}
-            className={"zoom-button"}
+            className={"group-button top"}
             onClick={() => {
               selectButton("F3");
               changeMap("3", "03_thethirdfloor.png");
@@ -209,7 +205,7 @@ export const InteractableMap = () => {
           </button>
           <button
             id={"F2"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("F2");
               changeMap("2", "02_thesecondfloor.png");
@@ -219,7 +215,7 @@ export const InteractableMap = () => {
           </button>
           <button
             id={"F1"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("F1");
               changeMap("1", "01_thefirstfloor.png");
@@ -229,7 +225,7 @@ export const InteractableMap = () => {
           </button>
           <button
             id={"L1"}
-            className={"zoom-button selected-floor-button"}
+            className={"group-button selected-floor-button"}
             onClick={() => {
               selectButton("L1");
               changeMap("L1", "00_thelowerlevel1.png");
@@ -239,7 +235,7 @@ export const InteractableMap = () => {
           </button>
           <button
             id={"L2"}
-            className={"zoom-button"}
+            className={"group-button bottom"}
             onClick={() => {
               selectButton("L2");
               changeMap("L2", "00_thelowerlevel2.png");
@@ -248,6 +244,8 @@ export const InteractableMap = () => {
             L2
           </button>
         </div>
+      </div>
+      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
         <div className={"toggle-button-container"}>
           <ToggleButton
             title={"Nodes"}
@@ -265,6 +263,10 @@ export const InteractableMap = () => {
             onClick={() => toggleButtons("halls")}
           />
         </div>
+        <PathfindingButton
+          algorithm={currentAlg}
+          handleChange={changeAlgorithm}
+        />
       </div>
       <canvas
         id={"map-canvas"}

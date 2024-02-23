@@ -7,24 +7,35 @@
   gap: 8px;
 }
 
-.map-bottom-left-buttons {
+.map-mid-left-buttons {
   position: fixed;
-  bottom: 55px;
-  margin: 8px;
+  top: 50%;
+  transform: translate(0, -50%);
+  flex-direction: row;
+  margin-left: 8px;
   display: flex;
   z-index: 1;
   gap: 8px;
 }
 
-.zoom-buttons {
+.map-bottom-left-buttons {
+  position: fixed;
+  bottom: 55px;
+  margin: 8px;
+  display: flex;
+  flex-direction: row;
+  z-index: 1;
+  gap: 8px;
+}
+
+.group-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 8px;
 }
 
-.zoom-button {
+.group-button {
   width: 60px;
   height: 60px;
   font-size: 30px;
@@ -34,7 +45,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
+  border-radius: 0;
+}
+
+.group-button.top {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.group-button.bottom {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 .selected-floor-button {
@@ -43,11 +64,11 @@
   border-width: 4px;
 }
 
-.zoom-button:hover {
+.group-button:hover {
   background-color: #4c6883;
 }
 
-.zoom-button:active {
+.group-button:active {
   background-color: #99a9b8;
 }
 
