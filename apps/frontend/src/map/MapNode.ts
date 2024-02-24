@@ -244,3 +244,73 @@ export class DepthFirstSearch implements SearchStrategy {
     return path;
   }
 }
+
+export class DijkstraSearch implements SearchStrategy {
+  pathfindingAlgorithm(start: MapNode | undefined, end: MapNode | undefined) {
+    if (start == undefined || end == undefined) return [];
+    const seen: Map<MapNode, MapNode> = new Map([]);
+    const distance: Map<MapNode, number> = new Map([]);
+    const pq = new PriorityQueue<MapNode>(
+      (a, b) => (distance.get(a) || Infinity) - (distance.get(b) || Infinity),
+    );
+    const calculateDistance = (node1: MapNode, node2: MapNode): number => {
+      return (
+        Math.sqrt(
+          Math.pow(node1.xcoord - node2.xcoord, 2) +
+            Math.pow(node1.ycoord - node2.ycoord, 2),
+        ) +
+        100000000000 *
+          Math.pow(floors.indexOf(node1.floor) - floors.indexOf(node2.floor), 2)
+      );
+    };
+
+    distance.set(start, 0);
+    pq.enqueue(start);
+
+    while (!pq.isEmpty()) {
+      const current = pq.dequeue() as MapNode;
+      current.edges.forEach((neighbor) => {
+        const dist =
+          (distance.get(current) || 0) + calculateDistance(current, neighbor);
+        if (!distance.has(neighbor) || dist < (distance.get(neighbor) || 0)) {
+          distance.set(neighbor, dist);
+          seen.set(neighbor, current);
+          pq.enqueue(neighbor);
+        }
+      });
+    }
+
+    // Reconstruct path
+    const path: MapNode[] = [];
+    let current = end;
+    while (current !== start) {
+      path.unshift(current);
+      current = seen.get(current) as MapNode;
+    }
+    path.unshift(start);
+    return path.reverse();
+  }
+}
+
+class PriorityQueue<T> {
+  private elements: T[];
+  private compare: (a: T, b: T) => number;
+
+  constructor(compare: (a: T, b: T) => number) {
+    this.elements = [];
+    this.compare = compare;
+  }
+
+  enqueue(element: T) {
+    this.elements.push(element);
+    this.elements.sort(this.compare);
+  }
+
+  dequeue(): T | undefined {
+    return this.elements.shift();
+  }
+
+  isEmpty(): boolean {
+    return this.elements.length === 0;
+  }
+}
