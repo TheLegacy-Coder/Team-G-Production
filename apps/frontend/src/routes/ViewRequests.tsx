@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import "./styles/ViewRequests.css";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
@@ -9,6 +9,8 @@ import {
   ServiceRequestReligious,
   ServiceRequestSanitation,
   ServiceRequest,
+  JobAssignments,
+  RequestType,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import {
@@ -264,23 +266,29 @@ export const RequestsTable = ({
           <option value="Completed">Completed</option>
         </select>
         <br />
-        <label className={"filterTextEmployees"}>Filter by Employee:</label>
-        <select
-          name="employeeFilter"
-          className="statusFilter"
-          id="employeeFilter"
-          value={employeeFilter}
-          onChange={(e) => {
-            setEmployeeFilter(e.target.value);
-          }}
-        >
-          <option value={"All"}>All</option>
-          {employees.map((emp) => (
-            <option id={emp.employeeID} value={emp.employeeID}>
-              {emp.firstName + " " + emp.lastName}
-            </option>
-          ))}
-        </select>
+        {currentEmployee?.accessLevel === "admin" ? (
+          <>
+            <label className={"filterTextEmployees"}>Filter by Employee:</label>
+            <select
+              name="employeeFilter"
+              className="statusFilter"
+              id="employeeFilter"
+              value={employeeFilter}
+              onChange={(e) => {
+                setEmployeeFilter(e.target.value);
+              }}
+            >
+              <option value={"All"}>All</option>
+              {employees.map((emp) => (
+                <option id={emp.employeeID} value={emp.employeeID}>
+                  {emp.firstName + " " + emp.lastName}
+                </option>
+              ))}
+            </select>
+          </>
+        ) : (
+          ""
+        )}
       </div>
       <table>
         <thead>
@@ -351,56 +359,87 @@ export const ViewRequests = () => {
     );
   }
 
+  const titlesToTables = new Map<string, React.ReactElement>([
+    [
+      "All",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={allRequests}
+        type={"All"}
+      />,
+    ],
+    [
+      "At Node: " + roomLocation,
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={allRequests}
+        type={"AtNode"}
+      />,
+    ],
+    [
+      "Flowers",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={requests?.flowers}
+        type={"Flowers"}
+      />,
+    ],
+    [
+      "Religious",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={requests?.religious}
+        type={"Religious"}
+      />,
+    ],
+    [
+      "Sanitation",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={requests?.sanitation}
+        type={"Sanitation"}
+      />,
+    ],
+    [
+      "Interpreter",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={requests?.interpreter}
+        type={"Interpreter"}
+      />,
+    ],
+    [
+      "Transport",
+      <RequestsTable
+        updateRequests={updateRequests}
+        requests={requests?.transport}
+        type={"Transport"}
+      />,
+    ],
+  ]);
+  let titles: string[] = [];
+  let tables: ReactElement[] = [];
+  if (currentEmployee?.accessLevel === "admin") {
+    titles = Array.from(titlesToTables.keys());
+    titles[1] = "At Node: " + roomLocation;
+    tables = Array.from(titlesToTables.values());
+  } else {
+    // Loop through JobAssignments and find the request that matches the currentEmployee.job
+    for (const [key, value] of JobAssignments) {
+      if (value.includes(currentEmployee?.job as string)) {
+        titles.push(RequestType[key]);
+        break;
+      }
+    }
+    titles.push("At Node: " + roomLocation);
+    for (const title of titles) {
+      tables.push(titlesToTables.get(title) as ReactElement);
+    }
+  }
+
   return (
     <div className={"view-requests-page"}>
-      <TabSwitcher
-        titles={[
-          "All",
-          "At Node: " + roomLocation,
-          "Flowers",
-          "Religious",
-          "Sanitation",
-          "Interpreter",
-          "Transport",
-        ]}
-        components={[
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={allRequests}
-            type={"All"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={allRequests}
-            type={"AtNode"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={requests?.flowers}
-            type={"Flowers"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={requests?.religious}
-            type={"Religious"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={requests?.sanitation}
-            type={"Sanitation"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={requests?.interpreter}
-            type={"Interpreter"}
-          />,
-          <RequestsTable
-            updateRequests={updateRequests}
-            requests={requests?.transport}
-            type={"Transport"}
-          />,
-        ]}
-      />
+      <TabSwitcher titles={titles} components={tables} />
     </div>
   );
 };
