@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { getEndNode, getStartNode, MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
@@ -13,6 +13,8 @@ import {
 } from "react-bootstrap-icons";
 
 const TextDirections: React.FC = () => {
+  const [selectedFloor, setSelectedFloor] = useState<string>("All");
+
   let path: MapNode[] = [];
 
   if (getStartNode() && getEndNode()) {
@@ -62,7 +64,11 @@ const TextDirections: React.FC = () => {
     }
   };
 
-  const directions = path.map((mapNode: MapNode, index: number) => {
+  const directionsByFloor: { [key: string]: JSX.Element[] } = {};
+  path.forEach((mapNode, index) => {
+    if (!directionsByFloor[mapNode.floor]) {
+      directionsByFloor[mapNode.floor] = [];
+    }
     let contents;
     if (index === 0) {
       contents = (
@@ -122,22 +128,63 @@ const TextDirections: React.FC = () => {
       }
     }
     if (contents) {
-      return (
+      directionsByFloor[mapNode.floor].push(
         <div key={index} className="directionDiv">
           {contents}
-        </div>
+        </div>,
       );
     }
-    return;
+  });
+
+  const floors = ["All", "L2", "L1", "1", "2", "3"];
+
+  const sortedFloors = Object.keys(directionsByFloor).sort((a, b) => {
+    const order = ["L2", "L1", "1", "2", "3"];
+    const startIdx = order.indexOf(getStartNode()?.floor || "");
+    const endIdx = order.indexOf(getEndNode()?.floor || "");
+    const aIdx = order.indexOf(a);
+    const bIdx = order.indexOf(b);
+
+    if (aIdx === startIdx) return -1;
+    if (bIdx === startIdx) return 1;
+    if (aIdx === endIdx) return 1;
+    if (bIdx === endIdx) return -1;
+    return aIdx - bIdx;
   });
 
   return (
     <div className={"container-div"}>
+      <div className={"floor-buttons"}>
+        {floors.map((floor) => (
+          <button
+            key={floor}
+            className={selectedFloor === floor ? "active" : ""}
+            onClick={() => setSelectedFloor(floor)}
+          >
+            {floor}
+          </button>
+        ))}
+      </div>
+      {(!getStartNode() || !getEndNode()) && (
+        <div>Please select both a starting and an ending node</div>
+      )}
       <div
         className={"asdf2-text-directions-container"}
         style={{ maxHeight: "450px" }}
       >
-        {directions}
+        {selectedFloor === "All" ? (
+          sortedFloors.map((floor) => (
+            <div key={floor}>
+              <h3>Floor {floor}</h3>
+              {directionsByFloor[floor]}
+            </div>
+          ))
+        ) : (
+          <>
+            <h3>Floor {selectedFloor}</h3>
+            {directionsByFloor[selectedFloor]}
+          </>
+        )}
       </div>
     </div>
   );
