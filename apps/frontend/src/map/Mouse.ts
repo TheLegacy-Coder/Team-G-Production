@@ -47,12 +47,37 @@ class Mouse {
 
   // zooms to a point
   public zoom(zoom: number, xCoord: number, yCoord: number) {
+    console.log("zoom update coords");
+    drawData.updateCoords();
     if (
       (drawData.scalar * zoom * this.imageWidth > window.innerWidth ||
         drawData.scalar * zoom * this.imageHeight > window.innerHeight) &&
       (drawData.scalar * zoom * this.imageWidth < window.innerWidth * 10 ||
         drawData.scalar * zoom * this.imageHeight < window.innerHeight * 10)
     ) {
+      console.log("valid coordinates");
+      console.log(
+        "In view X:\nPath lowest: " +
+          drawData.pathLowest.x +
+          "\nPath Highest: " +
+          drawData.pathHighest.x +
+          "\nUp left: " +
+          drawData.upleftCorner!.x +
+          "\nCenter: " +
+          drawData.centerPos!.x.toString() +
+          "\nDown right: " +
+          drawData.downrightCorner!.x +
+          "\nIn view Y:\nPath lowest: " +
+          drawData.pathLowest.y +
+          "\nPath Highest: " +
+          drawData.pathHighest.y +
+          "\nUp left: " +
+          drawData.upleftCorner!.y +
+          "\nCenter: " +
+          drawData.centerPos!.y.toString() +
+          "\nDown right: " +
+          drawData.downrightCorner!.y,
+      );
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -61,8 +86,10 @@ class Mouse {
       ctx!.scale(zoom, zoom);
       ctx!.translate(-xCoord, -yCoord);
     }
+    console.log("zoom update coords again");
     drawData.updateCoords();
-    this.boundCoords();
+    console.log("zoom bound coords");
+    mouse.boundCoords();
     //redraw = true;
     drawData.setRedraw(true);
   }
@@ -73,24 +100,6 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
@@ -137,30 +146,57 @@ class Mouse {
     let dim = { x: 0, y: 0, scale: 1 };
 
     if (homeFloor === "3") {
-      dim = this.setDim(1210, 2890, 750, 3060);
+      dim = mouse.setDim(1210, 2890, 750, 3060);
     } else if (homeFloor === "2") {
-      dim = this.setDim(1260, 4670, 350, 2880);
+      dim = mouse.setDim(1260, 4670, 350, 2880);
     } else if (homeFloor === "1") {
-      dim = this.setDim(960, 3280, 680, 2980);
+      dim = mouse.setDim(960, 3280, 680, 2980);
     } else if (homeFloor === "L1") {
-      dim = this.setDim(1620, 2790, 820, 2400);
+      dim = mouse.setDim(1620, 2790, 820, 2400);
     } else if (homeFloor === "L2") {
-      dim = this.setDim(1490, 2380, 780, 2930);
+      dim = mouse.setDim(1490, 2380, 780, 2930);
     }
     ctx!.translate(dim.x, dim.y);
+    console.log("home position coords");
     drawData.updateCoords();
     drawData.setScalar(dim.scale);
     ctx!.scale(dim.scale, dim.scale);
+    console.log("home position coords again");
     drawData.updateCoords();
-    this.boundCoords();
+    console.log("home position bound coords");
+    mouse.boundCoords();
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = drawData.scalar.toFixed(2).toString();
   }
   public buttonZoom(input: boolean) {
+    console.log("--------Start Zoom--------");
+    console.log(
+      "In view X:\nPath lowest: " +
+        drawData.pathLowest.x +
+        "\nPath Highest: " +
+        drawData.pathHighest.x +
+        "\nUp left: " +
+        drawData.upleftCorner!.x +
+        "\nCenter: " +
+        drawData.centerPos!.x.toString() +
+        "\nDown right: " +
+        drawData.downrightCorner!.x +
+        "\nIn view Y:\nPath lowest: " +
+        drawData.pathLowest.y +
+        "\nPath Highest: " +
+        drawData.pathHighest.y +
+        "\nUp left: " +
+        drawData.upleftCorner!.y +
+        "\nCenter: " +
+        drawData.centerPos!.y.toString() +
+        "\nDown right: " +
+        drawData.downrightCorner!.y,
+    );
     let zoomIncrement: number;
     if (input) zoomIncrement = 1 + mouse.zoomAmount;
     else zoomIncrement = 1 - mouse.zoomAmount;
-    this.zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
+    mouse.zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
+    console.log("--------End Zoom--------");
   }
   public setMap(floor: string, imageSrc: string) {
     if (mouse.newMap) {
@@ -174,12 +210,12 @@ class Mouse {
       const hasPath = drawData.resetMap(newFloor);
       drawData.setCurrentFloor(floor);
       drawData.setImage(imageSrc);
-      this.homePosition(floor);
+      mouse.homePosition(floor);
       ctx!.restore();
       drawData.setScalar(tempScalar);
       if (!hasPath) {
         drawData.resetMap(newFloor);
-        this.homePosition(floor);
+        mouse.homePosition(floor);
       }
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -202,6 +238,7 @@ class Mouse {
     ) {
       // centers canvas along x axis
       ctx!.translate(drawData.upleftCorner.x, 0);
+      console.log("bound coords update coords");
       drawData.updateCoords();
       ctx!.translate(
         (drawData.downrightCorner.x -
@@ -233,6 +270,7 @@ class Mouse {
     ) {
       // centers canvas along y axis
       ctx!.translate(0, drawData.upleftCorner.y);
+      console.log("bound coords update coords again");
       drawData.updateCoords();
       ctx!.translate(
         0,
@@ -258,6 +296,7 @@ class Mouse {
         );
       }
     }
+    console.log("bound coords update coords a third time");
     drawData.updateCoords();
   }
   //Adjusts zoom according to scroll
@@ -313,9 +352,12 @@ class Mouse {
         }
       }
     });
-    drawData.updateCoords();
-    mouse.boundCoords();
+
     if (moveRedraw) {
+      console.log("click move update coords");
+      drawData.updateCoords();
+      console.log("click move bound coords");
+      mouse.boundCoords();
       //redraw = true;
       drawData.setRedraw(true);
     }
@@ -338,6 +380,7 @@ class Mouse {
     mouse.moveMap = true;
     const posStart = drawData.tfPoint(posX, posY);
     mouse.setStartPos(posStart!.x, posStart!.y);
+    console.log("click down bound coords");
     mouse.boundCoords();
   }
 
@@ -356,6 +399,7 @@ class Mouse {
     posY;
     mouse.moveMap = false;
     mouse.setDelta(0, 0);
+    console.log("element up bound coords");
     mouse.boundCoords();
     drawData.setRedraw(true);
   }
@@ -393,7 +437,7 @@ class Mouse {
         }
       }
     });
-    if (emptyClick && delta.x === 0 && delta.y === 0) {
+    if (emptyClick && Math.abs(delta.x) <= 5 && Math.abs(delta.y) <= 5) {
       drawData.setSwitchNodes([], []);
       setStartNode(undefined);
       setEndNode(undefined);
@@ -401,6 +445,7 @@ class Mouse {
       drawData.resetPath();
     }
     mouse.setDelta(0, 0);
+    console.log("click up bound coords");
     mouse.boundCoords();
     drawData.setRedraw(true);
   }
@@ -411,23 +456,26 @@ class Mouse {
   }
 
   public canvasTouchStart(evt: React.TouchEvent<HTMLCanvasElement>) {
-    evt.preventDefault();
-    if (evt.touches.length === 1) {
-      mouse.clickDown(evt.touches[0].pageX, evt.touches[0].pageY);
+    //evt.preventDefault();
+    if (evt.touches.length >= 1) {
+      const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
+      mouse.clickDown(touch.x, touch.y);
     }
   }
 
   public canvasTouchEnd(evt: React.TouchEvent<HTMLCanvasElement>) {
-    evt.preventDefault();
-    if (evt.touches.length === 1) {
-      mouse.clickUp(evt.touches[0].pageX, evt.touches[0].pageY);
+    //evt.preventDefault();
+    if (evt.touches.length >= 1) {
+      const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
+      mouse.clickUp(touch.x, touch.y);
     }
   }
 
   public canvasTouchMove(evt: React.TouchEvent<HTMLCanvasElement>) {
-    evt.preventDefault();
-    if (evt.touches.length === 1) {
-      mouse.clickMove(evt.touches[0].pageX, evt.touches[0].pageY);
+    //evt.preventDefault();
+    if (evt.touches.length >= 1) {
+      const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
+      mouse.clickMove(touch.x, touch.y);
     }
   }
 }

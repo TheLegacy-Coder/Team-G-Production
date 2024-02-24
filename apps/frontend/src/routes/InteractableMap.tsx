@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef /*, useState*/ } from "react";
 import { draw } from "../map/Draw";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
@@ -10,30 +10,46 @@ import {
   BreadthFirstSearch,
   DepthFirstSearch,
 } from "../map/MapNode.ts";
-import {
-  Dash,
+/*import {
+  //Dash,
   EyeFill,
   EyeSlashFill,
-  Plus,
+  //Plus,
   HouseFill,
-} from "react-bootstrap-icons";
+} from "react-bootstrap-icons";*/
 
-interface Visibility {
+/*interface Visibility {
   nodes: boolean;
   edges: boolean;
   halls: boolean;
-}
+}*/
 
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
-  const [currentAlg, setCurrentAlg] = useState<string>("BFS");
-  const [visibilities, setVisibilities] = useState<Visibility>({
+  //const [currentAlg, setCurrentAlg] = useState<string>("BFS");
+  /*const [visibilities, setVisibilities] = useState<Visibility>({
     nodes: draw.showNodes,
     edges: draw.showEdges,
     halls: draw.showHalls,
-  });
+  });*/
+
+  let currentAlg = "BFS";
+  function setCurrentAlg(input: string) {
+    currentAlg = input;
+  }
+
+  const visibilities = [true, false, false];
+  function setVisibilities(entity: string, value: boolean) {
+    if (entity === "nodes") {
+      visibilities[0] = value;
+    } else if (entity === "edges") {
+      visibilities[1] = value;
+    } else if (entity === "halls") {
+      visibilities[2] = value;
+    }
+  }
 
   window.onresize = () => {
     const canvasContainer = document.getElementById("canvas-container")!.style;
@@ -87,13 +103,16 @@ export const InteractableMap = () => {
   function toggleButtons(type: string) {
     if (type === "nodes") {
       draw.showNodes = !draw.showNodes;
-      setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
+      //setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
+      setVisibilities("nodes", draw.showNodes);
     } else if (type === "edges") {
       draw.showEdges = !draw.showEdges;
-      setVisibilities({ ...visibilities, edges: !visibilities.edges });
+      //setVisibilities({ ...visibilities, edges: !visibilities.edges });
+      setVisibilities("edges", draw.showEdges);
     } else if (type === "halls") {
       draw.showHalls = !draw.showHalls;
-      setVisibilities({ ...visibilities, halls: !visibilities.halls });
+      //setVisibilities({ ...visibilities, halls: !visibilities.halls });
+      setVisibilities("halls", draw.showHalls);
     }
     drawData.setRedraw(true);
   }
@@ -114,16 +133,22 @@ export const InteractableMap = () => {
     value: boolean;
     onClick: () => void;
   }
-  function ToggleButton({ title, value, onClick }: ToggleButtonProps) {
+  function ToggleButton({
+    title,
+    //, value
+    onClick,
+  }: ToggleButtonProps) {
     return (
       <button className={"toggle-button"} onClick={onClick}>
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
-          {value ? (
-            <EyeFill color="white" size={35} />
-          ) : (
-            <EyeSlashFill color="white" size={35} />
-          )}
+          {
+            //{value ? (
+            //<EyeFill color="white" size={35} />
+            //) : (
+            //<EyeSlashFill color="white" size={35} />
+            //)}
+          }
         </div>
       </button>
     );
@@ -150,7 +175,7 @@ export const InteractableMap = () => {
 
   return (
     <div
-      onMouseMove={mouse.mouseMove}
+      //onMouseMove={mouse.mouseMove}
       id={"canvas-container"}
       style={
         {
@@ -160,7 +185,7 @@ export const InteractableMap = () => {
         } as React.CSSProperties
       }
     >
-      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
+      <div className={"map-top-left-buttons"} /*onMouseUp={mouse.divMouseUp}*/>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
           <div className={"zoom-buttons"}>
             <button
@@ -173,7 +198,7 @@ export const InteractableMap = () => {
                 borderBottomLeftRadius: "16px",
               }}
             >
-              <Dash size={50} />
+              {/*<Dash size={50} />*/}-
             </button>
             <button
               className={"zoom-button home-button"}
@@ -183,14 +208,18 @@ export const InteractableMap = () => {
               }}
               style={{ borderRadius: "0px" }}
             >
-              <HouseFill size={30} />
+              {/*<HouseFill size={30} />*/}
             </button>
             <button className={"zoom-button zoom-amount"}>
               <div id={"scalar"}></div>
             </button>
             <button
               className={"zoom-button"}
-              onClick={() => mouse.buttonZoom(true)}
+              onClick={() => {
+                console.log("click zoom start");
+                mouse.buttonZoom(true);
+                console.log("click zoom end");
+              }}
               style={{
                 borderTopRightRadius: "16px",
                 borderBottomRightRadius: "16px",
@@ -198,32 +227,34 @@ export const InteractableMap = () => {
                 borderBottomLeftRadius: "0px",
               }}
             >
-              <Plus size={50} />
+              {/*<Plus size={50} />*/}+
             </button>
           </div>
         </div>
 
-        <div className={"toggle-button-container"}>
+        <div
+          className={"toggle-button-container"} /*onMouseUp={mouse.divMouseUp}*/
+        >
           <ToggleButton
             title={"Nodes"}
-            value={visibilities.nodes}
+            value={visibilities[0]}
             onClick={() => toggleButtons("nodes")}
           />
           <ToggleButton
             title={"Edges"}
-            value={visibilities.edges}
+            value={visibilities[1]}
             onClick={() => toggleButtons("edges")}
           />
           <ToggleButton
             title={"Halls"}
-            value={visibilities.halls}
+            value={visibilities[2]}
             onClick={() => toggleButtons("halls")}
           />
         </div>
       </div>
       <div
         className={"map-top-left-search-button"}
-        onMouseUp={mouse.divMouseUp}
+        /*onMouseUp={mouse.divMouseUp}*/
       >
         <PathfindingButton
           algorithm={currentAlg}
@@ -231,7 +262,9 @@ export const InteractableMap = () => {
         />
       </div>
 
-      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
+      <div
+        className={"map-bottom-left-buttons"} /*onMouseUp={mouse.divMouseUp}*/
+      >
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <button
             id={"F3"}
@@ -300,6 +333,7 @@ export const InteractableMap = () => {
           //alert("end touch");
           mouse.canvasTouchMove(evt);
         }}
+        onMouseMove={mouse.mouseMove}
         onWheel={mouse.mouseScroll}
         ref={canvasRef}
         width={window.innerWidth}
@@ -308,6 +342,3 @@ export const InteractableMap = () => {
     </div>
   );
 };
-/* onMouseMove={mouse.mouseMove}
-        onMouseUp={mouse.mouseUp}
-        onWheel={mouse.mouseScroll}*/

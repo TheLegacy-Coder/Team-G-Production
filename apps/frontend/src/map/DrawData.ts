@@ -83,14 +83,6 @@ class DrawData {
   }
   // updates coordinate points for map panning and zooming
   public updateCoords() {
-    const center = this.tfPoint(
-      (window.innerWidth - this.offset.x) / 2,
-      (window.innerHeight - this.offset.y) / 2,
-    );
-
-    if (center !== undefined) {
-      this.setCenterPos(center.x, center.y);
-    }
     const upLeft = this.tfPoint(0, 0);
     if (upLeft !== undefined) {
       this.setUpLeft(upLeft.x, upLeft.y);
@@ -100,6 +92,34 @@ class DrawData {
     if (downRight !== undefined) {
       this.setDownRight(downRight.x, downRight.y);
     }
+    const center = this.tfPoint(window.innerWidth / 2, window.innerHeight / 2);
+    //const center = new DOMPoint((downRight!.x - upLeft!.x)/2, (downRight!.y - upLeft!.y)/2);
+
+    if (center !== undefined) {
+      this.setCenterPos(center.x, center.y);
+    }
+    console.log(
+      "In view X:\nPath lowest: " +
+        drawData.pathLowest.x +
+        "\nPath Highest: " +
+        drawData.pathHighest.x +
+        "\nUp left: " +
+        drawData.upleftCorner!.x +
+        "\nCenter: " +
+        drawData.centerPos!.x.toString() +
+        "\nDown right: " +
+        drawData.downrightCorner!.x +
+        "\nIn view Y:\nPath lowest: " +
+        drawData.pathLowest.y +
+        "\nPath Highest: " +
+        drawData.pathHighest.y +
+        "\nUp left: " +
+        drawData.upleftCorner!.y +
+        "\nCenter: " +
+        drawData.centerPos!.y.toString() +
+        "\nDown right: " +
+        drawData.downrightCorner!.y,
+    );
   }
   public setOffset(top: number, left: number) {
     this.offset.y = top;
@@ -134,8 +154,10 @@ class DrawData {
     }
     ctx!.scale(1 / this.scalar, 1 / this.scalar);
     this.setScalar(1);
+    console.log("reset map update coords");
     this.updateCoords();
     ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
+    console.log("reset map update coords again");
     this.updateCoords();
     this.setRedraw(true);
     return hasPath;
