@@ -47,8 +47,8 @@ export const HelpPage = () => {
         <br />
         <div>
           Search for Locations: Click on the dot at which you are located and
-          then another dot represent a specific department, clinic, or amenity
-          within the hospital.
+          then another dot representing a specific department, clinic, or
+          amenity within the hospital.
         </div>
         <br />
         <div>

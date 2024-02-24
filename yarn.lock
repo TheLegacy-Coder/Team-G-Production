@@ -4226,7 +4226,7 @@ __metadata:
     react-router-bootstrap: "npm:^0.26.2"
     react-router-dom: "npm:^6.11.2"
     react-zoom-pan-pinch: "npm:^3.1.0"
-    reaviz: "npm:^15.7.1"
+    reaviz: "npm:^15.7.2"
     sass: "npm:^1.62.1"
     serve: "npm:^14.2.0"
     sort-by: "npm:^1.2.0"
@@ -6927,9 +6927,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reaviz@npm:^15.7.1":
-  version: 15.7.1
-  resolution: "reaviz@npm:15.7.1"
+"reaviz@npm:^15.7.2":
+  version: 15.7.2
+  resolution: "reaviz@npm:15.7.2"
   dependencies:
     "@upsetjs/venn.js": "npm:^1.3.0"
     big-integer: "npm:^1.6.52"
@@ -6959,7 +6959,7 @@ __metadata:
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: fe2b75897579c473a211bb72dd58aa3e04d7c3e94951326040e8065a4839e4c18b9e1e6a487bd41a840857062185284e14ff8aa279149352f57ca35c447b3cb1
+  checksum: 0bd6daa69c02ae2e2d4b0f05b4a6806c239c87eef8b904a8c68bf0902d1e798652ae5ed143c5d7b79a2e4e411782a4da583c02284c1daf3870700669d75b80cb
   languageName: node
   linkType: hard
 

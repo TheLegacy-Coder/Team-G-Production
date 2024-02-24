@@ -26,61 +26,21 @@ export const About = () => {
         <div>WPI Computer Science Department</div>
         <div>CS3733-C24 Software Engineering, Prof. Wilson Wong</div>
         <div>Team Coach: Mike Wilkinson</div>
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <th>Team Member</th>
-                <th>Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Thomas Branchaud</td>
-                <td>Scrum Master</td>
-              </tr>
-              <tr>
-                <td>Camren Chraplak</td>
-                <td>Product Owner</td>
-              </tr>
-              <tr>
-                <td>Klaudio Fusha</td>
-                <td>Assistant Lead Software Engineer</td>
-              </tr>
-              <tr>
-                <td>Tyler Giroux</td>
-                <td>Project Manager</td>
-              </tr>
-              <tr>
-                <td>Silas Joy</td>
-                <td>Full-Time Software Engineer (Front/Back-End)</td>
-              </tr>
-              <tr>
-                <td>Zachary Medailleu</td>
-                <td>Full-Time Software Engineer (Front-End)</td>
-              </tr>
-              <tr>
-                <td>Noah Newton</td>
-                <td>Full-Time Software Engineer (Back-End)</td>
-              </tr>
-              <tr>
-                <td>Dimitri Saliba</td>
-                <td>Lead Developer</td>
-              </tr>
-              <tr>
-                <td>Gabriel Shiu</td>
-                <td>Assistant Lead Software Engineer</td>
-              </tr>
-              <tr>
-                <td>Istan Slamet</td>
-                <td>Documentation Analyst</td>
-              </tr>
-              <tr>
-                <td>Jason Zhang</td>
-                <td>Full-Time Software Engineer (Front-End)</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="row">
+          <div className="column">
+            <div className="card">
+              <img src="istan.jpg" alt="Jane" />
+              <div className="container">
+                <h2>Jane Doe</h2>
+                <p className="title">Documentation Analyst</p>
+                <p>Yessir</p>
+                <p>ipslamet@wpi.edu</p>
+                <p>
+                  <button className="button">Contact</button>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <div>
           We would like to thank Brigham and Women's Hospital and their
