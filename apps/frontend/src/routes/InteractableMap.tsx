@@ -289,6 +289,17 @@ export const InteractableMap = () => {
         id={"map-canvas"}
         onMouseDown={mouse.mouseDown}
         onMouseUp={mouse.mouseUp}
+        onTouchStart={(evt) => {
+          mouse.canvasTouchStart(evt);
+        }}
+        onTouchEnd={(evt) => {
+          //alert("end touch");
+          mouse.canvasTouchEnd(evt);
+        }}
+        onTouchMove={(evt) => {
+          //alert("end touch");
+          mouse.canvasTouchMove(evt);
+        }}
         onWheel={mouse.mouseScroll}
         ref={canvasRef}
         width={window.innerWidth}
