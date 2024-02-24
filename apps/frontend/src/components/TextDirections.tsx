@@ -8,6 +8,8 @@ import {
   GeoAltFill,
   SignTurnLeftFill,
   SignTurnRightFill,
+  ArrowDownUp,
+  PersonWalking,
 } from "react-bootstrap-icons";
 
 const TextDirections: React.FC = () => {
@@ -98,15 +100,21 @@ const TextDirections: React.FC = () => {
           drawData.allSwitchFloors[drawData.allSwitchNodes.indexOf(mapNode)];
         if (switchFloor === mapNode.floor) {
           contents = (
-            <p key={index}>
-              Exit {mapNode.longName} onto floor {switchFloor}
-            </p>
+            <>
+              <PersonWalking size={35} />
+              <p key={index}>
+                Exit {mapNode.longName} onto floor {switchFloor}
+              </p>
+            </>
           );
         } else {
           contents = (
-            <p key={index}>
-              Go to Floor {switchFloor} from {mapNode.longName}
-            </p>
+            <>
+              <ArrowDownUp size={35} />
+              <p key={index}>
+                Go to Floor {switchFloor} from {mapNode.longName}
+              </p>
+            </>
           );
         }
       } else if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
