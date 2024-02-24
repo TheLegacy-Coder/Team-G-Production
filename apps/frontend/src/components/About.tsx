@@ -26,15 +26,29 @@ export const About = () => {
         <div>WPI Computer Science Department</div>
         <div>CS3733-C24 Software Engineering, Prof. Wilson Wong</div>
         <div>Team Coach: Mike Wilkinson</div>
-        <div className="row">
-          <div className="column">
-            <div className="card">
-              <img src="istan.jpg" alt="Jane" />
-              <div className="container">
-                <h2>Jane Doe</h2>
+        <div className="about-page-row">
+          <div className="about-page-column">
+            <div className="about-page-card">
+              <img src="istan.jpg" alt="Istan" />
+              <div className="photo-container">
+                <h2>Istan Slamet</h2>
                 <p className="title">Documentation Analyst</p>
-                <p>Yessir</p>
+                <p>ISTAAAAAAAAAAAAAN</p>
                 <p>ipslamet@wpi.edu</p>
+                <p>
+                  <button className="button">Contact</button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="about-page-column">
+            <div className="about-page-card">
+              <img src="gabe.jpg" alt="Gabe" />
+              <div className="photo-container">
+                <h2>Gabriel Shiu</h2>
+                <p className="title">Assistant Lead Software Engineer</p>
+                <p>Shiu!</p>
+                <p>gshiu@wpi.edu</p>
                 <p>
                   <button className="button">Contact</button>
                 </p>
