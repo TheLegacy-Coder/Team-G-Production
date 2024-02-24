@@ -10,13 +10,13 @@ import {
   BreadthFirstSearch,
   DepthFirstSearch,
 } from "../map/MapNode.ts";
-/*import {
+import {
   //Dash,
   EyeFill,
   EyeSlashFill,
   //Plus,
-  HouseFill,
-} from "react-bootstrap-icons";*/
+  //HouseFill,
+} from "react-bootstrap-icons";
 
 /*interface Visibility {
   nodes: boolean;
@@ -130,25 +130,27 @@ export const InteractableMap = () => {
 
   interface ToggleButtonProps {
     title: string;
-    value: boolean;
     onClick: () => void;
   }
-  function ToggleButton({
-    title,
-    //, value
-    onClick,
-  }: ToggleButtonProps) {
+  function ToggleButton({ title, onClick }: ToggleButtonProps) {
+    console.log("toggle eyes");
+    let value: boolean = false;
+    if (title === "nodes") {
+      value = visibilities[0];
+    } else if (title === "edges") {
+      value = visibilities[1];
+    } else if (title === "halls") {
+      value = visibilities[2];
+    }
     return (
       <button className={"toggle-button"} onClick={onClick}>
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
-          {
-            //{value ? (
-            //<EyeFill color="white" size={35} />
-            //) : (
-            //<EyeSlashFill color="white" size={35} />
-            //)}
-          }
+          {value ? (
+            <EyeFill color="white" size={35} />
+          ) : (
+            <EyeSlashFill color="white" size={35} />
+          )}
         </div>
       </button>
     );
@@ -235,19 +237,39 @@ export const InteractableMap = () => {
         <div
           className={"toggle-button-container"} /*onMouseUp={mouse.divMouseUp}*/
         >
-          <ToggleButton
+          {/*<ToggleButton
             title={"Nodes"}
-            value={visibilities[0]}
             onClick={() => toggleButtons("nodes")}
-          />
+          />*/}
+          <button
+            className={"toggle-button"}
+            onClick={() => {
+              /*value ? (
+                      <EyeFill color="white" size={35}/>
+                  ) : (
+                      <EyeSlashFill color="white" size={35}/>
+                  )*/
+              console.log("toggle eyes");
+              const value = visibilities[0];
+              if (value) {
+                console.log("Setting value");
+                document.getElementById("node-eye")!.innerHTML =
+                  '<EyeFill color="white" size={35}/>';
+              } else {
+                document.getElementById("node-eye")!.innerHTML =
+                  '<EyeSlashFill color="white" size={35}/>';
+              }
+            }}
+          >
+            <div>{"Nodes"}</div>
+            <div style={{ marginLeft: "auto" }} id={"node-eye"}></div>
+          </button>
           <ToggleButton
             title={"Edges"}
-            value={visibilities[1]}
             onClick={() => toggleButtons("edges")}
           />
           <ToggleButton
             title={"Halls"}
-            value={visibilities[2]}
             onClick={() => toggleButtons("halls")}
           />
         </div>
@@ -326,11 +348,9 @@ export const InteractableMap = () => {
           mouse.canvasTouchStart(evt);
         }}
         onTouchEnd={(evt) => {
-          //alert("end touch");
           mouse.canvasTouchEnd(evt);
         }}
         onTouchMove={(evt) => {
-          //alert("end touch");
           mouse.canvasTouchMove(evt);
         }}
         onMouseMove={mouse.mouseMove}
