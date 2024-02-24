@@ -73,7 +73,7 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    console.log(
+    /*console.log(
       "In view X:\nPath lowest: " +
         drawData.pathLowest.x +
         "\nPath Highest: " +
@@ -90,7 +90,7 @@ class Mouse {
         drawData.upleftCorner!.y +
         "\nDown right: " +
         drawData.downrightCorner!.y,
-    );
+    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
@@ -303,11 +303,13 @@ class Mouse {
         if (dist < 10) {
           if (hoverNode !== node) {
             moveRedraw = true;
+            document.getElementById("map-canvas")!.style.cursor = "pointer";
           }
           hoverNode = node;
-        } else if (hoverNode == node) {
+        } else if (hoverNode === node) {
           hoverNode = undefined;
           moveRedraw = true;
+          document.getElementById("map-canvas")!.style.cursor = "auto";
         }
       }
     });
@@ -321,6 +323,9 @@ class Mouse {
   //Starts moving map according to mouse drag
   public mouseDown(evt: React.MouseEvent<Element, MouseEvent>) {
     mouse.updateMousePos(evt.pageX, evt.pageY);
+    if (hoverNode === undefined) {
+      document.getElementById("map-canvas")!.style.cursor = "all-scroll";
+    }
     if (pageStart === undefined) {
       return null;
     }
@@ -332,8 +337,9 @@ class Mouse {
   }
 
   public divMouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (hoverNode === undefined)
+      document.getElementById("map-canvas")!.style.cursor = "auto";
     if (tfCursor === undefined || delta === undefined) {
-      console.log("null mouse up");
       return null;
     }
     evt.pageX;
@@ -345,8 +351,9 @@ class Mouse {
 
   // runs when mouse released
   public mouseUp(evt: React.MouseEvent<Element, MouseEvent>) {
+    if (hoverNode === undefined)
+      document.getElementById("map-canvas")!.style.cursor = "auto";
     if (tfCursor === undefined || delta === undefined) {
-      console.log("null mouse up");
       return null;
     }
     mouse.moveMap = false;
