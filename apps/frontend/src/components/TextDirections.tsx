@@ -65,8 +65,8 @@ const TextDirections: React.FC = () => {
   };
 
   const directionsByFloor: { [key: string]: JSX.Element[] } = {};
+  const allDirections: JSX.Element[] = [];
   let previousFloor: string | null = null;
-
   path.forEach((mapNode, index) => {
     if (!directionsByFloor[mapNode.floor]) {
       directionsByFloor[mapNode.floor] = [];
@@ -138,8 +138,18 @@ const TextDirections: React.FC = () => {
             <h4>Floor {mapNode.floor}</h4>
           </div>,
         );
+        allDirections.push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
       }
       directionsByFloor[mapNode.floor].push(
+        <div key={index} className="directionDiv">
+          {contents}
+        </div>,
+      );
+      allDirections.push(
         <div key={index} className="directionDiv">
           {contents}
         </div>,
@@ -149,20 +159,6 @@ const TextDirections: React.FC = () => {
   });
 
   const floors = ["All", "L2", "L1", "1", "2", "3"];
-
-  const sortedFloors = Object.keys(directionsByFloor).sort((a, b) => {
-    const order = ["L2", "L1", "1", "2", "3"];
-    const startIdx = order.indexOf(getStartNode()?.floor || "");
-    const endIdx = order.indexOf(getEndNode()?.floor || "");
-    const aIdx = order.indexOf(a);
-    const bIdx = order.indexOf(b);
-
-    if (aIdx === startIdx) return -1;
-    if (bIdx === startIdx) return 1;
-    if (aIdx === endIdx) return 1;
-    if (bIdx === endIdx) return -1;
-    return aIdx - bIdx;
-  });
 
   return (
     <div className={"container-div"}>
@@ -185,9 +181,7 @@ const TextDirections: React.FC = () => {
         style={{ maxHeight: "450px" }}
       >
         {selectedFloor === "All" ? (
-          sortedFloors.map((floor) => (
-            <div key={floor}>{directionsByFloor[floor]}</div>
-          ))
+          allDirections
         ) : (
           <>{directionsByFloor[selectedFloor]}</>
         )}

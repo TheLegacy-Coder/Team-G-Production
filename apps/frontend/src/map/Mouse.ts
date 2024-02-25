@@ -73,7 +73,7 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    console.log(
+    /*console.log(
       "In view X:\nPath lowest: " +
         drawData.pathLowest.x +
         "\nPath Highest: " +
@@ -90,7 +90,7 @@ class Mouse {
         drawData.upleftCorner!.y +
         "\nDown right: " +
         drawData.downrightCorner!.y,
-    );
+    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
