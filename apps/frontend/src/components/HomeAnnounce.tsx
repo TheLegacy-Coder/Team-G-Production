@@ -6,7 +6,7 @@ import {
   clearAnnouncementFlag,
   refreshAnnouncements,
 } from "../stores/AnnouncementsStore.ts";
-//import { mouse } from "../map/Mouse.ts";
+import { mouse } from "../map/Mouse.ts";
 
 export const HomeAnnounce = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -63,8 +63,8 @@ export const HomeAnnounce = () => {
     <div
       className={"announcements-bar"}
       id={"marquee-content"}
-      //onMouseMove={mouse.mouseMove}
-      //onMouseUp={mouse.divMouseUp}
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.divMouseUp}
     >
       <style>
         {"@keyframes scroll-left {\n" +
