@@ -164,8 +164,8 @@ class Draw {
     ctx!.strokeStyle = "#000000";
     ctx!.lineWidth = 5 / drawData.scalar;
     const content: string[] = [];
-    let contentWidth: number = node.shortName.length;
-    content.push(node.shortName);
+    let contentWidth: number = node.longName.length;
+    content.push(node.longName);
     contentWidth = draw.getContentWidth(
       contentWidth,
       "x: " + node.xcoord.toString() + ", y: " + node.ycoord.toString(),

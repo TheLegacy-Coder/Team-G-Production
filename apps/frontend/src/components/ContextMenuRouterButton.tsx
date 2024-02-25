@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { contextMenuState } from "../stores/ContextMenuState.ts";
 import { loginStore } from "../stores/LoginStore.ts";
 import { Login } from "../routes/Login.tsx";
+import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 export interface ContextMenuRouterButtonProps {
   content: ReactNode;
   lable: string;
@@ -25,6 +26,13 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
       props.admin === undefined ? false : props.admin,
     );
   }
+
+  speechEngineBackend.RegisterCommand({
+    command: `open ${props.lable}`,
+    callback: () => {
+      route();
+    },
+  });
 
   if (props.button === true) {
     return (

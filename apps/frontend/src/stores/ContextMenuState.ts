@@ -82,6 +82,11 @@ class ContextMenuState {
 
     if (this.render != undefined) this.render();
   }
+
+  setShowing(newShowing: boolean) {
+    if (newShowing === this.showing) return;
+    this.toggle();
+  }
 }
 
 export const contextMenuState = new ContextMenuState();

@@ -3,10 +3,12 @@ import React from "react";
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
+import { SpeechEngine } from "../components/SpeechEngine.tsx";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
+      <SpeechEngine />
       <ContextMenu />
       <InteractableMap />
       <HomeAnnounce />

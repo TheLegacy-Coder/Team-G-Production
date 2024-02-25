@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { contextMenuState } from "../stores/ContextMenuState.ts";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { ServiceRequests } from "./ServiceRequests.tsx";
@@ -14,12 +14,44 @@ import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
 import { Charts } from "./Charts.tsx";
 import { mouse } from "../map/Mouse.ts";
+import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   loginStore.navbarRefreshHook = forceUpdate;
   contextMenuState.render = forceUpdate;
+
+  useEffect(() => {
+    speechEngineBackend.RegisterCommand({
+      command: `show context menu`,
+      callback: () => {
+        contextMenuState.setShowing(true);
+      },
+    });
+
+    speechEngineBackend.RegisterCommands({
+      commands: [`show menu`, `show the menu`],
+      callback: () => {
+        contextMenuState.setShowing(true);
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `hide context menu`,
+      callback: () => {
+        contextMenuState.setShowing(false);
+      },
+    });
+
+    speechEngineBackend.RegisterCommands({
+      commands: [`hide menu`, `hide the menu`],
+      callback: () => {
+        contextMenuState.setShowing(false);
+      },
+    });
+  }, []);
+
   return (
     <div
       className={contextMenuState.showingClass}

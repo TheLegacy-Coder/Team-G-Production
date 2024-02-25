@@ -17,6 +17,7 @@ import {
   Plus,
   HouseFill,
 } from "react-bootstrap-icons";
+import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 
 interface Visibility {
   nodes: boolean;
@@ -34,6 +35,105 @@ export const InteractableMap = () => {
     edges: draw.showEdges,
     halls: draw.showHalls,
   });
+
+  const toggleButtons = useCallback(
+    (type: string) => {
+      if (type === "nodes") {
+        draw.showNodes = !draw.showNodes;
+        setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
+      } else if (type === "edges") {
+        draw.showEdges = !draw.showEdges;
+        setVisibilities({ ...visibilities, edges: !visibilities.edges });
+      } else if (type === "halls") {
+        draw.showHalls = !draw.showHalls;
+        setVisibilities({ ...visibilities, halls: !visibilities.halls });
+      }
+      drawData.setRedraw(true);
+    },
+    [visibilities],
+  );
+
+  useEffect(() => {
+    speechEngineBackend.RegisterCommand({
+      command: `go to floor 3`,
+      callback: () => {
+        document.getElementById("F3")?.click();
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `go to floor 2`,
+      callback: () => {
+        document.getElementById("F2")?.click();
+      },
+    });
+
+    speechEngineBackend.RegisterCommands({
+      commands: [`go to floor 1`, `go to floor one`],
+      callback: () => {
+        document.getElementById("F1")?.click();
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `go to floor L1`,
+      callback: () => {
+        document.getElementById("L1")?.click();
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `go to floor L2`,
+      callback: () => {
+        document.getElementById("L2")?.click();
+      },
+    });
+
+    speechEngineBackend.RegisterCommands({
+      commands: [
+        `search with breadth first search`,
+        `search with breath first search`,
+      ],
+      callback: () => {
+        changeAlgorithm("BFS");
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `search with depth first search`,
+      callback: () => {
+        changeAlgorithm("DFS");
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `search with a star`,
+      callback: () => {
+        changeAlgorithm("A*");
+      },
+    });
+
+    speechEngineBackend.RegisterCommands({
+      commands: [`toggle nodes`, `toggle notes`],
+      callback: () => {
+        toggleButtons("nodes");
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `toggle edges`,
+      callback: () => {
+        toggleButtons("edges");
+      },
+    });
+
+    speechEngineBackend.RegisterCommand({
+      command: `toggle halls`,
+      callback: () => {
+        toggleButtons("halls");
+      },
+    });
+  }, [toggleButtons]);
 
   window.onresize = () => {
     const canvasContainer = document.getElementById("canvas-container")!.style;
@@ -82,20 +182,6 @@ export const InteractableMap = () => {
         drawData.setRedraw(true);
       }, 100);
     }
-  }
-
-  function toggleButtons(type: string) {
-    if (type === "nodes") {
-      draw.showNodes = !draw.showNodes;
-      setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
-    } else if (type === "edges") {
-      draw.showEdges = !draw.showEdges;
-      setVisibilities({ ...visibilities, edges: !visibilities.edges });
-    } else if (type === "halls") {
-      draw.showHalls = !draw.showHalls;
-      setVisibilities({ ...visibilities, halls: !visibilities.halls });
-    }
-    drawData.setRedraw(true);
   }
 
   function changeAlgorithm(newAlg: string) {
