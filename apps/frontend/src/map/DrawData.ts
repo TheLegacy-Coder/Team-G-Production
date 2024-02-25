@@ -98,28 +98,6 @@ class DrawData {
     if (center !== undefined) {
       this.setCenterPos(center.x, center.y);
     }
-    console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nCenter: " +
-        drawData.centerPos!.x.toString() +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nCenter: " +
-        drawData.centerPos!.y.toString() +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );
   }
   public setOffset(top: number, left: number) {
     this.offset.y = top;
@@ -154,10 +132,8 @@ class DrawData {
     }
     ctx!.scale(1 / this.scalar, 1 / this.scalar);
     this.setScalar(1);
-    console.log("reset map update coords");
     this.updateCoords();
     ctx!.translate(this.upleftCorner!.x, this.upleftCorner!.y);
-    console.log("reset map update coords again");
     this.updateCoords();
     this.setRedraw(true);
     return hasPath;

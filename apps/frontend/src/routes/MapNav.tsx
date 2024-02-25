@@ -8,7 +8,7 @@ import {
   HouseFill,
 } from "react-bootstrap-icons";
 import { draw } from "../map/Draw";
-import { mouse } from "../map/Mouse";
+import { setHoverNode, mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { PathfindingButton } from "../components/PathfindingButton.tsx";
 import { drawData } from "../map/DrawData.ts";
@@ -33,6 +33,8 @@ export const MapNav = () => {
   });
 
   function changeMap(floor: string, imageSrc: string) {
+    setHoverNode(undefined);
+
     if (mouse.setMap(floor, imageSrc)) {
       algorithm.searchAlg();
       setTimeout(() => {

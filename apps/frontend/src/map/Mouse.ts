@@ -13,6 +13,9 @@ import { algorithm } from "./MapAlgorithm.ts";
 import { drawData, ctx } from "./DrawData.ts";
 
 export let hoverNode: MapNode | undefined = undefined;
+export function setHoverNode(inHover: MapNode | undefined) {
+  hoverNode = inHover;
+}
 //Stores map delta xy coordinates while panning
 let delta: { x: number; y: number } | undefined = { x: 0, y: 0 };
 //Stores the start xy of mouse when pressed to test click clear or not
@@ -47,7 +50,6 @@ class Mouse {
 
   // zooms to a point
   public zoom(zoom: number, xCoord: number, yCoord: number) {
-    console.log("zoom update coords");
     drawData.updateCoords();
     if (
       (drawData.scalar * zoom * this.imageWidth > window.innerWidth ||
@@ -55,29 +57,6 @@ class Mouse {
       (drawData.scalar * zoom * this.imageWidth < window.innerWidth * 10 ||
         drawData.scalar * zoom * this.imageHeight < window.innerHeight * 10)
     ) {
-      console.log("valid coordinates");
-      console.log(
-        "In view X:\nPath lowest: " +
-          drawData.pathLowest.x +
-          "\nPath Highest: " +
-          drawData.pathHighest.x +
-          "\nUp left: " +
-          drawData.upleftCorner!.x +
-          "\nCenter: " +
-          drawData.centerPos!.x.toString() +
-          "\nDown right: " +
-          drawData.downrightCorner!.x +
-          "\nIn view Y:\nPath lowest: " +
-          drawData.pathLowest.y +
-          "\nPath Highest: " +
-          drawData.pathHighest.y +
-          "\nUp left: " +
-          drawData.upleftCorner!.y +
-          "\nCenter: " +
-          drawData.centerPos!.y.toString() +
-          "\nDown right: " +
-          drawData.downrightCorner!.y,
-      );
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
@@ -86,9 +65,7 @@ class Mouse {
       ctx!.scale(zoom, zoom);
       ctx!.translate(-xCoord, -yCoord);
     }
-    console.log("zoom update coords again");
     drawData.updateCoords();
-    console.log("zoom bound coords");
     mouse.boundCoords();
     //redraw = true;
     drawData.setRedraw(true);
@@ -157,46 +134,20 @@ class Mouse {
       dim = mouse.setDim(1490, 2380, 780, 2930);
     }
     ctx!.translate(dim.x, dim.y);
-    console.log("home position coords");
     drawData.updateCoords();
     drawData.setScalar(dim.scale);
     ctx!.scale(dim.scale, dim.scale);
-    console.log("home position coords again");
     drawData.updateCoords();
-    console.log("home position bound coords");
     mouse.boundCoords();
     const scaleID = document.querySelector("#scalar");
     scaleID!.textContent = drawData.scalar.toFixed(2).toString();
   }
   public buttonZoom(input: boolean) {
-    console.log("--------Start Zoom--------");
-    console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nCenter: " +
-        drawData.centerPos!.x.toString() +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nCenter: " +
-        drawData.centerPos!.y.toString() +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );
     let zoomIncrement: number;
-    if (input) zoomIncrement = 1 + mouse.zoomAmount;
-    else zoomIncrement = 1 - mouse.zoomAmount;
+    const multiplier = 5;
+    if (input) zoomIncrement = 1 + multiplier * mouse.zoomAmount;
+    else zoomIncrement = 1 - multiplier * mouse.zoomAmount;
     mouse.zoom(zoomIncrement, drawData.centerPos!.x, drawData.centerPos!.y);
-    console.log("--------End Zoom--------");
   }
   public setMap(floor: string, imageSrc: string) {
     if (mouse.newMap) {
@@ -238,7 +189,6 @@ class Mouse {
     ) {
       // centers canvas along x axis
       ctx!.translate(drawData.upleftCorner.x, 0);
-      console.log("bound coords update coords");
       drawData.updateCoords();
       ctx!.translate(
         (drawData.downrightCorner.x -
@@ -270,7 +220,6 @@ class Mouse {
     ) {
       // centers canvas along y axis
       ctx!.translate(0, drawData.upleftCorner.y);
-      console.log("bound coords update coords again");
       drawData.updateCoords();
       ctx!.translate(
         0,
@@ -296,7 +245,6 @@ class Mouse {
         );
       }
     }
-    console.log("bound coords update coords a third time");
     drawData.updateCoords();
   }
   //Adjusts zoom according to scroll
@@ -354,9 +302,7 @@ class Mouse {
     });
 
     if (moveRedraw) {
-      console.log("click move update coords");
       drawData.updateCoords();
-      console.log("click move bound coords");
       mouse.boundCoords();
       //redraw = true;
       drawData.setRedraw(true);
@@ -380,7 +326,6 @@ class Mouse {
     mouse.moveMap = true;
     const posStart = drawData.tfPoint(posX, posY);
     mouse.setStartPos(posStart!.x, posStart!.y);
-    console.log("click down bound coords");
     mouse.boundCoords();
   }
 
@@ -399,7 +344,6 @@ class Mouse {
     posY;
     mouse.moveMap = false;
     mouse.setDelta(0, 0);
-    console.log("element up bound coords");
     mouse.boundCoords();
     drawData.setRedraw(true);
   }
@@ -445,7 +389,6 @@ class Mouse {
       drawData.resetPath();
     }
     mouse.setDelta(0, 0);
-    console.log("click up bound coords");
     mouse.boundCoords();
     drawData.setRedraw(true);
   }
