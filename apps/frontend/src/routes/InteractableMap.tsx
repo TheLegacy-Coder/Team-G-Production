@@ -9,6 +9,7 @@ import {
   AStarSearch,
   BreadthFirstSearch,
   DepthFirstSearch,
+  DijkstraSearch,
 } from "../map/MapNode.ts";
 import {
   Dash,
@@ -105,6 +106,8 @@ export const InteractableMap = () => {
       algorithm.setSearchStrategy(new AStarSearch());
     } else if (newAlg === "DFS") {
       algorithm.setSearchStrategy(new DepthFirstSearch());
+    } else if (newAlg === "Dijkstra") {
+      algorithm.setSearchStrategy(new DijkstraSearch());
     }
     setCurrentAlg(newAlg);
   }
