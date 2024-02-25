@@ -6,6 +6,8 @@ import {
   BreadthFirstSearch,
   setStartNode,
   setEndNode,
+  AStarSearch,
+  DijkstraSearch,
 } from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
@@ -188,3 +190,8 @@ class MapAlgorithm {
 }
 
 export const algorithm = new MapAlgorithm();
+
+const aStarSearch = new AStarSearch();
+const dijkstraSearch = new DijkstraSearch();
+
+algorithm.setSearchStrategy(aStarSearch || dijkstraSearch);
