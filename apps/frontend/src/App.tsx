@@ -14,6 +14,7 @@ import { Csvs } from "./routes/Csvs.tsx";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.tsx";
 import { ViewRequests } from "./routes/ViewRequests.tsx";
 import { ViewEmployees } from "./routes/ViewEmployees.tsx";
+import { MobileDirections } from "./routes/MobileDirections.tsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,6 +29,10 @@ function App() {
             {
               path: "/map",
               element: <InteractableMap />,
+            },
+            {
+              path: "/mobiledirections",
+              element: <MobileDirections />,
             },
             {
               path: "/login",

@@ -9,6 +9,7 @@ import {
   AStarSearch,
   BreadthFirstSearch,
   DepthFirstSearch,
+  nodeStore,
 } from "../map/MapNode.ts";
 import {
   Dash,
@@ -29,6 +30,7 @@ export const InteractableMap = () => {
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
   const [currentAlg, setCurrentAlg] = useState<string>("BFS");
+
   const [visibilities, setVisibilities] = useState<Visibility>({
     nodes: draw.showNodes,
     edges: draw.showEdges,
@@ -106,6 +108,7 @@ export const InteractableMap = () => {
     } else if (newAlg === "DFS") {
       algorithm.setSearchStrategy(new DepthFirstSearch());
     }
+    nodeStore.currentAlg = newAlg;
     setCurrentAlg(newAlg);
   }
 

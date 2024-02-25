@@ -28,6 +28,7 @@ export const mapEdges: Map<string, Edge> = new Map([]);
 class NodeStore {
   public selectedNode: MapNode | undefined = undefined;
   public currentRefresh: DispatchWithoutAction | undefined;
+  public currentAlg = "BFS";
 
   setSelectedNode(node: MapNode | undefined) {
     this.selectedNode = node;

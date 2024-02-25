@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Edge } from "../map/MapNode.ts";
 import { currentToken } from "../stores/LoginStore.ts";
+import { IP } from "../config.ts";
 
 type importedMapNodes = {
   nodeID: string;
@@ -67,7 +68,7 @@ export function postNodesAxios(
 }
 
 export function getNodesAxios() {
-  return axios.get("http://localhost:3000/api/map/nodes");
+  return axios.get(`${IP}/api/map/nodes`);
 }
 
 export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
@@ -121,5 +122,5 @@ export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
 }
 
 export function getEdgesAxios() {
-  return axios.get("http://localhost:3000/api/map/edges");
+  return axios.get(`${IP}/api/map/edges`);
 }
