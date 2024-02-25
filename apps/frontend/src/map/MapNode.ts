@@ -104,7 +104,7 @@ export interface SearchStrategy {
 
 export class BreadthFirstSearch implements SearchStrategy {
   pathfindingAlgorithm(start: MapNode | undefined, end: MapNode | undefined) {
-    if (start == undefined || end == undefined) return [];
+    if (start === undefined || end === undefined) return [];
     const seen: Map<MapNode, MapNode> = new Map([]);
     seen.set(start, start);
     const frontier: MapNode[] = [start];
