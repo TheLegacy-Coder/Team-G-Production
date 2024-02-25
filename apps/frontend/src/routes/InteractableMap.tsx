@@ -50,15 +50,7 @@ export const InteractableMap = () => {
   }, [poll]);
 
   return (
-    <div
-      style={
-        {
-          width: window.innerWidth - drawData.offset.x,
-          height: window.innerHeight - drawData.offset.y,
-          overflow: "hidden",
-        } as React.CSSProperties
-      }
-    >
+    <div>
       <canvas
         id={"map-canvas"}
         onMouseDown={mouse.mouseDown}
