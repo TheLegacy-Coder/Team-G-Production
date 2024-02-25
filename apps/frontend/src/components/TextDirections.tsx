@@ -65,10 +65,13 @@ const TextDirections: React.FC = () => {
   };
 
   const directionsByFloor: { [key: string]: JSX.Element[] } = {};
+  let previousFloor: string | null = null;
+
   path.forEach((mapNode, index) => {
     if (!directionsByFloor[mapNode.floor]) {
       directionsByFloor[mapNode.floor] = [];
     }
+
     let contents;
     if (index === 0) {
       contents = (
@@ -127,12 +130,21 @@ const TextDirections: React.FC = () => {
         contents = getTurnDirection(prevNode, mapNode, nextNode);
       }
     }
+
     if (contents) {
+      if (mapNode.floor !== previousFloor) {
+        directionsByFloor[mapNode.floor].push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
+      }
       directionsByFloor[mapNode.floor].push(
         <div key={index} className="directionDiv">
           {contents}
         </div>,
       );
+      previousFloor = mapNode.floor;
     }
   });
 
@@ -174,16 +186,10 @@ const TextDirections: React.FC = () => {
       >
         {selectedFloor === "All" ? (
           sortedFloors.map((floor) => (
-            <div key={floor}>
-              <h3>Floor {floor}</h3>
-              {directionsByFloor[floor]}
-            </div>
+            <div key={floor}>{directionsByFloor[floor]}</div>
           ))
         ) : (
-          <>
-            <h3>Floor {selectedFloor}</h3>
-            {directionsByFloor[selectedFloor]}
-          </>
+          <>{directionsByFloor[selectedFloor]}</>
         )}
       </div>
     </div>
