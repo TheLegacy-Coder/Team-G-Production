@@ -16,6 +16,7 @@ import {
   AStarSearch,
   BreadthFirstSearch,
   DepthFirstSearch,
+  DijkstraSearch,
 } from "../map/MapNode.ts";
 
 interface Visibility {
@@ -62,6 +63,8 @@ export const MapNav = () => {
       algorithm.setSearchStrategy(new AStarSearch());
     } else if (newAlg === "DFS") {
       algorithm.setSearchStrategy(new DepthFirstSearch());
+    } else if (newAlg === "Dijkstra") {
+      algorithm.setSearchStrategy(new DijkstraSearch());
     }
     setCurrentAlg(newAlg);
   }
