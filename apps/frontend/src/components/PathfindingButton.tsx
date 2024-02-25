@@ -18,8 +18,8 @@ export const PathfindingButton = ({
       onChange={(e) => handleChange(e.target.value)}
     >
       <option value="BFS">BFS</option>
-      <option value="A*">A*</option>
       <option value="DFS">DFS</option>
+      <option value="A*">A*</option>
       <option value="Dijkstra">Dijkstra</option>
     </select>
   );
