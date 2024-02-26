@@ -49,4 +49,12 @@ app.use((err: HttpError, req: Request, res: Response): void => {
   res.status(err.status || 500);
 });
 
+// This is a generic path for the healthcheck. This is not publicly available anywhere
+// (e.g., Docker and the dev proxy DO NOT expose this). It exists exclusively so that can check the server
+// is alive/responsive. If this returns anything other than 200, Docker will automatically kill your backend
+// (under the assumption that something has gone horribly wrong). This must come before the authentication endpoint
+app.use("/healthcheck", function (req: Request, res: Response): void {
+  res.sendStatus(200);
+});
+
 export default app; // Export the backend, so that www.ts can start it
