@@ -196,7 +196,7 @@
 .context-menu-title-box {
   position: relative;
   padding-top: 5px;
-  top: 0px;
+  top: 0;
   background: #00284f;
   color: white;
   height: 90px;
@@ -206,7 +206,7 @@
 
 .context-menu-title {
   text-align: center;
-  font-size: 55px;
+  font-size: min(55px, var(--small-width) / 15);
   z-index: 100;
 }
 
