@@ -1,8 +1,8 @@
 :root {
   --small-width: min(850px, 90vw);
   --long-width: min(1500px, 90vw);
-  --context-width: 100px;
-  --text-size: calc(min(var(--init-width), var(--init-height)) / 2.2);
+  --context-width: calc(min(var(--init-width), var(--init-height)) * 2.5);
+  --text-size: calc(min(var(--init-width), var(--init-height)) / 2.7);
 }
 
 .context-menu-out-to-in {
@@ -104,9 +104,10 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
-  min-height: 50px;
+  min-height: calc(var(--text-size) * 3.5);
   z-index: 100;
   font-size: var(--text-size);
+  width: var(--context-width);
 }
 
 .context-menu-tab-admin {
@@ -121,9 +122,10 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
-  min-height: 50px;
+  min-height: calc(var(--text-size) * 3.5);
   z-index: 100;
   font-size: var(--text-size);
+  width: var(--context-width);
 }
 
 .context-menu-tab-admin-selected {
@@ -138,9 +140,10 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
-  min-height: 50px;
+  min-height: calc(var(--text-size) * 3.5);
   z-index: 100;
   font-size: var(--text-size);
+  width: var(--context-width);
 }
 
 .context-menu-tab-selected {
@@ -155,9 +158,10 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
-  min-height: 50px;
+  min-height: calc(var(--text-size) * 3.5);
   z-index: 100;
   font-size: var(--text-size);
+  width: var(--context-width);
 }
 
 .context-menu-in-to-out {

@@ -131,7 +131,7 @@ export function ContextMenu() {
               ? "context-menu-divider-content-reselect"
               : "context-menu-divider-content-reselect-alt"
         }
-        style={{ flex: "500px" }}
+        style={{ flex: "5px" }}
       >
         <div className={"context-menu-title-box"}>
           <h1 className={"context-menu-title"}>{contextMenuState.title}</h1>
