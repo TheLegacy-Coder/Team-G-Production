@@ -5,11 +5,13 @@ import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 import { MapNav } from "./MapNav.tsx";
 import { drawData } from "../map/DrawData.ts";
+//import { drawData } from "../map/DrawData.ts";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <ContextMenu />
+
       <div
         id={"canvas-container"}
         style={

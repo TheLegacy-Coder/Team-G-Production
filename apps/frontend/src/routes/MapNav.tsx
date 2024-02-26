@@ -109,8 +109,12 @@ export const MapNav = () => {
   }
 
   return (
-    <div>
-      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
+    <div
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.divMouseUp}
+      onTouchStart={mouse.divTouchStart}
+    >
+      <div className={"map-top-left-buttons"}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
           <div className={"zoom-buttons"}>
             <button
@@ -171,17 +175,14 @@ export const MapNav = () => {
           />
         </div>
       </div>
-      <div
-        className={"map-top-left-search-button"}
-        onMouseUp={mouse.divMouseUp}
-      >
+      <div className={"map-top-left-search-button"}>
         <PathfindingButton
           algorithm={currentAlg}
           handleChange={changeAlgorithm}
         />
       </div>
 
-      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
+      <div className={"map-bottom-left-buttons"}>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <button
             id={"F3"}

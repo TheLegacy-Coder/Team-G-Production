@@ -50,26 +50,24 @@ export const InteractableMap = () => {
   }, [poll]);
 
   return (
-    <div>
-      <canvas
-        id={"map-canvas"}
-        onMouseDown={mouse.mouseDown}
-        onMouseUp={mouse.mouseUp}
-        onTouchStart={(evt) => {
-          mouse.canvasTouchStart(evt);
-        }}
-        onTouchEnd={(evt) => {
-          mouse.canvasTouchEnd(evt);
-        }}
-        onTouchMove={(evt) => {
-          mouse.canvasTouchMove(evt);
-        }}
-        onMouseMove={mouse.mouseMove}
-        onWheel={mouse.mouseScroll}
-        ref={canvasRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
-      />
-    </div>
+    <canvas
+      id={"map-canvas"}
+      onMouseDown={mouse.mouseDown}
+      onMouseUp={mouse.mouseUp}
+      onTouchStart={(evt) => {
+        mouse.canvasTouchStart(evt);
+      }}
+      onTouchEnd={(evt) => {
+        mouse.canvasTouchEnd(evt);
+      }}
+      onTouchMove={(evt) => {
+        mouse.canvasTouchMove(evt);
+      }}
+      onMouseMove={mouse.mouseMove}
+      onWheel={mouse.mouseScroll}
+      ref={canvasRef}
+      width={window.innerWidth - drawData.offset.x}
+      height={window.innerHeight - drawData.offset.y}
+    />
   );
 };

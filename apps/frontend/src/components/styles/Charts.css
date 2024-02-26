@@ -5,6 +5,7 @@
   background: #e9d3b7;
   color: black;
   flex-direction: column;
+  overflow-y: scroll;
 }
 
 .first-row {
