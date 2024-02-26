@@ -1,5 +1,5 @@
 .container-div {
-  max-height: 270px;
+  max-height: 450px;
   overflow-y: auto;
   font-weight: bold;
   max-width: 500px;
@@ -32,4 +32,23 @@
 
 p {
   margin-bottom: 0;
+}
+
+.floor-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.floor-buttons button {
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.floor-buttons button.active {
+  background-color: lightblue;
+  border-radius: 5px;
+  border: 1px solid #000000;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { getEndNode, getStartNode, MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
@@ -13,6 +13,8 @@ import {
 } from "react-bootstrap-icons";
 
 const TextDirections: React.FC = () => {
+  const [selectedFloor, setSelectedFloor] = useState<string>("All");
+
   let path: MapNode[] = [];
 
   if (getStartNode() && getEndNode()) {
@@ -62,7 +64,14 @@ const TextDirections: React.FC = () => {
     }
   };
 
-  const directions = path.map((mapNode: MapNode, index: number) => {
+  const directionsByFloor: { [key: string]: JSX.Element[] } = {};
+  const allDirections: JSX.Element[] = [];
+  let previousFloor: string | null = null;
+  path.forEach((mapNode, index) => {
+    if (!directionsByFloor[mapNode.floor]) {
+      directionsByFloor[mapNode.floor] = [];
+    }
+
     let contents;
     if (index === 0) {
       contents = (
@@ -121,23 +130,61 @@ const TextDirections: React.FC = () => {
         contents = getTurnDirection(prevNode, mapNode, nextNode);
       }
     }
+
     if (contents) {
-      return (
+      if (mapNode.floor !== previousFloor) {
+        directionsByFloor[mapNode.floor].push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
+        allDirections.push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
+      }
+      directionsByFloor[mapNode.floor].push(
         <div key={index} className="directionDiv">
           {contents}
-        </div>
+        </div>,
       );
+      allDirections.push(
+        <div key={index} className="directionDiv">
+          {contents}
+        </div>,
+      );
+      previousFloor = mapNode.floor;
     }
-    return;
   });
+
+  const floors = ["All", "L2", "L1", "1", "2", "3"];
 
   return (
     <div className={"container-div"}>
+      <div className={"floor-buttons"}>
+        {floors.map((floor) => (
+          <button
+            key={floor}
+            className={selectedFloor === floor ? "active" : ""}
+            onClick={() => setSelectedFloor(floor)}
+          >
+            {floor}
+          </button>
+        ))}
+      </div>
+      {(!getStartNode() || !getEndNode()) && (
+        <div>Please select both a starting and an ending node</div>
+      )}
       <div
         className={"asdf2-text-directions-container"}
         style={{ maxHeight: "450px" }}
       >
-        {directions}
+        {selectedFloor === "All" ? (
+          allDirections
+        ) : (
+          <>{directionsByFloor[selectedFloor]}</>
+        )}
       </div>
     </div>
   );
