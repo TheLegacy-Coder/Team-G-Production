@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../components/styles/ZoomButton.css";
+import "./styles/MapNav.css";
 import {
   EyeFill,
   EyeSlashFill,
