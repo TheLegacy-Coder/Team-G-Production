@@ -97,7 +97,9 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  min-height: 50px;
   z-index: 100;
+  font-size: calc(min(var(--init-width), var(--init-height)) / 2.2);
 }
 
 .context-menu-tab-admin {
@@ -112,7 +114,9 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  min-height: 50px;
   z-index: 100;
+  font-size: calc(min(var(--init-width), var(--init-height)) / 2.2);
 }
 
 .context-menu-tab-admin-selected {
@@ -127,7 +131,9 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  min-height: 50px;
   z-index: 100;
+  font-size: calc(min(var(--init-width), var(--init-height)) / 2.2);
 }
 
 .context-menu-tab-selected {
@@ -142,7 +148,9 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  min-height: 50px;
   z-index: 100;
+  font-size: calc(min(var(--init-width), var(--init-height)) / 2.2);
 }
 
 .context-menu-in-to-out {
