@@ -43,7 +43,8 @@ export const SpeechEngine = () => {
   });
 
   if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
+    //return <span>Browser doesn't support speech recognition.</span>;
+    console.log("Browser doesn't support speech recognition.");
   }
 
   if (active) {
