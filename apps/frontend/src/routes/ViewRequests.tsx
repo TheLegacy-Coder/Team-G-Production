@@ -250,7 +250,14 @@ export const RequestsTable = ({
   return (
     <>
       <div className="filter">
-        <label htmlFor="statusFilter" className="filterTextStatus">
+        <label
+          htmlFor="statusFilter"
+          className={
+            currentEmployee?.accessLevel === "admin"
+              ? "filterTextStatus marginBottom"
+              : "filterTextStatus"
+          }
+        >
           Filter by Status:
         </label>
         <select
@@ -369,7 +376,7 @@ export const ViewRequests = () => {
       />,
     ],
     [
-      "At Node: " + roomLocation,
+      roomLocation,
       <RequestsTable
         updateRequests={updateRequests}
         requests={allRequests}
@@ -421,7 +428,7 @@ export const ViewRequests = () => {
   let tables: ReactElement[] = [];
   if (currentEmployee?.accessLevel === "admin") {
     titles = Array.from(titlesToTables.keys());
-    titles[1] = "At Node: " + roomLocation;
+    titles[1] = roomLocation;
     tables = Array.from(titlesToTables.values());
   } else {
     // Loop through JobAssignments and find the request that matches the currentEmployee.job
@@ -431,7 +438,7 @@ export const ViewRequests = () => {
         break;
       }
     }
-    titles.push("At Node: " + roomLocation);
+    titles.push(roomLocation);
     for (const title of titles) {
       tables.push(titlesToTables.get(title) as ReactElement);
     }
