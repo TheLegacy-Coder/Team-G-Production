@@ -56,8 +56,27 @@ class SpeechEngineBackend {
         this.watchdog = undefined;
       }
       this.watchdog = setTimeout(() => {
-        this.end(false);
-        this.currentCommand = [];
+        let phrase = "";
+        this.currentCommand.forEach((word, index) => {
+          phrase += word;
+          if (index < this.currentCommand.length - 1) {
+            phrase += " ";
+          }
+        });
+        let match = false;
+        this.commands.forEach((command) => {
+          if (command.command.toLowerCase() === phrase.toLowerCase()) {
+            match = true;
+            command.callback("");
+            console.log("augmented hit");
+            this.end(true);
+            this.currentCommand = [];
+          }
+        });
+        if (!match) {
+          this.end(false);
+          this.currentCommand = [];
+        }
       }, 2000);
     } else {
       this.currentCommand = [];

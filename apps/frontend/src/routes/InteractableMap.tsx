@@ -54,8 +54,8 @@ export const InteractableMap = () => {
   );
 
   useEffect(() => {
-    speechEngineBackend.RegisterCommand({
-      command: `go to floor 3`,
+    speechEngineBackend.RegisterCommands({
+      commands: [`go to floor 3`, `go to floor three`],
       callback: () => {
         document.getElementById("F3")?.click();
       },
