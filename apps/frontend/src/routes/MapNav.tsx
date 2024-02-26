@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import "../components/styles/ZoomButton.css";
+import "../index.css";
 import {
   Dash,
   EyeFill,
@@ -32,6 +33,8 @@ export const MapNav = () => {
     edges: draw.showEdges,
     halls: draw.showHalls,
   });
+  const [selectWidth, setSelectWidth] = useState<string>("0px");
+  const [selectHeight, setSelectHeight] = useState<string>("0px");
 
   function changeMap(floor: string, imageSrc: string) {
     setHoverNode(undefined);
@@ -73,17 +76,60 @@ export const MapNav = () => {
     title: string;
     value: boolean;
     onClick: () => void;
+    onChange: () => void;
   }
 
-  function ToggleButton({ title, value, onClick }: ToggleButtonProps) {
+  //let selectWidth = "";
+  //let selectHeight = "";
+
+  const poll = useCallback(() => {
+    const styleWidth = window.getComputedStyle(document.documentElement);
+    const styleHeight = window.getComputedStyle(document.documentElement);
+    const tempWidth = styleWidth.getPropertyValue("--init-width");
+    const tempHeight = styleHeight.getPropertyValue("--init-height");
+    if (tempWidth !== selectWidth || tempHeight !== selectHeight) {
+      setSelectWidth(tempWidth);
+      setSelectHeight(tempHeight);
+    }
+  }, [selectWidth, selectHeight]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
+  function getSize() {
+    let width = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--init-width");
+    let height = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--init-height");
+    width = width.substring(0, width.length - 2);
+    height = height.substring(0, height.length - 2);
+    return Math.min(Number(width), Number(height)) / 1.7;
+  }
+
+  function ToggleButton({
+    title,
+    value,
+    onClick,
+    onChange,
+  }: ToggleButtonProps) {
     return (
-      <button className={"toggle-button"} onClick={onClick}>
+      <button
+        className={"toggle-button"}
+        onClick={onClick}
+        onChange={onChange}
+        onResize={changed}
+        onResizeCapture={changed}
+      >
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
           {value ? (
-            <EyeFill color="white" size={35} />
+            <EyeFill color="white" size={getSize()} />
           ) : (
-            <EyeSlashFill color="white" size={35} />
+            <EyeSlashFill color="white" size={getSize()} />
           )}
         </div>
       </button>
@@ -106,6 +152,10 @@ export const MapNav = () => {
         }
       }
     });
+  }
+
+  function changed() {
+    console.log("Changed");
   }
 
   return (
@@ -162,16 +212,19 @@ export const MapNav = () => {
             title={"Nodes"}
             value={visibilities.nodes}
             onClick={() => toggleButtons("nodes")}
+            onChange={changed}
           />
           <ToggleButton
             title={"Edges"}
             value={visibilities.edges}
             onClick={() => toggleButtons("edges")}
+            onChange={changed}
           />
           <ToggleButton
             title={"Halls"}
             value={visibilities.halls}
             onClick={() => toggleButtons("halls")}
+            onChange={changed}
           />
         </div>
       </div>
