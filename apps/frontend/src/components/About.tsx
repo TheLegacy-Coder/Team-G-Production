@@ -29,29 +29,28 @@ export const About = () => {
         <div className="about-page-row">
           <div className="about-page-column">
             <div className="about-page-card">
-              <img src="istan.jpg" alt="Istan" />
+              <img src="istan.jpg" alt="Istan" width="100" height="100" />
               <div className="photo-container">
                 <h2>Istan Slamet</h2>
                 <p className="title">Documentation Analyst</p>
-                <p>ISTAAAAAAAAAAAAAN</p>
-                <p>ipslamet@wpi.edu</p>
-                <p>
-                  <button className="button">Contact</button>
-                </p>
               </div>
             </div>
           </div>
           <div className="about-page-column">
             <div className="about-page-card">
-              <img src="gabe.jpg" alt="Gabe" />
+              <img src="gabe.jpg" alt="Gabe" width="100" height="100" />
               <div className="photo-container">
                 <h2>Gabriel Shiu</h2>
                 <p className="title">Assistant Lead Software Engineer</p>
-                <p>Shiu!</p>
-                <p>gshiu@wpi.edu</p>
-                <p>
-                  <button className="button">Contact</button>
-                </p>
+              </div>
+            </div>
+          </div>
+          <div className="about-page-column">
+            <div className="about-page-card">
+              <img src="dimitri.png" alt="Dimitri" width="100" height="100" />
+              <div className="photo-container">
+                <h2>Dimitri Saliba</h2>
+                <p className="title">Lead Software Developer</p>
               </div>
             </div>
           </div>
