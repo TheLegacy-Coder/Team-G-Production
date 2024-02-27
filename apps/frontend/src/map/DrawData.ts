@@ -22,6 +22,10 @@ class DrawData {
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
 
+  public showNodes = true;
+  public showEdges = false;
+  public showHalls = false;
+
   public switchNodes: MapNode[] = [];
   public switchFloors: string[] = [];
 

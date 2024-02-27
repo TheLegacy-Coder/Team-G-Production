@@ -305,7 +305,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           if (hoverNode !== node) {
             moveRedraw = true;
             document.getElementById("map-canvas")!.style.cursor = "pointer";
@@ -395,7 +399,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           emptyClick = false;
           if (getStartNode() != undefined) {
             setEndNode(node);
