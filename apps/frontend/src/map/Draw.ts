@@ -102,7 +102,7 @@ class Draw {
         )
           draw.drawNodeDetails(hoverNode);
 
-        let pathInView = true;
+        let pathInView = false;
         if (mouse.inView()) {
           pathInView = true;
         }

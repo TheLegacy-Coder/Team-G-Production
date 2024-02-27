@@ -77,39 +77,18 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
     ) {
       return false;
     }
-    const result =
+    return (
       drawData.pathHighest.x > drawData.upleftCorner.x &&
       drawData.pathLowest.x < drawData.downrightCorner.x &&
       drawData.pathHighest.y > drawData.upleftCorner.y &&
-      drawData.pathLowest.y < drawData.downrightCorner.y;
-    if (result) {
-      drawData.setRedraw(true);
-    }
-    return result;
+      drawData.pathLowest.y < drawData.downrightCorner.y
+    );
   }
 
   private setDim(startX: number, endX: number, startY: number, endY: number) {

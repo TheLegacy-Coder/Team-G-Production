@@ -115,6 +115,10 @@ class DrawData {
   }
   public clearFloors() {
     this.floors = [];
+    this.switchFloors = [];
+    this.switchNodes = [];
+    this.allSwitchNodes = [];
+    this.allSwitchFloors = [];
   }
   public resetPath() {
     this.path = [];
