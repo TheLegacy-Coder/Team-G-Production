@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  BarChart,
+  BarSeries,
   PieChart,
   PieArcSeries,
   RadialGauge,
@@ -205,23 +207,26 @@ export const Charts = () => {
   return (
     <div className={"chart-container"}>
       <div className={"first-row"}>
-        <div className={"request-type-container"}>
-          <h4>Service Request Type</h4>
-          <PieChart
-            className={"request-type-container"}
-            data={serviceRequestType}
-            series={
-              <PieArcSeries
-                colorScheme={[
-                  "#065b1bFF",
-                  "#6F2048FF",
-                  "#20486FFF",
-                  "#D4A261FF",
-                  "#6F4886FF",
-                ]}
-              />
-            }
-          />
+        <div className={"first-row"}>
+          <div className={"request-type-container"}>
+            <h4>Service Request Type</h4>
+            <br />
+            <BarChart
+              className={"request-type-container"}
+              data={serviceRequestType}
+              series={
+                <BarSeries
+                  colorScheme={[
+                    "#065b1bFF",
+                    "#6F2048FF",
+                    "#20486FFF",
+                    "#D4A261FF",
+                    "#6F4886FF",
+                  ]}
+                />
+              }
+            />
+          </div>
         </div>
       </div>
       <div className={"second-row"}>
