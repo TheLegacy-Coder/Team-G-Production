@@ -113,7 +113,7 @@ export function ContextMenu() {
                   content={<ImportExport />}
                   lable={"Import/Export"}
                   protected={true}
-                  admin={true}
+                  admin={false}
                   style={"context-menu-tab-admin"}
                 />
               </>
