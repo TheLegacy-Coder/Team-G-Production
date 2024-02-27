@@ -166,6 +166,20 @@ export const ImportExport = () => {
     (document.getElementById("Edges") as HTMLInputElement).value = "";
   };
 
+  const handleSelectAll = () => {
+    (document.getElementById("EmployeesCheck") as HTMLInputElement).checked =
+      true;
+    (document.getElementById("NodesCheck") as HTMLInputElement).checked = true;
+    (document.getElementById("EdgesCheck") as HTMLInputElement).checked = true;
+  };
+
+  const handleUnselectAll = () => {
+    (document.getElementById("EmployeesCheck") as HTMLInputElement).checked =
+      false;
+    (document.getElementById("NodesCheck") as HTMLInputElement).checked = false;
+    (document.getElementById("EdgesCheck") as HTMLInputElement).checked = false;
+  };
+
   return (
     <div className={"data-page"}>
       <div className={"panel"}>
@@ -184,6 +198,22 @@ export const ImportExport = () => {
               <input id="EdgesCheck" type="checkbox" />
               <label>Edges</label>
             </div>
+          </div>
+          <div className={"select-buttons"}>
+            <button
+              className={"select-button"}
+              type="button"
+              onClick={handleSelectAll}
+            >
+              Select All
+            </button>
+            <button
+              className={"select-button"}
+              type="button"
+              onClick={handleUnselectAll}
+            >
+              Unselect All
+            </button>
           </div>
           <input value="Export" type="submit" className="add-button" />
         </form>

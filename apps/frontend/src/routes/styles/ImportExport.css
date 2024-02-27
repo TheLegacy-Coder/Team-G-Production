@@ -51,15 +51,34 @@ label {
   width: 50%;
 }
 
+.select-buttons {
+  display: none;
+  /*display: flex;*/
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+}
+
+.select-button {
+  padding: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
 .import-option {
+  padding: 8px;
 }
 
 input[type="file"] {
   width: 100%;
-  padding: 8px;
   border-radius: 8px;
   border: 1px solid #00284f;
   font-size: 16px;
+  margin-top: 8px;
 }
 
 input[type="checkbox"] {
@@ -79,6 +98,7 @@ input[type="submit"] {
   color: white;
   margin-left: 5px;
   margin-bottom: 5px;
+  font-size: 32px;
 }
 
 .fileInput {
