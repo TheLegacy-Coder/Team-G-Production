@@ -19,6 +19,7 @@ export const TabSwitcher = (props: TabSwitcherProps) => {
                 (title === props.titles[selectedIndex] ? "-selected" : "")
               }
               id={title}
+              key={title}
               onClick={() => {
                 setSelectedIndex(index);
               }}

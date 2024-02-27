@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { ctx, drawData, initCTX } from "../map/DrawData.ts";
-import "../components/styles/ZoomButton.css";
 import { draw } from "../map/Draw";
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

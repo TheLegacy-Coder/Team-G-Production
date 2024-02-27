@@ -31,13 +31,13 @@
   gap: 8px;
 }
 
-.zoom-buttons {
+.group-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.zoom-button {
+.group-button {
   width: min(var(--init-width), var(--init-height));
   height: min(var(--init-width), var(--init-height));
   font-size: calc(min(var(--init-width), var(--init-height)) / 1.7);
@@ -47,7 +47,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
 }
 
 .selected-floor-button {
@@ -56,11 +55,11 @@
   border-width: 4px;
 }
 
-.zoom-button:hover {
+.group-button:hover {
   background-color: #4c6883;
 }
 
-.zoom-button:active {
+.group-button:active {
   background-color: #99a9b8;
 }
 
@@ -69,7 +68,7 @@
 }
 
 .path-floor {
-  background-color: lightblue;
+  background-color: #6291c6;
 }
 
 .toggle-button-container {
