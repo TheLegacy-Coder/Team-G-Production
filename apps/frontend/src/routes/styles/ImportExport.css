@@ -73,7 +73,7 @@ label {
   padding: 8px;
 }
 
-input[type="file"] {
+.file-input {
   width: 100%;
   border-radius: 8px;
   border: 1px solid #00284f;
@@ -81,7 +81,7 @@ input[type="file"] {
   margin-top: 8px;
 }
 
-input[type="checkbox"] {
+.file-checkbox {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #00284f;
@@ -90,7 +90,7 @@ input[type="checkbox"] {
   margin-right: 16px;
 }
 
-input[type="submit"] {
+.file-submit {
   padding: 5px;
   border: 2px solid white;
   border-radius: 5px;
@@ -99,7 +99,4 @@ input[type="submit"] {
   margin-left: 5px;
   margin-bottom: 5px;
   font-size: 32px;
-}
-
-.fileInput {
 }

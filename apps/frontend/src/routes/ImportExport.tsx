@@ -1,18 +1,32 @@
 import "./styles/ImportExport.css";
 import { Employee } from "common/src/Employee.ts";
-import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
+import {
+  addMultipleEmployeesAxios,
+  getEmployeesAxios,
+} from "../DataAsObject/employeesAxios.ts";
 import { EmployeeWrapper } from "./ViewEmployees.tsx";
-import { useEffect, useState } from "react";
-import { Edge, mapEdges, MapNode, mapNodes } from "../map/MapNode.ts";
+import { useEffect, useReducer, useState } from "react";
+import {
+  Edge,
+  getMapNodesEdges,
+  mapEdges,
+  MapNode,
+  mapNodes,
+} from "../map/MapNode.ts";
 import React from "react";
 import * as JSZip from "jszip";
 import { saveAs } from "file-saver";
+import {
+  postEdgesAxios,
+  postNodesAxios,
+} from "../DataAsObject/mapNodesAxios.ts";
 async function getEmployees(): Promise<EmployeeWrapper> {
   return getEmployeesAxios("true", "");
 }
 
 export const ImportExport = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const getAndSetEmployees = () => {
     getEmployees().then((list) => {
@@ -79,88 +93,116 @@ export const ImportExport = () => {
     const nodeFile = formData.get("Nodes") as File;
     const edgeFile = formData.get("Edges") as File;
 
-    console.log(formData.get("Employees"));
-
-    const importedMapEmployees: Employee[] = [];
-    let reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target) {
-        const content = event.target.result;
-        const lines = (content as string).split("\n");
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].replace("\r", "").split(",");
-          if (line[0] === "") continue;
-          const employee: Employee = {
-            employeeID: line[0],
-            firstName: line[1],
-            lastName: line[2],
-            email: line[3],
-            job: line[4],
-            accessLevel: line[5],
-          };
-          importedMapEmployees.push(employee);
+    // upload employees
+    if (employeeFile.size !== 0) {
+      const importedMapEmployees: Employee[] = [];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target) {
+          const content = event.target.result;
+          const lines = (content as string).split("\n");
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].replace("\r", "").split(",");
+            if (line[0] === "") continue;
+            const employee: Employee = {
+              employeeID: line[0],
+              firstName: line[1],
+              lastName: line[2],
+              email: line[3],
+              job: line[4],
+              accessLevel: line[5],
+            };
+            importedMapEmployees.push(employee);
+          }
+          console.log(importedMapEmployees);
+          // post all new employees & replace all old ones
+          addMultipleEmployeesAxios("true", importedMapEmployees).then(() => {
+            // update local store
+            getAndSetEmployees();
+          });
         }
-      }
-      console.log(importedMapEmployees);
-    };
-    reader.readAsText(employeeFile);
+      };
+      reader.readAsText(employeeFile);
+    }
 
-    const importedMapEdges: Edge[] = [];
-    reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target) {
-        const content = event.target.result;
-        const lines = (content as string).split("\n");
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].replace("\r", "").split(",");
-          if (line[0] === "") continue;
-          const edge: Edge = {
-            edgeID: line[0],
-            startNode: line[1],
-            endNode: line[2],
-          };
-          importedMapEdges.push(edge);
+    const uploadEdges = (edgeFile: File) => {
+      if (edgeFile.size !== 0) {
+        const importedMapEdges: Edge[] = [];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target) {
+            const content = event.target.result;
+            const lines = (content as string).split("\n");
+            for (let i = 1; i < lines.length; i++) {
+              const line = lines[i].replace("\r", "").split(",");
+              if (line[0] === "") continue;
+              const edge: Edge = {
+                edgeID: line[0],
+                startNode: line[1],
+                endNode: line[2],
+              };
+              importedMapEdges.push(edge);
+            }
+            console.log(importedMapEdges);
+            postEdgesAxios("true", importedMapEdges).then(() => {
+              getMapNodesEdges().then(() => {
+                forceUpdate();
+              });
+            });
+          }
+        };
+        reader.readAsText(edgeFile);
+      }
+    };
+
+    if (nodeFile.size !== 0) {
+      // if nodes are being uploaded, upload nodes then edges so edges can reference nodes
+      const importedMapNodes: {
+        nodeID: string;
+        xcoord: number;
+        ycoord: number;
+        floor: string;
+        building: string;
+        nodeType: string;
+        longName: string;
+        shortName: string;
+      }[] = [];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target) {
+          const content = event.target.result;
+          const lines = (content as string).replace("\r", "").split("\n");
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].split(",");
+            if (line[0] === "") continue;
+            const node = {
+              nodeID: line[0],
+              xcoord: parseInt(line[1]),
+              ycoord: parseInt(line[2]),
+              floor: line[3],
+              building: line[4],
+              nodeType: line[5],
+              longName: line[6],
+              shortName: line[7],
+            };
+            importedMapNodes.push(node);
+          }
+          console.log(importedMapNodes);
+          postNodesAxios("true", importedMapNodes).then(() => {
+            getMapNodesEdges().then(() => {
+              forceUpdate();
+              uploadEdges(edgeFile);
+            });
+          });
         }
-      }
-      console.log(importedMapEdges);
-    };
-    reader.readAsText(edgeFile);
+      };
+      reader.readAsText(nodeFile);
+    } else {
+      // if nodes are not being uploaded, just upload edges
+      uploadEdges(edgeFile);
+    }
 
-    const importedMapNodes: {
-      nodeID: string;
-      xcoord: number;
-      ycoord: number;
-      floor: string;
-      building: string;
-      nodeType: string;
-      longName: string;
-      shortName: string;
-    }[] = [];
-    reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target) {
-        const content = event.target.result;
-        const lines = (content as string).replace("\r", "").split("\n");
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].split(",");
-          if (line[0] === "") continue;
-          const node = {
-            nodeID: line[0],
-            xcoord: parseInt(line[1]),
-            ycoord: parseInt(line[2]),
-            floor: line[3],
-            building: line[4],
-            nodeType: line[5],
-            longName: line[6],
-            shortName: line[7],
-          };
-          importedMapNodes.push(node);
-        }
-      }
-      console.log(importedMapNodes);
-    };
-    reader.readAsText(nodeFile);
-
+    // clear the file inputs
     (document.getElementById("Employees") as HTMLInputElement).value = "";
     (document.getElementById("Nodes") as HTMLInputElement).value = "";
     (document.getElementById("Edges") as HTMLInputElement).value = "";
@@ -187,15 +229,27 @@ export const ImportExport = () => {
         <form onSubmit={handleExport}>
           <div className={"checkboxes"}>
             <div className={"export-option"}>
-              <input id="EmployeesCheck" type="checkbox" />
+              <input
+                id="EmployeesCheck"
+                type="checkbox"
+                className={"file-checkbox"}
+              />
               <label>Employees</label>
             </div>
             <div className={"export-option"}>
-              <input id="NodesCheck" type="checkbox" />
+              <input
+                id="NodesCheck"
+                type="checkbox"
+                className={"file-checkbox"}
+              />
               <label>Nodes</label>
             </div>
             <div className={"export-option"}>
-              <input id="EdgesCheck" type="checkbox" />
+              <input
+                id="EdgesCheck"
+                type="checkbox"
+                className={"file-checkbox"}
+              />
               <label>Edges</label>
             </div>
           </div>
@@ -215,7 +269,7 @@ export const ImportExport = () => {
               Unselect All
             </button>
           </div>
-          <input value="Export" type="submit" className="add-button" />
+          <input value="Export" type="submit" className="file-submit" />
         </form>
       </div>
       <div className={"panel"}>
@@ -228,7 +282,7 @@ export const ImportExport = () => {
               type="file"
               id="Employees"
               accept="text/csv"
-              required
+              className={"file-input"}
             />
           </div>
           <div className={"import-option"}>
@@ -238,7 +292,7 @@ export const ImportExport = () => {
               type="file"
               id="Nodes"
               accept="text/csv"
-              required
+              className={"file-input"}
             />
           </div>
           <div className={"import-option"}>
@@ -248,10 +302,10 @@ export const ImportExport = () => {
               type="file"
               id="Edges"
               accept="text/csv"
-              required
+              className={"file-input"}
             />
           </div>
-          <input value="Import" type="submit" className="add-button" />
+          <input value="Import" type="submit" className="file-submit" />
         </form>
       </div>
     </div>
