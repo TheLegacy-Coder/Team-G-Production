@@ -4,10 +4,9 @@ import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 import { EmployeeWrapper } from "./ViewEmployees.tsx";
 import { useEffect, useState } from "react";
 import { Edge, mapEdges, MapNode, mapNodes } from "../map/MapNode.ts";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import { HTMLInputElement, IHTMLInputElement } from "happy-dom";
 import React from "react";
+import * as JSZip from "jszip";
+import { saveAs } from "file-saver";
 async function getEmployees(): Promise<EmployeeWrapper> {
   return getEmployeesAxios("true", "");
 }
@@ -31,6 +30,8 @@ export const ImportExport = () => {
     let rows: string[] = [];
     let csvArray;
     let a;
+
+    const zip = new JSZip();
     if (
       (document.getElementById("EmployeesCheck") as HTMLInputElement).checked
     ) {
@@ -58,12 +59,13 @@ export const ImportExport = () => {
         }
       });
       csvArray = rows.join("\r\n");
-      a = document.createElement("a");
+      /*a = document.createElement("a");
       a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
       a.target = "_blank";
       a.download = "nodes.csv";
       document.body.appendChild(a);
-      a.click();
+      a.click();*/
+      zip.file("nodes.csv", csvArray);
     }
 
     if ((document.getElementById("EdgesCheck") as HTMLInputElement).checked) {
@@ -73,13 +75,18 @@ export const ImportExport = () => {
         rows.push(Object.values(row).slice(0, 3).join(","));
       });
       csvArray = rows.join("\r\n");
-      a = document.createElement("a");
+      /*a = document.createElement("a");
       a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
       a.target = "_blank";
       a.download = "edges.csv";
-      document.body.appendChild(a);
-      a.click();
+      document.body.appendChild(a);*/
+      zip.file("edges.csv", csvArray);
     }
+
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+      // see FileSaver.js
+      saveAs(content, "example.zip");
+    });
   };
 
   const handleImport = (e: React.FormEvent<HTMLFormElement>) => {
@@ -180,9 +187,9 @@ export const ImportExport = () => {
     };
     reader.readAsText(nodeFile);
 
-    (document.getElementById("Employees") as IHTMLInputElement).value = "";
-    (document.getElementById("Nodes") as IHTMLInputElement).value = "";
-    (document.getElementById("Edges") as IHTMLInputElement).value = "";
+    (document.getElementById("Employees") as HTMLInputElement).value = "";
+    (document.getElementById("Nodes") as HTMLInputElement).value = "";
+    (document.getElementById("Edges") as HTMLInputElement).value = "";
   };
 
   return (
