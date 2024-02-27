@@ -233,6 +233,7 @@ export const ImportExport = () => {
                 id="EmployeesCheck"
                 type="checkbox"
                 className={"file-checkbox"}
+                defaultChecked={true}
               />
               <label>Employees</label>
             </div>
@@ -241,6 +242,7 @@ export const ImportExport = () => {
                 id="NodesCheck"
                 type="checkbox"
                 className={"file-checkbox"}
+                defaultChecked={true}
               />
               <label>Nodes</label>
             </div>
@@ -249,6 +251,7 @@ export const ImportExport = () => {
                 id="EdgesCheck"
                 type="checkbox"
                 className={"file-checkbox"}
+                defaultChecked={true}
               />
               <label>Edges</label>
             </div>
