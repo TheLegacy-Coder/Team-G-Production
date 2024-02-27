@@ -3,14 +3,14 @@ import "./styles/ViewRequests.css";
 import { TabSwitcher } from "../components/TabSwitcher.tsx";
 import {
   AllServiceRequests,
+  JobAssignments,
+  RequestType,
+  ServiceRequest,
   ServiceRequestExternalTransport,
   ServiceRequestFlowers,
   ServiceRequestInterpreter,
   ServiceRequestReligious,
   ServiceRequestSanitation,
-  ServiceRequest,
-  JobAssignments,
-  RequestType,
 } from "common/src/ServiceRequests.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import {
@@ -25,39 +25,22 @@ import { nodeStore } from "../map/MapNode.ts";
 interface RequestsTableProps {
   updateRequests: () => void;
   requests: ServiceRequest[] | undefined;
-  type?: string;
+  type: RequestType | string;
+  roomLocation?: string;
+  employees: Employee[];
 }
 
 export const RequestsTable = ({
   updateRequests,
   requests,
   type,
+  roomLocation,
+  employees,
 }: RequestsTableProps) => {
   const [stati] = useState(new Map<string, string>());
-  const [filter, setFilter] = useState<string>("All");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
   const [employeeFilter, setEmployeeFilter] = useState<string>("All");
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [roomLocation, setlocation] = useState<string>("Select Node");
-  // Get employees from DB and store them in state
 
-  useEffect(() => {
-    if (nodeStore.selectedNode?.nodeID !== undefined) {
-      setlocation(nodeStore.selectedNode?.nodeID);
-    } else {
-      setlocation("Select Node");
-    }
-    updateRequests();
-  }, [updateRequests]);
-
-  const getAndSetEmployees = () => {
-    getEmployeesAxios("true", "").then((list) => {
-      if (list !== undefined) {
-        setEmployees(list.data);
-      }
-    });
-  };
-  // Fetch the employees from the server on load
-  useEffect(getAndSetEmployees, []);
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
     changeStatusAxios(requestID, newStatus).then(() => {
@@ -101,10 +84,10 @@ export const RequestsTable = ({
       return;
     }
     if (
-      filter === "All" ||
-      (filter === "Assigned" && request.status === "Assigned") ||
-      (filter === "In Progress" && request.status === "In Progress") ||
-      (filter === "Completed" && request.status === "Completed")
+      statusFilter === "All" ||
+      (statusFilter === "Assigned" && request.status === "Assigned") ||
+      (statusFilter === "In Progress" && request.status === "In Progress") ||
+      (statusFilter === "Completed" && request.status === "Completed")
     ) {
       const extraCols = [];
       const extraInfo = [];
@@ -114,42 +97,46 @@ export const RequestsTable = ({
           switch (request.requestType) {
             case "Flowers":
               extraInfo.push(
-                <p>
+                <p key={"flowerType"}>
                   Flower Type: {(request as ServiceRequestFlowers).flowerType}
                 </p>,
-                <p>Amount: {(request as ServiceRequestFlowers).amount}</p>,
+                <p key={"amount"}>
+                  Amount: {(request as ServiceRequestFlowers).amount}
+                </p>,
               );
               break;
             case "Religious":
               extraInfo.push(
-                <p>Faith: {(request as ServiceRequestReligious).faith}</p>,
+                <p key={"faith"}>
+                  Faith: {(request as ServiceRequestReligious).faith}
+                </p>,
               );
               break;
             case "Sanitation":
               extraInfo.push(
-                <p>
+                <p key={"hazardous"}>
                   Hazardous:{" "}
                   {(request as ServiceRequestSanitation).hazardous.toString()}
                 </p>,
-                <p>
+                <p key={"mess type"}>
                   Mess Type: {(request as ServiceRequestSanitation).messType}
                 </p>,
               );
               break;
             case "Interpreter":
               extraInfo.push(
-                <p>
+                <p key={"language"}>
                   Language: {(request as ServiceRequestInterpreter).language}
                 </p>,
               );
               break;
             case "Transport":
               extraInfo.push(
-                <p>
+                <p key={"vehicle"}>
                   Vehicle:{" "}
                   {(request as ServiceRequestExternalTransport).vehicle}
                 </p>,
-                <p>
+                <p key={"destination"}>
                   Destination:{" "}
                   {(request as ServiceRequestExternalTransport).destination}
                 </p>,
@@ -158,7 +145,7 @@ export const RequestsTable = ({
           }
           extraCols.push(<td key="extra info">{extraInfo}</td>);
           break;
-        case "Flowers":
+        case RequestType.Flowers:
           extraCols.push(
             <td key="flowerType">
               {(request as ServiceRequestFlowers).flowerType}
@@ -166,12 +153,12 @@ export const RequestsTable = ({
             <td key="amount">{(request as ServiceRequestFlowers).amount}</td>,
           );
           break;
-        case "Religious":
+        case RequestType.Religious:
           extraCols.push(
             <td key="faith">{(request as ServiceRequestReligious).faith}</td>,
           );
           break;
-        case "Sanitation":
+        case RequestType.Sanitation:
           extraCols.push(
             <td key="hazardous">
               {(request as ServiceRequestSanitation).hazardous.toString()}
@@ -181,14 +168,14 @@ export const RequestsTable = ({
             </td>,
           );
           break;
-        case "Interpreter":
+        case RequestType.Interpreter:
           extraCols.push(
             <td key="language">
               {(request as ServiceRequestInterpreter).language}
             </td>,
           );
           break;
-        case "Transport":
+        case RequestType.Transport:
           extraCols.push(
             <td key="vehicle">
               {(request as ServiceRequestExternalTransport).vehicle}
@@ -222,31 +209,32 @@ export const RequestsTable = ({
     case "AtNode":
       extraHeaders.push(<th key="extra">Extra Info</th>);
       break;
-    case "Flowers":
+    case RequestType.Flowers:
       extraHeaders.push(
         <th key="flowerType">Flower Type</th>,
         <th key="amount">Amount</th>,
       );
       break;
-    case "Religious":
+    case RequestType.Religious:
       extraHeaders.push(<th key="faith">Faith</th>);
       break;
-    case "Sanitation":
+    case RequestType.Sanitation:
       extraHeaders.push(
         <th key="hazardous">Hazardous</th>,
         <th key="messType">Mess Type</th>,
       );
       break;
-    case "Interpreter":
+    case RequestType.Interpreter:
       extraHeaders.push(<th key="language">Language</th>);
       break;
-    case "Transport":
+    case RequestType.Transport:
       extraHeaders.push(
         <th key="vehicle">Vehicle</th>,
         <th key="destination">Destination</th>,
       );
       break;
   }
+
   return (
     <>
       <div className="filter">
@@ -264,8 +252,8 @@ export const RequestsTable = ({
           name="statusFilter"
           className="statusFilter"
           id="statusFilter"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
         >
           <option value="All">All</option>
           <option value="Assigned">Assigned</option>
@@ -286,11 +274,21 @@ export const RequestsTable = ({
               }}
             >
               <option value={"All"}>All</option>
-              {employees.map((emp) => (
-                <option id={emp.employeeID} value={emp.employeeID}>
-                  {emp.firstName + " " + emp.lastName}
-                </option>
-              ))}
+              {employees.map((emp) =>
+                type === "All" ||
+                type === "AtNode" ||
+                JobAssignments.get(type as RequestType)?.includes(emp.job) ? (
+                  <option
+                    id={emp.employeeID}
+                    value={emp.employeeID}
+                    key={emp.employeeID}
+                  >
+                    {emp.firstName + " " + emp.lastName}
+                  </option>
+                ) : (
+                  ""
+                ),
+              )}
             </select>
           </>
         ) : (
@@ -320,16 +318,27 @@ export const RequestsTable = ({
 export const ViewRequests = () => {
   const [requests, setRequests] = useState<AllServiceRequests>();
   const [roomLocation, setlocation] = useState<string>("Select Node");
+  const [employees, setEmployees] = useState<Employee[]>([]);
 
-  const node = nodeStore.selectedNode?.nodeID;
+  // Get employees from DB and store them in state
+  const getAndSetEmployees = () => {
+    getEmployeesAxios("true", "").then((list) => {
+      if (list !== undefined) {
+        setEmployees(list.data);
+      }
+    });
+  };
 
-  useEffect(() => {
+  // Fetch the employees from the server on load
+  useEffect(getAndSetEmployees, []);
+
+  nodeStore.currentRefresh = () => {
     if (nodeStore.selectedNode?.nodeID !== undefined) {
       setlocation(nodeStore.selectedNode?.nodeID);
     } else {
       setlocation("Select Node");
     }
-  }, [node]);
+  };
 
   // Get requests from DB and store them in state
   const updateRequests = () => {
@@ -373,6 +382,8 @@ export const ViewRequests = () => {
         updateRequests={updateRequests}
         requests={allRequests}
         type={"All"}
+        key={"All"}
+        employees={employees}
       />,
     ],
     [
@@ -381,6 +392,9 @@ export const ViewRequests = () => {
         updateRequests={updateRequests}
         requests={allRequests}
         type={"AtNode"}
+        roomLocation={roomLocation}
+        key={"AtNode"}
+        employees={employees}
       />,
     ],
     [
@@ -388,7 +402,9 @@ export const ViewRequests = () => {
       <RequestsTable
         updateRequests={updateRequests}
         requests={requests?.flowers}
-        type={"Flowers"}
+        type={RequestType.Flowers}
+        key={RequestType.Flowers}
+        employees={employees}
       />,
     ],
     [
@@ -396,7 +412,9 @@ export const ViewRequests = () => {
       <RequestsTable
         updateRequests={updateRequests}
         requests={requests?.religious}
-        type={"Religious"}
+        type={RequestType.Religious}
+        key={RequestType.Religious}
+        employees={employees}
       />,
     ],
     [
@@ -404,7 +422,9 @@ export const ViewRequests = () => {
       <RequestsTable
         updateRequests={updateRequests}
         requests={requests?.sanitation}
-        type={"Sanitation"}
+        type={RequestType.Sanitation}
+        key={RequestType.Sanitation}
+        employees={employees}
       />,
     ],
     [
@@ -412,7 +432,9 @@ export const ViewRequests = () => {
       <RequestsTable
         updateRequests={updateRequests}
         requests={requests?.interpreter}
-        type={"Interpreter"}
+        type={RequestType.Interpreter}
+        key={RequestType.Interpreter}
+        employees={employees}
       />,
     ],
     [
@@ -420,7 +442,9 @@ export const ViewRequests = () => {
       <RequestsTable
         updateRequests={updateRequests}
         requests={requests?.transport}
-        type={"Transport"}
+        type={RequestType.Transport}
+        key={RequestType.Transport}
+        employees={employees}
       />,
     ],
   ]);
