@@ -248,14 +248,19 @@ abstract class SearchTemplate implements SearchStrategy {
 
 export class AStarSearch extends SearchTemplate {
   calculateHeuristic(node1: MapNode, node2: MapNode): number {
+    let stairHeuristic = 0;
+    if (node1.nodeType === "Stairs" || node2.nodeType === "Stairs") {
+      stairHeuristic = 10000;
+    }
+    const floorHeuristic =
+      10010 *
+      Math.pow(floors.indexOf(node1.floor) - floors.indexOf(node2.floor), 2);
+
     return Math.sqrt(
       Math.pow(node1.xcoord - node2.xcoord, 2) +
         Math.pow(node1.ycoord - node2.ycoord, 2) +
-        100000000000 *
-          Math.pow(
-            floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
-            2,
-          ),
+        floorHeuristic +
+        stairHeuristic,
     );
   }
 }
