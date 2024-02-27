@@ -3,7 +3,7 @@
   min-height: calc(100% - 90px);
   max-height: calc(100% - 90px);
   height: 100%;
-  background: #e9d3b7;
+  background: #b8c4d1;
   padding: 16px;
   gap: 16px;
   display: flex;
@@ -14,16 +14,14 @@
   margin: 0 auto;
   width: 50%;
   padding: 20px;
-  /*font-size: 30px;*/
-  background-color: #00284f;
-  color: white;
+  background-color: #e9d3b7;
+  color: black;
   border-radius: 16px;
   border: 2px solid black;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  /*justify-content: center;*/
 }
 
 form {
@@ -31,6 +29,8 @@ form {
   flex-direction: column;
   gap: 16px;
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 label {
@@ -47,13 +47,11 @@ label {
 .export-option {
   display: flex;
   flex-direction: row;
-  /*align-items: ;*/
   width: 50%;
 }
 
 .select-buttons {
   display: none;
-  /*display: flex;*/
   flex-direction: row;
   gap: 16px;
   justify-content: center;
@@ -61,7 +59,7 @@ label {
 
 .select-button {
   padding: 5px;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 5px;
   background-color: #00284f;
   color: white;
@@ -75,10 +73,9 @@ label {
 
 .file-input {
   width: 100%;
-  border-radius: 8px;
-  border: 1px solid #00284f;
   font-size: 16px;
   margin-top: 8px;
+  margin-left: 2px;
 }
 
 .file-checkbox {
@@ -92,11 +89,12 @@ label {
 
 .file-submit {
   padding: 5px;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 5px;
   background-color: #00284f;
   color: white;
-  margin-left: 5px;
-  margin-bottom: 5px;
-  font-size: 32px;
+  font-size: 28px;
+  width: 120px;
+  margin-left: auto;
+  margin-right: auto;
 }
