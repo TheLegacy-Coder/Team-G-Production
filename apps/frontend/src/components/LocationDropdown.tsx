@@ -23,7 +23,6 @@ const LocationDropdown: React.FC = () => {
 
   // Fetch map nodes and set start and end locations
   useEffect(() => {
-    console.log("fetch nodes");
     const fetchMapNodes = async () => {
       try {
         // Fetch map nodes from the mapNodes variable
