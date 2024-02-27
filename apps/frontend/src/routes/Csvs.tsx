@@ -67,10 +67,13 @@ const Nodes = () => {
       }
 
       axios
-        .post("http://localhost:3000/api/map/nodes", {
-          deleteAll: true,
-          nodes: importedMapNodes,
-        })
+        .post(
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/nodes",
+          {
+            deleteAll: true,
+            nodes: importedMapNodes,
+          },
+        )
         // update local store
         .then(() => {
           getMapNodesEdges().then(() => {
@@ -174,10 +177,13 @@ const Edges = () => {
         }
       }
       axios
-        .post("http://localhost:3000/api/map/edges", {
-          deleteAll: true,
-          edges: importedMapEdges,
-        })
+        .post(
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/edges",
+          {
+            deleteAll: true,
+            edges: importedMapEdges,
+          },
+        )
         // update local store
         .then(() => {
           getMapNodesEdges().then(() => {

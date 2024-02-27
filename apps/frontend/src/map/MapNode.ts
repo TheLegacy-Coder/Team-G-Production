@@ -45,7 +45,9 @@ export function getMapNodesEdges() {
   mapEdges.clear();
   return new Promise((resolve, reject) => {
     axios
-      .get("http://localhost:3000/api/map/nodes")
+      .get(
+        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/nodes",
+      )
       .then((response: AxiosResponse<MapNode[]>) => {
         // console.log(response.data);
         response.data.forEach((node) => {
@@ -54,7 +56,9 @@ export function getMapNodesEdges() {
         });
 
         axios
-          .get("http://localhost:3000/api/map/edges")
+          .get(
+            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/edges",
+          )
           .then((response: AxiosResponse<Edge[]>) => {
             // console.log(response.data);
             response.data.forEach((edge) => {

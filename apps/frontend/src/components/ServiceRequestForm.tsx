@@ -155,7 +155,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
     try {
       axios
         .post(
-          "http://localhost:3000/api/" +
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/" +
             ServiceRequestEndpoints.get(props.requestType),
           req,
         )
@@ -183,7 +183,10 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
     const fetchEmployeeNamesAndIDS = async () => {
       try {
         axios
-          .get("http://localhost:3000/api/employees?jobTypes=" + jobs)
+          .get(
+            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees?jobTypes=" +
+              jobs,
+          )
           .then((response: AxiosResponse<Employee[]>) => {
             setEmployees(response.data);
           });

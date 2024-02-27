@@ -30,10 +30,13 @@ export const RequestsTable = ({
   // Change status of a request, PATCH to backend
   const handleStatusChange = (requestID: string, newStatus: string) => {
     axios
-      .patch("http://localhost:3000/api/services/requests", {
-        requestID: requestID,
-        status: newStatus,
-      })
+      .patch(
+        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+        {
+          requestID: requestID,
+          status: newStatus,
+        },
+      )
       .then((response) => {
         // Update the requests in state
         updateRequests();
@@ -185,17 +188,23 @@ export const ViewRequests = () => {
   const updateRequests = () => {
     if (currentEmployee?.accessLevel === "admin") {
       axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { getAll: true },
-        })
+        .get(
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+          {
+            params: { getAll: true },
+          },
+        )
         .then((res: AxiosResponse<AllServiceRequests>) => {
           setRequests(res.data);
         });
     } else {
       axios
-        .get("http://localhost:3000/api/services/requests", {
-          params: { employeeID: currentEmployee?.employeeID },
-        })
+        .get(
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+          {
+            params: { employeeID: currentEmployee?.employeeID },
+          },
+        )
         .then((res: AxiosResponse<AllServiceRequests>) => {
           setRequests(res.data);
         });

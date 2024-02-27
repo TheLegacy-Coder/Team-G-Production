@@ -18,7 +18,9 @@ export function clearAnnouncementFlag() {
 refreshAnnouncements();
 export function refreshAnnouncements() {
   axios
-    .get("http://localhost:3000/api/announcements")
+    .get(
+      "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/announcements",
+    )
     .then((response: AxiosResponse<Announcement[]>) => {
       announcements = response.data;
       if (announcementsLength !== announcements.length) {

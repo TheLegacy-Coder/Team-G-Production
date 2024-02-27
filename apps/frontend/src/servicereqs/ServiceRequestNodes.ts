@@ -37,7 +37,10 @@ export function postServiceRequest(
   request: Prisma.ServiceRequestUncheckedCreateInput,
 ) {
   axios
-    .post("http://localhost:3000/api/services/requests", request) // REPLACE WITH ACTUAL URL
+    .post(
+      "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+      request,
+    ) // REPLACE WITH ACTUAL URL
     .then((response) => {
       return response.data;
     })

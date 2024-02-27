@@ -52,7 +52,10 @@ lock.on("authenticated", function (authResult) {
       console.log(profile);
       currentProfile = profile as Profile;
       axios
-        .get("http://localhost:3000/api/employees/?getID=" + profile.sub)
+        .get(
+          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees/?getID=" +
+            profile.sub,
+        )
         .then((response: AxiosResponse<Employee>) => {
           currentEmployee = response.data;
           console.log(currentEmployee);

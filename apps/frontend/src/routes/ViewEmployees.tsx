@@ -10,9 +10,12 @@ export interface EmployeeWrapper {
 }
 
 async function getEmployees(): Promise<EmployeeWrapper> {
-  return axios.get("http://localhost:3000/api/employees", {
-    params: { getAll: true },
-  });
+  return axios.get(
+    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
+    {
+      params: { getAll: true },
+    },
+  );
 }
 
 export const ViewEmployees = () => {
@@ -67,9 +70,12 @@ export const ViewEmployees = () => {
     ) {
       try {
         axios
-          .delete("http://localhost:3000/api/employees", {
-            data: { employeeID: employeeID },
-          })
+          .delete(
+            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
+            {
+              data: { employeeID: employeeID },
+            },
+          )
           .then(() => {
             getAndSetEmployees();
             setState("none");
@@ -100,7 +106,11 @@ export const ViewEmployees = () => {
     if (state === "edit") {
       try {
         axios
-          .patch("http://localhost:3000/api/employees", data, {})
+          .patch(
+            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
+            data,
+            {},
+          )
           .then(() => {
             getAndSetEmployees();
             setState("none");
@@ -110,10 +120,16 @@ export const ViewEmployees = () => {
       }
     } else if (state === "add") {
       try {
-        axios.post("http://localhost:3000/api/employees", data, {}).then(() => {
-          getAndSetEmployees();
-          setState("none");
-        });
+        axios
+          .post(
+            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
+            data,
+            {},
+          )
+          .then(() => {
+            getAndSetEmployees();
+            setState("none");
+          });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
