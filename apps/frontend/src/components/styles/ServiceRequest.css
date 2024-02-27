@@ -37,12 +37,11 @@
 
 .request-nav-style {
   color: #ffffff;
-  background: #00284f;
   border: 4px solid white;
   font-size: 30px;
   border-radius: 5px;
   padding: 5px;
-  width: 350px;
+  width: 450px;
   height: 100px;
   justify-content: center;
   align-content: center;
@@ -50,7 +49,45 @@
   cursor: pointer;
   /*margin-bottom: 40px;*/
   display: flex;
-  justify-content: center;
-  align-content: center;
   flex-direction: column;
+}
+
+.flower-button {
+  background: #6da2dd;
+}
+
+.flower-button:hover {
+  background: #98bde7;
+}
+
+.interpreter-button {
+  background: #6291c5;
+}
+
+.interpreter-button:hover {
+  background: #91b2d6;
+}
+
+.religious-button {
+  background: #496d94;
+}
+
+.religious-button:hover {
+  background: #7f98b4;
+}
+
+.transport-button {
+  background: #314862;
+}
+
+.transport-button:hover {
+  background: #6e7e91;
+}
+
+.sanitation-button {
+  background: #00284f;
+}
+
+.sanitation-button:hover {
+  background-color: #4c6883;
 }
