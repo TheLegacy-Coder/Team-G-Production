@@ -6,6 +6,7 @@ import {
   clearAnnouncementFlag,
   refreshAnnouncements,
 } from "../stores/AnnouncementsStore.ts";
+import { mouse } from "../map/Mouse.ts";
 
 export const HomeAnnounce = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -23,7 +24,7 @@ export const HomeAnnounce = () => {
     }
     refreshAnnouncements();
 
-    setTimeout(checkUpdates, 10000);
+    setTimeout(checkUpdates, 600000);
   }
 
   const announcementArray = announcements;
@@ -44,7 +45,7 @@ export const HomeAnnounce = () => {
   const divWidth = divRef === null ? 100 : divRef.getBoundingClientRect().width;
   const pxps = 25;
   if (divRef === null) {
-    setTimeout(forceUpdate, 100);
+    setTimeout(forceUpdate, 1000);
   }
 
   const textLength = text.length * 9; //approximate pixel size for 32px font
@@ -59,7 +60,12 @@ export const HomeAnnounce = () => {
   const speed = marqueeLength / pxps;
 
   return (
-    <div className={"announcements-bar"} id={"marquee-content"}>
+    <div
+      className={"announcements-bar"}
+      id={"marquee-content"}
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.divMouseUp}
+    >
       <style>
         {"@keyframes scroll-left {\n" +
           `  0% {\n` +

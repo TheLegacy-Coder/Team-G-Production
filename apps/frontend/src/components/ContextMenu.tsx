@@ -8,9 +8,12 @@ import "./styles/ContextMenu.css";
 import { Csvs } from "../routes/Csvs.tsx";
 import { ViewRequests } from "../routes/ViewRequests.tsx";
 import { ViewEmployees } from "../routes/ViewEmployees.tsx";
+import { About } from "./About.tsx";
 import { HelpPage } from "./HelpPage.tsx";
 import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
+import { Charts } from "./Charts.tsx";
+import { mouse } from "../map/Mouse.ts";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -18,7 +21,12 @@ export function ContextMenu() {
   loginStore.navbarRefreshHook = forceUpdate;
   contextMenuState.render = forceUpdate;
   return (
-    <div className={contextMenuState.showingClass} style={{ display: "flex" }}>
+    <div
+      className={contextMenuState.showingClass}
+      style={{ display: "flex" }}
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.divMouseUp}
+    >
       <div className={"context-menu-nav"}>
         <div
           className={"context-menu-toggle"}
@@ -28,6 +36,14 @@ export function ContextMenu() {
         >
           {contextMenuState.showing ? "→" : "←"}
         </div>
+
+        <ContextMenuRouterButton
+          content={<About />}
+          lable={"About"}
+          protected={false}
+          style={"context-menu-tab"}
+        />
+
         <ContextMenuRouterButton
           content={<HelpPage />}
           lable={"Help"}
@@ -54,13 +70,13 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<LocationDropdown />}
-          lable={"Location Dropdown"}
+          lable={"Directions"}
           style={"context-menu-tab"}
         />
 
         <ContextMenuRouterButton
           content={<ServiceRequests />}
-          lable={"Service Request"}
+          lable={"Make Service Request"}
           protected={true}
           style={"context-menu-tab"}
         />
@@ -71,6 +87,13 @@ export function ContextMenu() {
           <>
             {loginStore.loginType === "admin" ? (
               <>
+                <ContextMenuRouterButton
+                  content={<Charts />}
+                  lable={"Charts"}
+                  protected={true}
+                  admin={false}
+                  style={"context-menu-tab-admin"}
+                />
                 <ContextMenuRouterButton
                   content={<Csvs />}
                   lable={"Nodes & Edges"}
@@ -91,7 +114,7 @@ export function ContextMenu() {
             )}
             <ContextMenuRouterButton
               content={<ViewRequests />}
-              lable={"Service Requests"}
+              lable={"View Requests"}
               protected={true}
               admin={true}
               style={"context-menu-tab-admin"}

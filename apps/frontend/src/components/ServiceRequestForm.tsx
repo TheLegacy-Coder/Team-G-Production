@@ -2,22 +2,22 @@ import React, { useEffect, useReducer, useState } from "react";
 import {
   JobAssignments,
   RequestType,
-  ServiceRequestEndpoints,
   ServiceRequestExternalTransport,
   ServiceRequestFlowers,
   ServiceRequestInterpreter,
   ServiceRequestReligious,
   ServiceRequestSanitation,
+  ServiceRequest,
 } from "common/src/ServiceRequests.ts";
 import { nodeStore } from "../map/MapNode.ts";
 
-import axios, { AxiosResponse } from "axios";
 import { Employee } from "common/src/Employee.ts";
-import { ServiceRequest } from "../servicereqs/ServiceRequestNodes.ts";
 import { currentEmployee } from "../stores/LoginStore.ts";
 import "./styles/ServiceRequestForm.css";
 import { ServiceRequests } from "./ServiceRequests.tsx";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
+import { serviceRequestPostAxios } from "../DataAsObject/serviceRequestsAxios.ts";
+import { getEmployeesAxios } from "../DataAsObject/employeesAxios.ts";
 
 export interface ServiceRequestProps {
   requestType: RequestType;
@@ -73,14 +73,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
       break;
   }
   function handleSubmit() {
-    let req: ServiceRequest = {
-      desc: "",
-      location: "",
-      requestID: "",
-      requestType: "",
-      requester: "",
-      status: "",
-    };
+    let req: ServiceRequest;
     switch (props.requestType) {
       case RequestType.Religious:
         req = {
@@ -152,21 +145,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
         break;
     }
     console.log(req);
-    try {
-      axios
-        .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/" +
-            ServiceRequestEndpoints.get(props.requestType),
-          req,
-        )
-        .then((response: AxiosResponse<Employee[]>) => {
-          console.log(response);
-        });
-
-      // Replace with the actual property holding employee names in the API response
-    } catch (error) {
-      console.error("Error fetching employee names:", error);
-    }
+    serviceRequestPostAxios(props.requestType, req);
     setSubmitted(true);
   }
 
@@ -181,20 +160,9 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   useEffect(() => {
     // Fetch employee names using API call and update the state
     const fetchEmployeeNamesAndIDS = async () => {
-      try {
-        axios
-          .get(
-            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees?jobTypes=" +
-              jobs,
-          )
-          .then((response: AxiosResponse<Employee[]>) => {
-            setEmployees(response.data);
-          });
-
-        // Replace with the actual property holding employee names in the API response
-      } catch (error) {
-        console.error("Error fetching employee names:", error);
-      }
+      getEmployeesAxios("false", jobs).then((res) => {
+        setEmployees(res.data);
+      });
     };
     fetchEmployeeNamesAndIDS();
   }, [jobs]);
@@ -202,7 +170,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
   return (
     <div className={"service-request-container"}>
       {submitted ? (
-        <>
+        <div className={"submitted-container"}>
           <svg
             className="checkmark"
             xmlns="http://www.w3.org/2000/svg"
@@ -227,12 +195,14 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
           <br />
           <ContextMenuRouterButton
             content={<ServiceRequests />}
+            icon={null}
             lable={"Service Request"}
             protected={true}
-            style={"nav-button"}
+            style={"service-request-form-cancel"}
+            button={true}
             customText={"Back"}
           />
-        </>
+        </div>
       ) : (
         <div className={"service-request-form"}>
           <h3 className={"service-request-form-label"}>Description</h3>
@@ -455,6 +425,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
 
           <ContextMenuRouterButton
             content={<ServiceRequests />}
+            icon={null}
             customText={"Cancel"}
             lable={"Service Request"}
             style={"service-request-form-cancel"}

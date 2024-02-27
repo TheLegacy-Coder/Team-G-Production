@@ -1,0 +1,99 @@
+.map-top-left-buttons {
+  position: fixed;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  gap: 8px;
+}
+
+.map-top-left-search-button {
+  position: fixed;
+  margin-top: 8px;
+  margin-left: 196px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  gap: 8px;
+}
+
+.map-bottom-left-buttons {
+  position: fixed;
+  bottom: 55px;
+  margin: 8px;
+  display: flex;
+  z-index: 1;
+  gap: 8px;
+}
+
+.group-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-button {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  color: white;
+  background-color: #00284f;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selected-floor-button {
+  border-color: #ff0000;
+  font-weight: bold;
+  border-width: 4px;
+}
+
+.group-button:hover {
+  background-color: #4c6883;
+}
+
+.group-button:active {
+  background-color: #99a9b8;
+}
+
+.zoom-amount {
+  display: none;
+}
+
+.path-floor {
+  background-color: #6291c6;
+}
+
+.toggle-button-container {
+  width: 180px;
+  font-size: 30px;
+  background-color: #00284f;
+  cursor: pointer;
+  color: white;
+  border-radius: 16px;
+  border: 2px solid black;
+}
+
+/* Overall Toggle Button*/
+.toggle-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #00284f;
+  color: white;
+  border-radius: 25px;
+  border: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-button:hover {
+  background-color: #4c6883;
+}
+
+.toggle-button:active {
+  background-color: #99a9b8;
+}

@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./styles/ViewEmployees.css";
-import axios from "axios";
 import { Employee } from "common/src/Employee.ts";
+import {
+  addEmployeeAxios,
+  addMultipleEmployeesAxios,
+  deleteEmployeeAxios,
+  editEmployeeAxios,
+  getEmployeesAxios,
+} from "../DataAsObject/employeesAxios.ts";
 
 type State = "none" | "add" | "edit";
 
@@ -10,12 +16,7 @@ export interface EmployeeWrapper {
 }
 
 async function getEmployees(): Promise<EmployeeWrapper> {
-  return axios.get(
-    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-    {
-      params: { getAll: true },
-    },
-  );
+  return getEmployeesAxios("true", "");
 }
 
 export const ViewEmployees = () => {
@@ -68,21 +69,10 @@ export const ViewEmployees = () => {
     if (
       window.confirm(`Are you sure you want to delete employee ${employeeID}?`)
     ) {
-      try {
-        axios
-          .delete(
-            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-            {
-              data: { employeeID: employeeID },
-            },
-          )
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
-      } catch (error) {
-        console.error("Error deleting employee:", error);
-      }
+      deleteEmployeeAxios(employeeID).then(() => {
+        getAndSetEmployees();
+        setState("none");
+      });
     }
   };
 
@@ -105,35 +95,74 @@ export const ViewEmployees = () => {
 
     if (state === "edit") {
       try {
-        axios
-          .patch(
-            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-            data,
-            {},
-          )
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        editEmployeeAxios(data).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
     } else if (state === "add") {
       try {
-        axios
-          .post(
-            "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-            data,
-            {},
-          )
-          .then(() => {
-            getAndSetEmployees();
-            setState("none");
-          });
+        addEmployeeAxios([data]).then(() => {
+          getAndSetEmployees();
+          setState("none");
+        });
       } catch (error) {
         console.error("Error submitting employee:", error);
       }
     }
+  };
+
+  const handleExportEmployees = () => {
+    const rows: string[] = [];
+    rows.push("employeeID,firstName,lastName,email,job,accessLevel");
+    employees.forEach((row: Employee) => {
+      rows.push(Object.values(row).slice(0, 6).join(","));
+    });
+    const csvArray = rows.join("\r\n");
+    const a = document.createElement("a");
+    a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+    a.target = "_blank";
+    a.download = "employees.csv";
+    document.body.appendChild(a);
+    a.click();
+  };
+
+  const handleImportEmployees = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const importedMapEmployees: Employee[] = [];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target) {
+        const content = event.target.result;
+        const lines = (content as string).split("\n");
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].replace("\r", "").split(",");
+          if (line[0] === "") continue;
+          const employee: Employee = {
+            employeeID: line[0],
+            firstName: line[1],
+            lastName: line[2],
+            email: line[3],
+            job: line[4],
+            accessLevel: line[5],
+          };
+          importedMapEmployees.push(employee);
+        }
+      }
+      console.log(importedMapEmployees);
+
+      // post all new employees & replace all old ones
+      addMultipleEmployeesAxios("true", importedMapEmployees).then(() => {
+        // update local store
+        getAndSetEmployees();
+      });
+      e.target.value = "";
+    };
+    reader.readAsText(file);
   };
 
   // Render rows for each employee
@@ -176,7 +205,7 @@ export const ViewEmployees = () => {
       // With buttons for editing and deleting if the row is being hovered over
       const buttons =
         employee.employeeID === hoveringID && state === "none" ? (
-          <>
+          <div className="edit-delete-buttons">
             <button className="edit-button" onClick={editEmployee}>
               Edit
             </button>
@@ -186,7 +215,7 @@ export const ViewEmployees = () => {
             >
               Delete
             </button>
-          </>
+          </div>
         ) : null;
 
       rows.push(
@@ -241,16 +270,17 @@ export const ViewEmployees = () => {
       <table>
         <thead>
           <tr>
-            <th>employeeID</th>
-            <th>firstName</th>
-            <th>lastName</th>
-            <th>email</th>
-            <th>job</th>
-            <th>accessLevel</th>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Job</th>
+            <th>Access Level</th>
           </tr>
         </thead>
         <tbody onMouseLeave={handleMouseLeave}>{rows}</tbody>
       </table>
+
       {state === "add" || state === "edit" ? (
         // If the state is "add" or "edit", render a submit button and a cancel button
 
@@ -265,11 +295,30 @@ export const ViewEmployees = () => {
           </button>
         </div>
       ) : (
-        <div className={"float-buttons"}>
-          <button className="add-button" onClick={addEmployee}>
-            Add Employee
-          </button>
-        </div>
+        <>
+          <div className={"float-buttons-right"}>
+            <button
+              className={"import-export-buttons"}
+              onClick={handleExportEmployees}
+            >
+              Export CSV
+            </button>
+            <label className={"import-export-buttons"}>
+              <input
+                onChange={handleImportEmployees}
+                type={"file"}
+                accept={".csv"}
+                hidden
+              />
+              Import CSV
+            </label>
+          </div>
+          <div className={"float-buttons-left"}>
+            <button className="add-button" onClick={addEmployee}>
+              Add Employee
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

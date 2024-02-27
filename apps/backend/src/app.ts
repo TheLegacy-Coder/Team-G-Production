@@ -9,6 +9,14 @@ import employeeRouter from "./routes/employeeRouter.ts";
 
 const app: Express = express(); // Setup the backend
 
+// app.use(
+//   auth({
+//     audience: "/api",
+//     issuerBaseURL: "https://dev-1uv1d12i66i3umpd.us.auth0.com/",
+//     tokenSigningAlg: "RS256",
+//   }),
+// );
+
 // Setup generic middlewear
 app.use(
   logger("dev", {
@@ -57,4 +65,4 @@ app.use((err: HttpError, req: Request, res: Response): void => {
   res.status(err.status || 500);
 });
 
-export default app; // Export the backend, so that www.ts can start it
+export default app; // Export the backend, so that

@@ -5,6 +5,7 @@
   width: 850px;
   height: 80%;
   animation: slide-in 1s;
+  z-index: 100;
 }
 
 .context-menu-long-to-in {
@@ -14,6 +15,7 @@
   width: 850px;
   height: 80%;
   animation: slide-long-to-in 1s;
+  z-index: 100;
 }
 
 .context-menu-in-to-long {
@@ -23,6 +25,7 @@
   width: 1500px;
   height: 80%;
   animation: slide-in-to-long 1s;
+  z-index: 100;
 }
 
 .context-menu-out-to-long {
@@ -32,6 +35,7 @@
   width: 1500px;
   height: 80%;
   animation: slide-out-to-long 1s;
+  z-index: 100;
 }
 
 .context-menu-long-to-out {
@@ -41,6 +45,7 @@
   width: 1500px;
   height: 80%;
   animation: slide-long-to-out 1s;
+  z-index: 100;
 }
 
 .context-menu-nav {
@@ -59,6 +64,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 100;
 }
 
 .context-menu-toggle {
@@ -75,6 +81,7 @@
   align-content: center;
   flex-direction: column;
   font-size: 60px;
+  z-index: 100;
 }
 
 .context-menu-tab {
@@ -89,10 +96,11 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  z-index: 100;
 }
 
 .context-menu-tab-admin {
-  background: #4f0028;
+  background: #723252;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;
@@ -103,10 +111,11 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  z-index: 100;
 }
 
 .context-menu-tab-admin-selected {
-  background: #6f2048;
+  background: #9c6f85;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;
@@ -117,10 +126,11 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  z-index: 100;
 }
 
 .context-menu-tab-selected {
-  background: #20486f;
+  background: #4c6883;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;
@@ -131,6 +141,7 @@
   cursor: pointer;
   flex: 1;
   max-height: calc(100% / 7);
+  z-index: 100;
 }
 
 .context-menu-in-to-out {
@@ -140,6 +151,7 @@
   width: 850px;
   height: 80%;
   animation: slide-in-to-out 1s;
+  z-index: 100;
 }
 
 .context-menu-start {
@@ -148,6 +160,7 @@
   right: -700px;
   width: 850px;
   height: 80%;
+  z-index: 100;
 }
 
 .context-menu-divider-content {
@@ -157,6 +170,7 @@
   background: #b8c4d1;
   position: relative;
   box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
+  z-index: 100;
 }
 
 .context-menu-title-box {
@@ -167,11 +181,13 @@
   color: white;
   height: 90px;
   border-bottom: 3px solid white;
+  z-index: 100;
 }
 
 .context-menu-title {
   text-align: center;
   font-size: 55px;
+  z-index: 100;
 }
 
 @keyframes slide-in {
@@ -235,6 +251,7 @@
   position: relative;
   box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
   animation: flash 1s;
+  z-index: 100;
 }
 
 .context-menu-divider-content-reselect-alt {
@@ -244,6 +261,7 @@
   position: relative;
   box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
   animation: flash-alt 1s;
+  z-index: 100;
 }
 
 @keyframes flash {

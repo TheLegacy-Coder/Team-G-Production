@@ -1,0 +1,36 @@
+.encompassing-div {
+  height: calc(100% - 90px);
+  align-content: center;
+}
+
+.about-page-container {
+  overflow-y: scroll;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 100%;
+  color: black;
+  font-size: 20px;
+}
+
+.about-page-container th {
+  border-color: black;
+  border-bottom-color: white;
+}
+
+.about-page-container div {
+  margin-bottom: 10px;
+}
+
+.about-page-container div:last-child {
+  margin-bottom: 0; /* Remove bottom margin for the last div */
+}
+
+a {
+  color: midnightblue;
+}

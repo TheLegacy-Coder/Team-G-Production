@@ -6,26 +6,22 @@ export interface TabSwitcherProps {
 }
 
 export const TabSwitcher = (props: TabSwitcherProps) => {
-  const [selected, setSelected] = useState(props.titles[0]);
-  let selectedIndex = 0;
-  props.titles.forEach((title, i) => {
-    if (title === selected) {
-      selectedIndex = i;
-    }
-  });
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <>
       <div className={"tab-switcher-container"}>
-        {props.titles.map(function (title) {
+        {props.titles.map(function (title, index) {
           return (
             <div
               className={
-                "tab-switcher-tab" + (title === selected ? "-selected" : "")
+                "tab-switcher-tab" +
+                (title === props.titles[selectedIndex] ? "-selected" : "")
               }
               id={title}
+              key={title}
               onClick={() => {
-                setSelected(title);
+                setSelectedIndex(index);
               }}
             >
               {title}

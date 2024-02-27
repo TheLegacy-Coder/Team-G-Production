@@ -4,12 +4,19 @@
   max-height: calc(100% - 90px);
   height: 100%;
   background: #e9d3b7;
+  padding-bottom: 65px;
 }
 
-.float-buttons {
+.float-buttons-right {
   position: absolute;
   bottom: 16px;
   right: 32px;
+}
+
+.float-buttons-left {
+  position: absolute;
+  bottom: 16px;
+  left: 32px;
 }
 
 table {
@@ -43,9 +50,11 @@ th {
 }
 
 .edit-delete-buttons {
+  position: relative;
 }
 
 .edit-button {
+  transform: translateY(-100%);
   position: absolute;
   right: 100px;
   border: 2px solid white;
@@ -55,6 +64,7 @@ th {
 }
 
 .delete-button {
+  transform: translateY(-100%);
   position: absolute;
   right: 25px;
   border: 2px solid white;
@@ -64,6 +74,7 @@ th {
 }
 
 .add-button {
+  padding: 5px;
   border: 2px solid white;
   border-radius: 5px;
   background-color: #00284f;

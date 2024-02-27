@@ -3,15 +3,18 @@ import React from "react";
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
-import LocationDropdown from "../components/LocationDropdown.tsx";
+import { MapNav } from "./MapNav.tsx";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <ContextMenu />
-      <InteractableMap />
+      <div id={"canvas-container"}>
+        <MapNav />
+        <InteractableMap />
+      </div>
+
       <HomeAnnounce />
-      <LocationDropdown />
     </div>
   );
 };

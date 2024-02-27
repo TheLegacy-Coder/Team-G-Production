@@ -1,0 +1,85 @@
+.chart-container {
+  overflow-y: scroll;
+  display: flex;
+  width: 100%;
+  height: calc(100% - 90px);
+  background: #b8c4d1;
+  color: black;
+  flex-direction: column;
+}
+
+.first-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.second-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+
+.third-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+
+.fourth-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  padding: 60px;
+}
+
+.request-type-container {
+  grid-column-end: 2;
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.request-status-container {
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.request-leader-container {
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.floor-requests-container {
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+text {
+  font-size: 18px;
+  color: black !important;
+  fill: black !important;
+  opacity: 1 !important;
+}
+.third-row > div > div > svg > g > g > text {
+  font-size: 20px;
+  color: black !important;
+  fill: black !important;
+  opacity: 1 !important;
+}
+
+h4 {
+  text-align: center;
+}

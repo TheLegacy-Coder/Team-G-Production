@@ -1,0 +1,10 @@
+.pathfindingButton {
+  width: 120px;
+  height: 60px;
+  font-size: 25px;
+  border-radius: 16px;
+  color: white;
+  background-color: #00284f;
+  border: 2px solid black;
+  padding-left: 10px;
+}
