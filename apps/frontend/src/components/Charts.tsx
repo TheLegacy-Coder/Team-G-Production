@@ -38,13 +38,11 @@ export const Charts = () => {
       setRequests(res.data);
     });
   }, []);
-  console.log(employees);
 
   employees?.forEach((employee: Employee) => {
     employeeRegistry.set(employee.employeeID, employee);
     statsMap.set(employee.employeeID, { completed: 0 });
   });
-  console.log(employeeRegistry);
 
   let serviceRequestType = [
     { key: "Flowers", data: 0 },
@@ -62,8 +60,6 @@ export const Charts = () => {
       { key: "Transport", data: requestTypes.transport.length },
     ];
   }
-
-  console.log(serviceRequestType);
 
   let assigned = 0;
   let inProgress = 0;

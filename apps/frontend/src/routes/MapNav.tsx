@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import "../components/styles/ZoomButton.css";
+import "./styles/MapNav.css";
 import {
-  Dash,
   EyeFill,
   EyeSlashFill,
-  Plus,
   HouseFill,
+  ZoomIn,
+  ZoomOut,
 } from "react-bootstrap-icons";
 import { draw } from "../map/Draw";
 import { setHoverNode, mouse } from "../map/Mouse";
@@ -32,6 +32,8 @@ export const MapNav = () => {
     edges: draw.showEdges,
     halls: draw.showHalls,
   });
+
+  const ICON_SIZE = 35;
 
   function changeMap(floor: string, imageSrc: string) {
     setHoverNode(undefined);
@@ -81,9 +83,9 @@ export const MapNav = () => {
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
           {value ? (
-            <EyeFill color="white" size={35} />
+            <EyeFill color="white" size={ICON_SIZE} />
           ) : (
-            <EyeSlashFill color="white" size={35} />
+            <EyeSlashFill color="white" size={ICON_SIZE} />
           )}
         </div>
       </button>
@@ -112,10 +114,10 @@ export const MapNav = () => {
     <div>
       <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-          <div className={"zoom-buttons"}>
+          <div className={"group-buttons"}>
             <button
-              className={"zoom-button"}
-              onClick={() => mouse.buttonZoom(false)}
+              className={"group-button"}
+              onClick={() => mouse.buttonZoom(true)}
               style={{
                 borderTopRightRadius: "0px",
                 borderBottomRightRadius: "0px",
@@ -123,24 +125,21 @@ export const MapNav = () => {
                 borderBottomLeftRadius: "16px",
               }}
             >
-              <Dash size={50} />
+              <ZoomIn size={ICON_SIZE} />
             </button>
             <button
-              className={"zoom-button home-button"}
+              className={"group-button"}
+              onClick={() => mouse.buttonZoom(false)}
+              style={{ borderRadius: "0px" }}
+            >
+              <ZoomOut size={ICON_SIZE} />
+            </button>
+            <button
+              className={"group-button home-button"}
               onClick={() => {
                 drawData.resetMap(false);
                 mouse.homePosition(drawData.currentFloor);
               }}
-              style={{ borderRadius: "0px" }}
-            >
-              <HouseFill size={30} />
-            </button>
-            <button className={"zoom-button zoom-amount"}>
-              <div id={"scalar"}></div>
-            </button>
-            <button
-              className={"zoom-button"}
-              onClick={() => mouse.buttonZoom(true)}
               style={{
                 borderTopRightRadius: "16px",
                 borderBottomRightRadius: "16px",
@@ -148,7 +147,10 @@ export const MapNav = () => {
                 borderBottomLeftRadius: "0px",
               }}
             >
-              <Plus size={50} />
+              <HouseFill size={ICON_SIZE} />
+            </button>
+            <button className={"group-button zoom-amount"}>
+              <div id={"scalar"}></div>
             </button>
           </div>
         </div>
@@ -182,20 +184,24 @@ export const MapNav = () => {
       </div>
 
       <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <button
             id={"F3"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("F3");
               changeMap("3", "03_thethirdfloor.png");
+            }}
+            style={{
+              borderTopRightRadius: "16px",
+              borderTopLeftRadius: "16px",
             }}
           >
             3
           </button>
           <button
             id={"F2"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("F2");
               changeMap("2", "02_thesecondfloor.png");
@@ -205,7 +211,7 @@ export const MapNav = () => {
           </button>
           <button
             id={"F1"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("F1");
               changeMap("1", "01_thefirstfloor.png");
@@ -215,7 +221,7 @@ export const MapNav = () => {
           </button>
           <button
             id={"L1"}
-            className={"zoom-button selected-floor-button"}
+            className={"group-button selected-floor-button"}
             onClick={() => {
               selectButton("L1");
               changeMap("L1", "00_thelowerlevel1.png");
@@ -225,10 +231,14 @@ export const MapNav = () => {
           </button>
           <button
             id={"L2"}
-            className={"zoom-button"}
+            className={"group-button"}
             onClick={() => {
               selectButton("L2");
               changeMap("L2", "00_thelowerlevel2.png");
+            }}
+            style={{
+              borderBottomRightRadius: "16px",
+              borderBottomLeftRadius: "16px",
             }}
           >
             L2
