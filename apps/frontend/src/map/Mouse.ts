@@ -334,7 +334,7 @@ class Mouse {
     }
   }
 
-  private clickDown(posX: number, posY: number) {
+  public clickDown(posX: number, posY: number) {
     mouse.updateMousePos(posX, posY);
     if (hoverNode === undefined) {
       document.getElementById("map-canvas")!.style.cursor = "all-scroll";
@@ -379,7 +379,7 @@ class Mouse {
     }
   }
 
-  private clickUp(posX: number, posY: number) {
+  public clickUp(posX: number, posY: number) {
     if (hoverNode === undefined)
       document.getElementById("map-canvas")!.style.cursor = "auto";
     if (tfCursor === undefined || delta === undefined) {

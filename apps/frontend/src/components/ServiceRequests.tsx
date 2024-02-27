@@ -3,9 +3,12 @@ import "./styles/ServiceRequest.css";
 import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
 import { ServiceRequestForm } from "./ServiceRequestForm.tsx";
 import { RequestType } from "common/src/ServiceRequests.ts";
+import { mouse } from "../map/Mouse";
 
 // ServiceRequests component responsible for handling service requests
 export const ServiceRequests = () => {
+  mouse.clickDown(0, 0);
+  mouse.clickUp(0, 0);
   // Like before, ServiceRequests handling logic
   return (
     <div className={"asdf-service-request-container"}>
