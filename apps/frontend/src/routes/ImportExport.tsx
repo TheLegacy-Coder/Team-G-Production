@@ -187,15 +187,19 @@ export const ImportExport = () => {
         <form onSubmit={handleExport}>
           <div className={"checkboxes"}>
             <div className={"export-option"}>
-              <input id="EmployeesCheck" type="checkbox" />
+              <input
+                id="EmployeesCheck"
+                type="checkbox"
+                defaultChecked={true}
+              />
               <label>Employees</label>
             </div>
             <div className={"export-option"}>
-              <input id="NodesCheck" type="checkbox" />
+              <input id="NodesCheck" type="checkbox" defaultChecked={true} />
               <label>Nodes</label>
             </div>
             <div className={"export-option"}>
-              <input id="EdgesCheck" type="checkbox" />
+              <input id="EdgesCheck" type="checkbox" defaultChecked={true} />
               <label>Edges</label>
             </div>
           </div>
