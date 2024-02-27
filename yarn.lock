@@ -6928,8 +6928,8 @@ __metadata:
   linkType: hard
 
 "reaviz@npm:^15.7.1":
-  version: 15.7.1
-  resolution: "reaviz@npm:15.7.1"
+  version: 15.7.2
+  resolution: "reaviz@npm:15.7.2"
   dependencies:
     "@upsetjs/venn.js": "npm:^1.3.0"
     big-integer: "npm:^1.6.52"
@@ -6959,7 +6959,7 @@ __metadata:
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: fe2b75897579c473a211bb72dd58aa3e04d7c3e94951326040e8065a4839e4c18b9e1e6a487bd41a840857062185284e14ff8aa279149352f57ca35c447b3cb1
+  checksum: 0bd6daa69c02ae2e2d4b0f05b4a6806c239c87eef8b904a8c68bf0902d1e798652ae5ed143c5d7b79a2e4e411782a4da583c02284c1daf3870700669d75b80cb
   languageName: node
   linkType: hard
 
@@ -7579,7 +7579,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "softeng-starter-code@workspace:."
   dependencies:
-    "@types/prop-types": "npm:^15.7.11"
     "@types/react": "npm:^18.0.37"
     "@types/react-dom": "npm:^18.0.11"
     "@vitest/ui": "npm:^0.33.0"
@@ -7590,7 +7589,6 @@ __metadata:
     husky: "npm:^8.0.0"
     prettier: "npm:2.8.8"
     prettier-config-custom: "workspace:*"
-    prop-types: "npm:^15.8.1"
     react: "npm:^18.2.0"
     react-bootstrap: "npm:^2.10.0"
     react-dom: "npm:^18.2.0"
@@ -8010,9 +8008,9 @@ __metadata:
   linkType: hard
 
 "transformation-matrix@npm:^2.9.0":
-  version: 2.16.0
-  resolution: "transformation-matrix@npm:2.16.0"
-  checksum: d4e14d6c831e4fb699c80fc0e74c3ce99bf28343d1849a4da432bb7ff5bac30bd56091b646c8b8259c1af49ac5c34a9cb080d91d060d4b9592fec265c5ce208a
+  version: 2.16.1
+  resolution: "transformation-matrix@npm:2.16.1"
+  checksum: a9ee0843202d9ddc64362d09764fba99591f2134bdfaccac63b975281a591f52a19b4aaa56aaa86ace70f4271e25b639709029d28db04bcd9415f3edd3252086
   languageName: node
   linkType: hard
 
