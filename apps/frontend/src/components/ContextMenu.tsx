@@ -39,7 +39,6 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<About />}
-          icon={null}
           lable={"About"}
           protected={false}
           style={"context-menu-tab"}
@@ -47,7 +46,6 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<HelpPage />}
-          icon={null}
           lable={"Help"}
           protected={false}
           style={"context-menu-tab"}
@@ -57,7 +55,6 @@ export function ContextMenu() {
           // Render Profile button when logged in
           <ContextMenuRouterButton
             content={<Profile />}
-            icon={null}
             lable={"Profile"}
             protected={false}
             style={"context-menu-tab"}
@@ -66,7 +63,6 @@ export function ContextMenu() {
           // Render Login button when logged out
           <ContextMenuRouterButton
             content={<Login />}
-            icon={null}
             lable={"Login"}
             style={"context-menu-tab"}
           />
@@ -74,14 +70,12 @@ export function ContextMenu() {
 
         <ContextMenuRouterButton
           content={<LocationDropdown />}
-          icon={null}
           lable={"Directions"}
           style={"context-menu-tab"}
         />
 
         <ContextMenuRouterButton
           content={<ServiceRequests />}
-          icon={null}
           lable={"Make Service Request"}
           protected={true}
           style={"context-menu-tab"}
@@ -95,7 +89,6 @@ export function ContextMenu() {
               <>
                 <ContextMenuRouterButton
                   content={<Charts />}
-                  icon={null}
                   lable={"Charts"}
                   protected={true}
                   admin={false}
@@ -103,7 +96,6 @@ export function ContextMenu() {
                 />
                 <ContextMenuRouterButton
                   content={<Csvs />}
-                  icon={null}
                   lable={"Nodes & Edges"}
                   protected={true}
                   admin={true}
@@ -111,7 +103,6 @@ export function ContextMenu() {
                 />
                 <ContextMenuRouterButton
                   content={<ViewEmployees />}
-                  icon={null}
                   lable={"Employees"}
                   protected={true}
                   admin={true}
@@ -123,7 +114,6 @@ export function ContextMenu() {
             )}
             <ContextMenuRouterButton
               content={<ViewRequests />}
-              icon={null}
               lable={"View Requests"}
               protected={true}
               admin={true}

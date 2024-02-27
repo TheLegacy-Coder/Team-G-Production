@@ -5,7 +5,7 @@ import { Login } from "../routes/Login.tsx";
 
 export interface ContextMenuRouterButtonProps {
   content: ReactNode;
-  icon: ReactNode | null;
+  icon?: ReactNode;
   lable: string;
   protected?: boolean;
   style: string;
@@ -54,7 +54,7 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
           <div style={{ float: "left", paddingLeft: "10px" }}>{props.icon}</div>
           <div
             style={
-              props.icon !== null
+              props.icon !== undefined
                 ? { paddingRight: "50px", paddingTop: "5px" }
                 : {}
             }
