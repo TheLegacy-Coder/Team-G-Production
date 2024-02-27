@@ -1,0 +1,11 @@
+.data-page {
+  overflow-y: scroll;
+  min-height: calc(100% - 90px);
+  max-height: calc(100% - 90px);
+  height: 100%;
+  background: #e9d3b7;
+  padding-bottom: 65px;
+}
+
+.fileInput {
+}

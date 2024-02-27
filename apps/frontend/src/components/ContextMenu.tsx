@@ -14,6 +14,7 @@ import LocationDropdown from "./LocationDropdown.tsx";
 import { Profile } from "./Profile.tsx";
 import { Charts } from "./Charts.tsx";
 import { mouse } from "../map/Mouse.ts";
+import { ImportExport } from "../routes/ImportExport.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -104,6 +105,13 @@ export function ContextMenu() {
                 <ContextMenuRouterButton
                   content={<ViewEmployees />}
                   lable={"Employees"}
+                  protected={true}
+                  admin={true}
+                  style={"context-menu-tab-admin"}
+                />
+                <ContextMenuRouterButton
+                  content={<ImportExport />}
+                  lable={"Import/Export"}
                   protected={true}
                   admin={true}
                   style={"context-menu-tab-admin"}
