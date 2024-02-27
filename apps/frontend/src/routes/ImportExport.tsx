@@ -29,7 +29,6 @@ export const ImportExport = () => {
     e.preventDefault();
     let rows: string[] = [];
     let csvArray;
-    let a;
 
     const zip = new JSZip();
     if (
@@ -40,12 +39,7 @@ export const ImportExport = () => {
         rows.push(Object.values(row).slice(0, 6).join(","));
       });
       csvArray = rows.join("\r\n");
-      a = document.createElement("a");
-      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
-      a.target = "_blank";
-      a.download = "employees.csv";
-      document.body.appendChild(a);
-      a.click();
+      zip.file("employees.csv", csvArray);
     }
 
     if ((document.getElementById("NodesCheck") as HTMLInputElement).checked) {
@@ -59,12 +53,6 @@ export const ImportExport = () => {
         }
       });
       csvArray = rows.join("\r\n");
-      /*a = document.createElement("a");
-      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
-      a.target = "_blank";
-      a.download = "nodes.csv";
-      document.body.appendChild(a);
-      a.click();*/
       zip.file("nodes.csv", csvArray);
     }
 
@@ -75,17 +63,11 @@ export const ImportExport = () => {
         rows.push(Object.values(row).slice(0, 3).join(","));
       });
       csvArray = rows.join("\r\n");
-      /*a = document.createElement("a");
-      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
-      a.target = "_blank";
-      a.download = "edges.csv";
-      document.body.appendChild(a);*/
       zip.file("edges.csv", csvArray);
     }
 
     zip.generateAsync({ type: "blob" }).then(function (content) {
-      // see FileSaver.js
-      saveAs(content, "example.zip");
+      saveAs(content, "data.zip");
     });
   };
 
@@ -93,14 +75,6 @@ export const ImportExport = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-
-    /*if ((formData.get("") === undefined ||
-            (document.getElementById("Nodes") as IHTMLInputElement).files[0] === undefined ||
-            (document.getElementById("Edges") as IHTMLInputElement).files[0] === undefined)  {
-            console.log("Select All Files");
-            return;
-        }*/
-
     const employeeFile = formData.get("Employees") as File;
     const nodeFile = formData.get("Nodes") as File;
     const edgeFile = formData.get("Edges") as File;
