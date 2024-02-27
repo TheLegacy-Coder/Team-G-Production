@@ -4,12 +4,83 @@
   max-height: calc(100% - 90px);
   height: 100%;
   background: #e9d3b7;
-  padding-bottom: 65px;
+  padding: 16px;
+  gap: 16px;
+  display: flex;
+  flex-direction: row;
+}
+
+.panel {
+  margin: 0 auto;
+  width: 50%;
+  padding: 20px;
+  /*font-size: 30px;*/
+  background-color: #00284f;
+  cursor: pointer;
+  color: white;
+  border-radius: 16px;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  /*justify-content: center;*/
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+label {
+  text-align: center;
+}
+
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.export-option {
+  display: flex;
+  flex-direction: row;
+  /*align-items: ;*/
+  width: 50%;
+}
+
+.import-option {
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #00284f;
+  font-size: 16px;
+}
+
+input[type="checkbox"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #00284f;
+  font-size: 16px;
+  width: 20px;
+  margin-right: 16px;
+}
+
+input[type="submit"] {
+  padding: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  color: white;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .fileInput {
-}
-
-.importbutton {
-  margin-left: 50%;
 }

@@ -194,39 +194,62 @@ export const ImportExport = () => {
 
   return (
     <div className={"data-page"}>
-      <form onSubmit={handleExport}>
-        <label>
-          <input id="EmployeesCheck" type="checkbox" />
-          Output Employees?
-        </label>
-        <br />
-        <label>
-          <input id="NodesCheck" type="checkbox" />
-          Output Nodes?
-        </label>
-        <br />
-        <label>
-          <input id="EdgesCheck" type="checkbox" />
-          Output Edges?
-        </label>
-        <br />
-        <input value="Export All" type="submit" className="add-button" />
-      </form>
-      <form id="fileUploads" onSubmit={handleImport}>
-        <input
-          name="Employees"
-          type="file"
-          id="Employees"
-          accept="text/csv"
-          required
-        />
-        <br />
-        <input name="Nodes" type="file" id="Nodes" accept="text/csv" required />
-        <br />
-        <input name="Edges" type="file" id="Edges" accept="text/csv" required />
-        <br />
-        <input value="Import All" type="submit" className="add-button" />
-      </form>
+      <div className={"panel"}>
+        <h2>Export</h2>
+        <form onSubmit={handleExport}>
+          <div className={"checkboxes"}>
+            <div className={"export-option"}>
+              <input id="EmployeesCheck" type="checkbox" />
+              <label>Employees</label>
+            </div>
+            <div className={"export-option"}>
+              <input id="NodesCheck" type="checkbox" />
+              <label>Nodes</label>
+            </div>
+            <div className={"export-option"}>
+              <input id="EdgesCheck" type="checkbox" />
+              <label>Edges</label>
+            </div>
+          </div>
+          <input value="Export" type="submit" className="add-button" />
+        </form>
+      </div>
+      <div className={"panel"}>
+        <h2>Import</h2>
+        <form id="fileUploads" onSubmit={handleImport}>
+          <div className={"import-option"}>
+            <label>Employees</label>
+            <input
+              name="Employees"
+              type="file"
+              id="Employees"
+              accept="text/csv"
+              required
+            />
+          </div>
+          <div className={"import-option"}>
+            <label>Nodes</label>
+            <input
+              name="Nodes"
+              type="file"
+              id="Nodes"
+              accept="text/csv"
+              required
+            />
+          </div>
+          <div className={"import-option"}>
+            <label>Edges</label>
+            <input
+              name="Edges"
+              type="file"
+              id="Edges"
+              accept="text/csv"
+              required
+            />
+          </div>
+          <input value="Import" type="submit" className="add-button" />
+        </form>
+      </div>
     </div>
   );
 };
