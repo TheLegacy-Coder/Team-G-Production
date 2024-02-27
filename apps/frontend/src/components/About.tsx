@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles/About.css";
+import { ContextMenuRouterButton } from "./ContextMenuRouterButton.tsx";
+import { Credits } from "./Credits.tsx";
 
 export const About = () => {
   const container = useRef<HTMLDivElement>(null);
@@ -8,7 +10,6 @@ export const About = () => {
   const [scrollHeight, setScrollHeight] = useState<string>("");
 
   useEffect(() => {
-    // console.log(container.current ? container.current.clientHeight : 0);
     setScrollHeight(
       container.current
         ? container.current.clientHeight.toString()
@@ -90,6 +91,14 @@ export const About = () => {
           The Brigham & Women's Hospital maps and data used in this application
           are copyrighted and provided for the sole use of educational purposes.
         </div>
+        <ContextMenuRouterButton
+          content={<Credits />}
+          lable={"Credits"}
+          protected={false}
+          style={"credits-button"}
+          button={true}
+          customText={"Credits"}
+        />
       </div>
     </div>
   );

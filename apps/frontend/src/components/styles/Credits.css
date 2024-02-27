@@ -3,7 +3,7 @@
   align-content: center;
 }
 
-.about-page-container {
+.credits-container {
   overflow-y: scroll;
   justify-content: center;
   text-align: center;
@@ -16,38 +16,43 @@
   height: 100%;
   color: black;
   font-size: 20px;
+
+  align-content: center;
+  width: 100%;
+  background: #b8c4d1;
+  flex-direction: column;
 }
 
-.about-page-container th {
-  border-color: black;
-  border-bottom-color: white;
-}
-
-.about-page-container div {
+.credits-box {
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 10px;
+  padding-bottom: 5px;
+  border: #00284f 4px solid;
+  border-radius: 5px;
+  width: 350px;
 }
 
-.about-page-container div:last-child {
-  margin-bottom: 0; /* Remove bottom margin for the last div */
-}
-
-a {
-  color: midnightblue;
-}
-
-.credits-button {
+.back-button {
   color: white;
-  width: 200px;
-  height: 80px;
-  font-size: 38px;
+  width: 150px;
+  font-size: 18px;
   padding: 5px;
-  border: 4px solid white;
+  border: 2px solid white;
   border-radius: 5px;
   background-color: #00284f;
   margin-top: 15px;
   margin-bottom: 5px;
 }
-
-.credits-button:hover {
+.back-button:hover {
   background-color: #4c6883;
+}
+
+.credits-text {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.credits-link {
+  font-size: 15px;
 }
