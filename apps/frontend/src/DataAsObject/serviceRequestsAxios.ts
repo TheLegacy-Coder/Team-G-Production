@@ -12,7 +12,7 @@ export function changeStatusAxios(requestID: string, newStatus: string) {
   return new Promise((resolve, reject) => {
     axios
       .patch(
-        "http://localhost:3000/api/services/requests",
+        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
         {
           requestID: requestID,
           status: newStatus,
@@ -37,17 +37,23 @@ export function changeStatusAxios(requestID: string, newStatus: string) {
 }
 
 export function getAllAxios() {
-  return axios.get("http://localhost:3000/api/services/requests", {
-    params: { getAll: true },
-    headers: { Authorization: `Bearer ${currentToken}` },
-  });
+  return axios.get(
+    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+    {
+      params: { getAll: true },
+      headers: { Authorization: `Bearer ${currentToken}` },
+    },
+  );
 }
 
 export function getFromEmployeeAxios(employeeID: string) {
-  return axios.get("http://localhost:3000/api/services/requests", {
-    params: { employeeID: employeeID, getAll: false },
-    headers: { Authorization: `Bearer ${currentToken}` },
-  });
+  return axios.get(
+    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/services/requests",
+    {
+      params: { employeeID: employeeID, getAll: false },
+      headers: { Authorization: `Bearer ${currentToken}` },
+    },
+  );
 }
 
 export function serviceRequestPostAxios(
@@ -57,7 +63,8 @@ export function serviceRequestPostAxios(
   try {
     axios
       .post(
-        "http://localhost:3000/api/" + ServiceRequestEndpoints.get(requestType),
+        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/" +
+          ServiceRequestEndpoints.get(requestType),
         req,
         {
           headers: {
