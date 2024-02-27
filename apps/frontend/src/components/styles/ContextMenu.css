@@ -111,7 +111,7 @@
 }
 
 .context-menu-tab-admin {
-  background: #4f0028;
+  background: #723252;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;
@@ -129,7 +129,7 @@
 }
 
 .context-menu-tab-admin-selected {
-  background: #6f2048;
+  background: #9c6f85;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;
@@ -147,7 +147,7 @@
 }
 
 .context-menu-tab-selected {
-  background: #20486f;
+  background: #4c6883;
   color: white;
   border-bottom: 2px solid white;
   text-align: center;

@@ -195,6 +195,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
           <br />
           <ContextMenuRouterButton
             content={<ServiceRequests />}
+            icon={null}
             lable={"Service Request"}
             protected={true}
             style={"service-request-form-cancel"}
@@ -424,6 +425,7 @@ export function ServiceRequestForm(props: ServiceRequestProps) {
 
           <ContextMenuRouterButton
             content={<ServiceRequests />}
+            icon={null}
             customText={"Cancel"}
             lable={"Service Request"}
             style={"service-request-form-cancel"}

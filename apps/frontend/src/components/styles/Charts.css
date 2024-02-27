@@ -3,10 +3,9 @@
   display: flex;
   width: 100%;
   height: calc(100% - 90px);
-  background: #e9d3b7;
+  background: #b8c4d1;
   color: black;
   flex-direction: column;
-  overflow-y: scroll;
 }
 
 .first-row {
