@@ -92,7 +92,7 @@ export const SpeechEngine = () => {
           onClick={() => {
             console.log("gotcha");
             setInit(true);
-            speak("test");
+            speak("");
           }}
         />
       ) : (

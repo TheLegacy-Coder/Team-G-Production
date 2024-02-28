@@ -31,7 +31,17 @@ export const About = () => {
             mouthClosedImage={"dimitri/close.jpg"}
             mouthOpenImage={"dimitri/open.jpg"}
             getText={() => {
-              return "Silly goofy little test";
+              return "If at first you dont succeed, add dash dash force and try again.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Tyler Giroux"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"tyler/close.jpg"}
+            mouthOpenImage={"tyler/open.jpg"}
+            getText={() => {
+              return "Docker broke my laptop again.";
             }}
           />
 
@@ -51,7 +61,7 @@ export const About = () => {
             mouthClosedImage={"cam/close.jpg"}
             mouthOpenImage={"cam/open.jpg"}
             getText={() => {
-              return "Silly goofy little test";
+              return "When the going gets tough the tough get going.";
             }}
           />
 
@@ -71,7 +81,7 @@ export const About = () => {
             mouthClosedImage={"gabe/close.jpg"}
             mouthOpenImage={"gabe/open.jpg"}
             getText={() => {
-              return "Silly goofy little test";
+              return "I'd do anything for a lifetime of scrums with scrum master Tommy";
             }}
           />
 
@@ -81,7 +91,7 @@ export const About = () => {
             mouthClosedImage={"silas/close.jpg"}
             mouthOpenImage={"silas/open.jpg"}
             getText={() => {
-              return "Silly goofy little test";
+              return "Waka waka waka waka";
             }}
           />
 
@@ -91,7 +101,47 @@ export const About = () => {
             mouthClosedImage={"tommy/close.jpg"}
             mouthOpenImage={"tommy/open.jpg"}
             getText={() => {
-              return "Silly goofy little test";
+              return "Zero all nighters needed, guess we are just better.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Noah Newton"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"noah/close.jpg"}
+            mouthOpenImage={"noah/open.jpg"}
+            getText={() => {
+              return "I don't have one yet ask me later.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Istan Slamet"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"istan/close.jpg"}
+            mouthOpenImage={"istan/open.jpg"}
+            getText={() => {
+              return "The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Jason Zhang"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"jason/close.jpg"}
+            mouthOpenImage={"jason/open.jpg"}
+            getText={() => {
+              return "If you obey all the rules you miss all the fun.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Mike Wilkinson (SA)"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"mike/close.jpg"}
+            mouthOpenImage={"mike/open.jpg"}
+            getText={() => {
+              return "Good job on the talking heads Dimitri im very proud of you.";
             }}
           />
         </div>
