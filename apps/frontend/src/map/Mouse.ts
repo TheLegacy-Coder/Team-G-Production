@@ -52,10 +52,10 @@ class Mouse {
   public zoom(zoom: number, xCoord: number, yCoord: number) {
     drawData.updateCoords();
     if (
-      (drawData.scalar * zoom * this.imageWidth > window.innerWidth ||
-        drawData.scalar * zoom * this.imageHeight > window.innerHeight) &&
-      (drawData.scalar * zoom * this.imageWidth < window.innerWidth * 10 ||
-        drawData.scalar * zoom * this.imageHeight < window.innerHeight * 10)
+      (drawData.scalar * zoom * mouse.imageWidth > window.innerWidth ||
+        drawData.scalar * zoom * mouse.imageHeight > window.innerHeight) &&
+      (drawData.scalar * zoom * mouse.imageWidth < window.innerWidth * 10 ||
+        drawData.scalar * zoom * mouse.imageHeight < window.innerHeight * 10)
     ) {
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
@@ -79,39 +79,18 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
     ) {
       return false;
     }
-    const result =
+    return (
       drawData.pathHighest.x > drawData.upleftCorner.x &&
       drawData.pathLowest.x < drawData.downrightCorner.x &&
       drawData.pathHighest.y > drawData.upleftCorner.y &&
-      drawData.pathLowest.y < drawData.downrightCorner.y;
-    if (result) {
-      drawData.setRedraw(true);
-    }
-    return result;
+      drawData.pathLowest.y < drawData.downrightCorner.y
+    );
   }
 
   private setDim(startX: number, endX: number, startY: number, endY: number) {
@@ -205,14 +184,14 @@ class Mouse {
       return null;
     if (
       drawData.downrightCorner.x - drawData.upleftCorner.x >
-      this.imageWidth
+      mouse.imageWidth
     ) {
       // centers canvas along x axis
       ctx!.translate(drawData.upleftCorner.x, 0);
       drawData.updateCoords();
       ctx!.translate(
         (drawData.downrightCorner.x -
-          this.imageWidth -
+          mouse.imageWidth -
           drawData.offset.x / drawData.scalar) /
           2,
         0,
@@ -223,11 +202,11 @@ class Mouse {
         ctx!.translate(drawData.upleftCorner.x, 0);
       } else if (
         drawData.downrightCorner.x >
-        this.imageWidth + drawData.offset.x / drawData.scalar
+        mouse.imageWidth + drawData.offset.x / drawData.scalar
       ) {
         // aligns canvas along right side
         ctx!.translate(
-          -this.imageWidth -
+          -mouse.imageWidth -
             drawData.offset.x / drawData.scalar +
             drawData.downrightCorner.x,
           0,
@@ -236,7 +215,7 @@ class Mouse {
     }
     if (
       drawData.downrightCorner.y - drawData.upleftCorner.y >
-      this.imageHeight
+      mouse.imageHeight
     ) {
       // centers canvas along y axis
       ctx!.translate(0, drawData.upleftCorner.y);
@@ -244,7 +223,7 @@ class Mouse {
       ctx!.translate(
         0,
         (drawData.downrightCorner.y -
-          this.imageHeight -
+          mouse.imageHeight -
           drawData.offset.y / drawData.scalar) /
           2,
       );
@@ -254,12 +233,12 @@ class Mouse {
         ctx!.translate(0, drawData.upleftCorner.y);
       } else if (
         drawData.downrightCorner.y >
-        this.imageHeight + drawData.offset.y / drawData.scalar
+        mouse.imageHeight + drawData.offset.y / drawData.scalar
       ) {
         // aligns canvas along bottom side
         ctx!.translate(
           0,
-          -this.imageHeight -
+          -mouse.imageHeight -
             drawData.offset.y / drawData.scalar +
             drawData.downrightCorner.y,
         );
@@ -307,7 +286,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           if (hoverNode !== node) {
             moveRedraw = true;
             document.getElementById("map-canvas")!.style.cursor = "pointer";
@@ -331,10 +314,12 @@ class Mouse {
 
   // runs for moving mouse
   public mouseMove(evt: React.MouseEvent<Element, MouseEvent>) {
-    mouse.clickMove(evt.pageX, evt.pageY);
+    if (!mouse.touch) {
+      mouse.clickMove(evt.pageX, evt.pageY);
+    }
   }
 
-  private clickDown(posX: number, posY: number) {
+  public clickDown(posX: number, posY: number) {
     mouse.updateMousePos(posX, posY);
     if (hoverNode === undefined) {
       document.getElementById("map-canvas")!.style.cursor = "all-scroll";
@@ -372,7 +357,14 @@ class Mouse {
     mouse.elementUp(evt.pageX, evt.pageY);
   }
 
-  private clickUp(posX: number, posY: number) {
+  public divTouchUp(evt: React.TouchEvent<HTMLDivElement>) {
+    mouse.touch = false;
+    if (evt.touches.length === 1) {
+      mouse.elementUp(evt.touches[0].pageX, evt.touches[0].pageY);
+    }
+  }
+
+  public clickUp(posX: number, posY: number) {
     if (hoverNode === undefined)
       document.getElementById("map-canvas")!.style.cursor = "auto";
     if (tfCursor === undefined || delta === undefined) {
@@ -388,7 +380,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           emptyClick = false;
           if (getStartNode() != undefined) {
             setEndNode(node);
@@ -419,27 +415,32 @@ class Mouse {
   }
 
   public canvasTouchStart(evt: React.TouchEvent<HTMLCanvasElement>) {
-    //evt.preventDefault();
-    if (evt.touches.length >= 1) {
+    if (evt.touches.length === 1) {
       const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
       mouse.clickDown(touch.x, touch.y);
     }
   }
 
   public canvasTouchEnd(evt: React.TouchEvent<HTMLCanvasElement>) {
-    //evt.preventDefault();
-    if (evt.touches.length >= 1) {
+    if (evt.touches.length === 1) {
       const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
       mouse.clickUp(touch.x, touch.y);
     }
   }
 
-  public canvasTouchMove(evt: React.TouchEvent<HTMLCanvasElement>) {
-    //evt.preventDefault();
-    if (evt.touches.length >= 1) {
+  public canvasTouchMove(
+    evt: React.TouchEvent<HTMLCanvasElement> | React.TouchEvent<HTMLDivElement>,
+  ) {
+    if (evt.touches.length === 1) {
       const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
       mouse.clickMove(touch.x, touch.y);
     }
+  }
+  private touch = false;
+
+  public divTouchStart(evt: React.TouchEvent<HTMLDivElement>) {
+    mouse.touch = true;
+    evt;
   }
 }
 

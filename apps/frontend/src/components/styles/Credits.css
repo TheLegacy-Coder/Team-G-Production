@@ -1,0 +1,58 @@
+.encompassing-div {
+  height: calc(100% - 90px);
+  align-content: center;
+}
+
+.credits-container {
+  overflow-y: scroll;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 100%;
+  color: black;
+  font-size: 20px;
+
+  align-content: center;
+  width: 100%;
+  background: #b8c4d1;
+  flex-direction: column;
+}
+
+.credits-box {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border: #00284f 4px solid;
+  border-radius: 5px;
+  width: 350px;
+}
+
+.back-button {
+  color: white;
+  width: 150px;
+  font-size: 18px;
+  padding: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #00284f;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+.back-button:hover {
+  background-color: #4c6883;
+}
+
+.credits-text {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.credits-link {
+  font-size: 15px;
+}

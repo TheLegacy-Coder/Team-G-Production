@@ -3,8 +3,11 @@ import React from "react";
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
+import { SpeechEngine } from "../components/SpeechEngine.tsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { MapNav } from "./MapNav.tsx";
+import { drawData } from "../map/DrawData.ts";
+//import { drawData } from "../map/DrawData.ts";
 
 export const Index = () => {
   return (
@@ -16,9 +19,23 @@ export const Index = () => {
       }}
     >
       <div style={{ position: "relative", height: "100%" }}>
+        <SpeechEngine />
         <ContextMenu />
-        <InteractableMap />
-        <MapNav />
+
+        <div
+          id={"canvas-container"}
+          style={
+            {
+              width: window.innerWidth - drawData.offset.x,
+              height: window.innerHeight - drawData.offset.y,
+              overflow: "hidden",
+            } as React.CSSProperties
+          }
+        >
+          <MapNav />
+          <InteractableMap />
+        </div>
+
         <HomeAnnounce />
       </div>
     </Auth0Provider>

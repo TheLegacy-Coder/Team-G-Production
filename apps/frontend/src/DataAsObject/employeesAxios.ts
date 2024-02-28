@@ -80,34 +80,25 @@ export function addMultipleEmployeesAxios(
   importedMapEmployees: Employee[],
 ) {
   return new Promise((resolve, reject) => {
-    if (deleteAll == "true") {
-      axios
-        .post(link + "/api/employees", {
-          deleteAll: true,
+    const deleteAllBoolean = deleteAll === "true";
+    axios
+      .post(
+        link + "/api/employees",
+        {
+          deleteAll: deleteAllBoolean,
           employees: importedMapEmployees,
-        })
-        .then(() => {
-          resolve("Added Employees");
-          return;
-        })
-        .catch((error) => {
-          reject(error);
-          return;
-        });
-    } else {
-      axios
-        .post(link + "/api/employees", {
-          deleteAll: false,
-          employees: importedMapEmployees,
-        })
-        .then(() => {
-          resolve("Added Employees");
-          return;
-        })
-        .catch((error) => {
-          reject(error);
-          return;
-        });
-    }
+        },
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        },
+      )
+      .then(() => {
+        resolve("Added Employees");
+        return;
+      })
+      .catch((error) => {
+        reject(error);
+        return;
+      });
   });
 }
