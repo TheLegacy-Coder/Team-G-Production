@@ -4273,6 +4273,7 @@ __metadata:
     react-bootstrap: "npm:^2.7.4"
     react-bootstrap-icons: "npm:^1.11.3"
     react-dom: "npm:^18.2.0"
+    react-qr-code: "npm:^2.0.12"
     react-router-bootstrap: "npm:^0.26.2"
     react-router-dom: "npm:^6.11.2"
     react-speech-kit: "npm:^3.0.1"
@@ -4283,6 +4284,7 @@ __metadata:
     sass: "npm:^1.62.1"
     serve: "npm:^14.2.0"
     sort-by: "npm:^1.2.0"
+    swiper: "npm:^11.0.7"
     tsconfig-custom: "workspace:*"
     typescript: "npm:^5.0.2"
     vite: "npm:^4.3.9"
@@ -6688,6 +6690,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qr.js@npm:0.0.0":
+  version: 0.0.0
+  resolution: "qr.js@npm:0.0.0"
+  checksum: a05943d13cbc478e48935de8669b72312fe02de05057c35ebfab59a574c084530a9afb9ee651d53c8c870a54f9ec93ea7b63231de202740ce16a71c797e37ce9
+  languageName: node
+  linkType: hard
+
 "qs@npm:6.9.6":
   version: 6.9.6
   resolution: "qs@npm:6.9.6"
@@ -6915,6 +6924,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-qr-code@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "react-qr-code@npm:2.0.12"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+    qr.js: "npm:0.0.0"
+  peerDependencies:
+    react: ^16.x || ^17.x || ^18.x
+    react-native-svg: "*"
+  peerDependenciesMeta:
+    react-native-svg:
+      optional: true
+  checksum: b7bad40d7d5f04f7ff336ae499920dd5ea0e7616ed7fec5f849e54f8f26b5e4acd1ba8e69198be8617dc7fecdf36cf4302c99ff74885320b55bb95d19a09de7c
+  languageName: node
+  linkType: hard
+
 "react-router-bootstrap@npm:^0.26.2":
   version: 0.26.2
   resolution: "react-router-bootstrap@npm:0.26.2"
@@ -7068,8 +7093,8 @@ __metadata:
   linkType: hard
 
 "reaviz@npm:^15.7.1":
-  version: 15.7.1
-  resolution: "reaviz@npm:15.7.1"
+  version: 15.7.2
+  resolution: "reaviz@npm:15.7.2"
   dependencies:
     "@upsetjs/venn.js": "npm:^1.3.0"
     big-integer: "npm:^1.6.52"
@@ -7099,7 +7124,7 @@ __metadata:
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: fe2b75897579c473a211bb72dd58aa3e04d7c3e94951326040e8065a4839e4c18b9e1e6a487bd41a840857062185284e14ff8aa279149352f57ca35c447b3cb1
+  checksum: 0bd6daa69c02ae2e2d4b0f05b4a6806c239c87eef8b904a8c68bf0902d1e798652ae5ed143c5d7b79a2e4e411782a4da583c02284c1daf3870700669d75b80cb
   languageName: node
   linkType: hard
 
@@ -8042,6 +8067,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swiper@npm:^11.0.7":
+  version: 11.0.7
+  resolution: "swiper@npm:11.0.7"
+  checksum: 438e21078634545167be8ab97b85c2a9313f943b56b1d52ebd203374754f1c328deefe864b48379ec2775783e282296bafcff2312d52bc979d8659f9aa88659a
+  languageName: node
+  linkType: hard
+
 "tabbable@npm:^5.3.2, tabbable@npm:^5.3.3":
   version: 5.3.3
   resolution: "tabbable@npm:5.3.3"
@@ -8166,9 +8198,9 @@ __metadata:
   linkType: hard
 
 "transformation-matrix@npm:^2.9.0":
-  version: 2.16.0
-  resolution: "transformation-matrix@npm:2.16.0"
-  checksum: d4e14d6c831e4fb699c80fc0e74c3ce99bf28343d1849a4da432bb7ff5bac30bd56091b646c8b8259c1af49ac5c34a9cb080d91d060d4b9592fec265c5ce208a
+  version: 2.16.1
+  resolution: "transformation-matrix@npm:2.16.1"
+  checksum: a9ee0843202d9ddc64362d09764fba99591f2134bdfaccac63b975281a591f52a19b4aaa56aaa86ace70f4271e25b639709029d28db04bcd9415f3edd3252086
   languageName: node
   linkType: hard
 

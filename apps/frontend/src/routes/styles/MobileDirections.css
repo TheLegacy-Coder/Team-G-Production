@@ -1,0 +1,47 @@
+.directions-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - 30px);
+  margin-top: 10px;
+}
+
+.directions-container-inner {
+  height: 100%;
+}
+
+p {
+  text-align: center;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-div {
+  margin: auto;
+  height: 100%;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

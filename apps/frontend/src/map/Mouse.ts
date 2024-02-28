@@ -59,7 +59,9 @@ class Mouse {
     ) {
       drawData.setScalar(drawData.scalar * zoom);
       const scaleID = document.querySelector("#scalar");
-      scaleID!.textContent = drawData.scalar.toFixed(2).toString();
+      if (scaleID !== undefined) {
+        scaleID!.textContent = drawData.scalar.toFixed(2).toString();
+      }
 
       ctx!.translate(xCoord, yCoord);
       ctx!.scale(zoom, zoom);

@@ -1,16 +1,17 @@
 import axios from "axios";
 import { currentToken } from "../stores/LoginStore.ts";
 import { Employee } from "common/src/Employee.ts";
+import { link } from "./links.ts";
 
 export function getEmployeesAxios(getAll: string, jobs: string) {
   if (getAll == "true") {
-    return axios.get("http://localhost:3000/api/employees?getAll=true", {
+    return axios.get(link + "/api/employees?getAll=true", {
       headers: {
         Authorization: `Bearer ${currentToken}`,
       },
     });
   } else {
-    return axios.get("http://localhost:3000/api/employees?jobTypes=" + jobs, {
+    return axios.get(link + "/api/employees?jobTypes=" + jobs, {
       headers: {
         Authorization: `Bearer ${currentToken}`,
       },
@@ -21,7 +22,7 @@ export function getEmployeesAxios(getAll: string, jobs: string) {
 export function deleteEmployeeAxios(employeeID: string) {
   return new Promise((resolve, reject) => {
     axios
-      .delete("http://localhost:3000/api/employees", {
+      .delete(link + "/api/employees", {
         data: { employeeID: employeeID },
         headers: { Authorization: `Bearer ${currentToken}` },
       })
@@ -39,7 +40,7 @@ export function deleteEmployeeAxios(employeeID: string) {
 export function editEmployeeAxios(data: Employee) {
   return new Promise((resolve, reject) => {
     axios
-      .patch("http://localhost:3000/api/employees", data, {
+      .patch(link + "/api/employees", data, {
         headers: { Authorization: `Bearer ${currentToken}` },
       })
       .then(() => {
@@ -57,7 +58,7 @@ export function addEmployeeAxios(data: Employee[]) {
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:3000/api/employees",
+        link + "/api/employees",
         { employees: data },
         {
           headers: { Authorization: `Bearer ${currentToken}` },
@@ -82,7 +83,7 @@ export function addMultipleEmployeesAxios(
     const deleteAllBoolean = deleteAll === "true";
     axios
       .post(
-        "http://localhost:3000/api/employees",
+        link + "/api/employees",
         {
           deleteAll: deleteAllBoolean,
           employees: importedMapEmployees,

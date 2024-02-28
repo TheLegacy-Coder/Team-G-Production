@@ -2,6 +2,7 @@ import { DispatchWithoutAction } from "react";
 import { Employee } from "common/src/Employee.ts";
 import axios, { AxiosResponse } from "axios";
 import { contextMenuState } from "./ContextMenuState.ts";
+import { link } from "../DataAsObject/links.ts";
 //import { Auth0Lock } from 'auth0-lock';
 
 // Initializing our Auth0Lock
@@ -56,7 +57,7 @@ lock.on("authenticated", function (authResult) {
       console.log(profile);
       currentProfile = profile as Profile;
       axios
-        .get("http://localhost:3000/api/employees/?getID=" + profile.sub, {
+        .get(link + "/api/employees/?getID=" + profile.sub, {
           headers: {
             Authorization: `Bearer ${currentToken}`,
           },
