@@ -10,13 +10,16 @@ import {
   Truck,
   Recycle,
 } from "react-bootstrap-icons";
+import { mouse } from "../map/Mouse";
 
 // ServiceRequests component responsible for handling service requests
 export const ServiceRequests = () => {
   const ICON_SIZE = 57;
+  mouse.clickDown(0, 0);
+  mouse.clickUp(0, 0);
   // Like before, ServiceRequests handling logic
   return (
-    <div className={"asdf-service-request-container"}>
+    <div className={"service-request-container"}>
       <ContextMenuRouterButton
         content={<ServiceRequestForm requestType={RequestType.Flowers} />}
         icon={<Flower1 color="white" size={ICON_SIZE} />}

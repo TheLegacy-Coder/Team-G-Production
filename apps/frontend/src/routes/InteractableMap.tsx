@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef /*, useState*/ } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { ctx, drawData, initCTX } from "../map/DrawData.ts";
-//import {MapNav} from "./MapNav.tsx";
+import { draw } from "../map/Draw";
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -22,6 +22,7 @@ export const InteractableMap = () => {
   };
 
   function initContext() {
+    draw;
     if (canvasRef.current) {
       const rect = canvasRef.current?.getBoundingClientRect();
       drawData.setOffset(rect.top, rect.left);
@@ -53,15 +54,9 @@ export const InteractableMap = () => {
       id={"map-canvas"}
       onMouseDown={mouse.mouseDown}
       onMouseUp={mouse.mouseUp}
-      onTouchStart={(evt) => {
-        mouse.canvasTouchStart(evt);
-      }}
-      onTouchEnd={(evt) => {
-        mouse.canvasTouchEnd(evt);
-      }}
-      onTouchMove={(evt) => {
-        mouse.canvasTouchMove(evt);
-      }}
+      onTouchStart={mouse.canvasTouchStart}
+      onTouchEnd={mouse.canvasTouchEnd}
+      onTouchMove={mouse.canvasTouchMove}
       onMouseMove={mouse.mouseMove}
       onWheel={mouse.mouseScroll}
       ref={canvasRef}

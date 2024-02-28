@@ -77,39 +77,18 @@ class Mouse {
     );
   }
   public inView(): boolean {
-    /*console.log(
-      "In view X:\nPath lowest: " +
-        drawData.pathLowest.x +
-        "\nPath Highest: " +
-        drawData.pathHighest.x +
-        "\nUp left: " +
-        drawData.upleftCorner!.x +
-        "\nDown right: " +
-        drawData.downrightCorner!.x +
-        "\nIn view Y:\nPath lowest: " +
-        drawData.pathLowest.y +
-        "\nPath Highest: " +
-        drawData.pathHighest.y +
-        "\nUp left: " +
-        drawData.upleftCorner!.y +
-        "\nDown right: " +
-        drawData.downrightCorner!.y,
-    );*/
     if (
       drawData.upleftCorner === undefined ||
       drawData.downrightCorner === undefined
     ) {
       return false;
     }
-    const result =
+    return (
       drawData.pathHighest.x > drawData.upleftCorner.x &&
       drawData.pathLowest.x < drawData.downrightCorner.x &&
       drawData.pathHighest.y > drawData.upleftCorner.y &&
-      drawData.pathLowest.y < drawData.downrightCorner.y;
-    if (result) {
-      drawData.setRedraw(true);
-    }
-    return result;
+      drawData.pathLowest.y < drawData.downrightCorner.y
+    );
   }
 
   private setDim(startX: number, endX: number, startY: number, endY: number) {
@@ -305,7 +284,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           if (hoverNode !== node) {
             moveRedraw = true;
             document.getElementById("map-canvas")!.style.cursor = "pointer";
@@ -334,7 +317,7 @@ class Mouse {
     }
   }
 
-  private clickDown(posX: number, posY: number) {
+  public clickDown(posX: number, posY: number) {
     mouse.updateMousePos(posX, posY);
     if (hoverNode === undefined) {
       document.getElementById("map-canvas")!.style.cursor = "all-scroll";
@@ -379,7 +362,7 @@ class Mouse {
     }
   }
 
-  private clickUp(posX: number, posY: number) {
+  public clickUp(posX: number, posY: number) {
     if (hoverNode === undefined)
       document.getElementById("map-canvas")!.style.cursor = "auto";
     if (tfCursor === undefined || delta === undefined) {
@@ -395,7 +378,11 @@ class Mouse {
           Math.pow(tfCursor!.x - node.xcoord, 2) +
             Math.pow(tfCursor!.y - node.ycoord, 2),
         );
-        if (dist < 10) {
+        if (
+          dist < 10 &&
+          ((drawData.showNodes && node.nodeType !== "HALL") ||
+            (drawData.showHalls && node.nodeType === "HALL"))
+        ) {
           emptyClick = false;
           if (getStartNode() != undefined) {
             setEndNode(node);

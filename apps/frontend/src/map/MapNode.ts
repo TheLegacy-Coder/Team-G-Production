@@ -248,14 +248,36 @@ abstract class SearchTemplate implements SearchStrategy {
 
 export class AStarSearch extends SearchTemplate {
   calculateHeuristic(node1: MapNode, node2: MapNode): number {
+    // Calculate vertical distance/heuristic
+    const floorDiff = Math.abs(
+      floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
+    );
+    // Default accounts for floors linearly
+    let verticalHeuristic = 1000 * floorDiff;
+    if (node1.nodeType === "STAI" && node2.nodeType === "STAI") {
+      // If both are stairs
+      verticalHeuristic = 1000000000 * floorDiff;
+    } else if (node1.nodeType === "ELEV" && node2.nodeType === "ELEV") {
+      // If both are elevators
+      verticalHeuristic = 100000000 * floorDiff;
+    }
+
+    // console.log(node1.shortName, node2.shortName);
+    // console.log("vert", verticalHeuristic);
+    // console.log("x", Math.pow(node1.xcoord - node2.xcoord, 2));
+    // console.log("y", Math.pow(node1.ycoord - node2.ycoord, 2));
+    // console.log("xy", Math.pow(node1.xcoord - node2.xcoord, 2) +
+    //     Math.pow(node1.ycoord - node2.ycoord, 2));
+    // console.log("total", Math.sqrt(
+    //     Math.pow(node1.xcoord - node2.xcoord, 2) +
+    //     Math.pow(node1.ycoord - node2.ycoord, 2) +
+    //     verticalHeuristic,
+    // ));
+
     return Math.sqrt(
       Math.pow(node1.xcoord - node2.xcoord, 2) +
         Math.pow(node1.ycoord - node2.ycoord, 2) +
-        100000000000 *
-          Math.pow(
-            floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
-            2,
-          ),
+        verticalHeuristic,
     );
   }
 }

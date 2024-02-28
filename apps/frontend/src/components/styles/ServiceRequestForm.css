@@ -1,15 +1,13 @@
 .service-request-form {
-  overflow-y: auto;
   margin-top: 16px;
   width: 100%;
-  min-height: calc(100% - 90px);
-  max-height: calc(100% - 90px);
   text-align: center;
   align-items: center;
 }
 
 .service-request-container {
   height: 100%;
+  overflow-y: auto;
 }
 
 .service-request-form-label {
@@ -55,7 +53,7 @@
   color: white;
   width: 150px;
   margin-top: 15px;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
   font-size: 18px;
   margin-left: 16px;
 }
@@ -74,7 +72,7 @@
   color: white;
   width: 150px;
   margin-top: 15px;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
   font-size: 18px;
   margin-right: 16px;
 }

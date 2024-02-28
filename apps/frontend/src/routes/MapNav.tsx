@@ -8,7 +8,6 @@ import {
   ZoomIn,
   ZoomOut,
 } from "react-bootstrap-icons";
-import { draw } from "../map/Draw";
 import { setHoverNode, mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { PathfindingButton } from "../components/PathfindingButton.tsx";
@@ -29,9 +28,9 @@ interface Visibility {
 export const MapNav = () => {
   const [currentAlg, setCurrentAlg] = useState<string>("BFS");
   const [visibilities, setVisibilities] = useState<Visibility>({
-    nodes: draw.showNodes,
-    edges: draw.showEdges,
-    halls: draw.showHalls,
+    nodes: drawData.showNodes,
+    edges: drawData.showEdges,
+    halls: drawData.showHalls,
   });
   const [selectWidth, setSelectWidth] = useState<string>("0px");
   const [selectHeight, setSelectHeight] = useState<string>("0px");
@@ -50,13 +49,13 @@ export const MapNav = () => {
   }
   function toggleButtons(type: string) {
     if (type === "nodes") {
-      draw.showNodes = !draw.showNodes;
+      drawData.showNodes = !drawData.showNodes;
       setVisibilities({ ...visibilities, nodes: !visibilities.nodes });
     } else if (type === "edges") {
-      draw.showEdges = !draw.showEdges;
+      drawData.showEdges = !drawData.showEdges;
       setVisibilities({ ...visibilities, edges: !visibilities.edges });
     } else if (type === "halls") {
-      draw.showHalls = !draw.showHalls;
+      drawData.showHalls = !drawData.showHalls;
       setVisibilities({ ...visibilities, halls: !visibilities.halls });
     }
     drawData.setRedraw(true);

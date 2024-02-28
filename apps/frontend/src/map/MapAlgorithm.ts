@@ -131,12 +131,14 @@ class MapAlgorithm {
           temp.push([x, y]);
           if (x < drawData.pathLowest.x) {
             drawData.setPathLowest(x, drawData.pathLowest.y);
-          } else if (x > drawData.pathHighest.x) {
+          }
+          if (x > drawData.pathHighest.x) {
             drawData.setPathHighest(x, drawData.pathHighest.y);
           }
           if (y < drawData.pathLowest.y) {
             drawData.setPathLowest(drawData.pathLowest.x, y);
-          } else if (y > drawData.pathHighest.y) {
+          }
+          if (y > drawData.pathHighest.y) {
             drawData.setPathHighest(drawData.pathHighest.x, y);
           }
         }
@@ -171,10 +173,10 @@ class MapAlgorithm {
         if (scaleID !== null) scaleID!.classList.remove("path-floor");
       }
       drawData.clearFloors();
-      drawData.path.forEach((node) => {
-        if (!drawData.floors.includes(node.floor))
-          drawData.floors.push(node.floor);
-      });
+      for (let i = 0; i < drawData.allSwitchFloors.length; i++) {
+        if (!drawData.floors.includes(drawData.allSwitchFloors[i]))
+          drawData.floors.push(drawData.allSwitchFloors[i]);
+      }
       this.setFloorButtons();
     }
 
