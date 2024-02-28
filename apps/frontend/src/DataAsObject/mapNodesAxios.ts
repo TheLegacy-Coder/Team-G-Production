@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Edge } from "../map/MapNode.ts";
 import { currentToken } from "../stores/LoginStore.ts";
+import { link } from "./links.ts";
 
 type importedMapNodes = {
   nodeID: string;
@@ -21,7 +22,7 @@ export function postNodesAxios(
     if (deleteAll == "true") {
       axios
         .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/nodes",
+          link + "/api/map/nodes",
           {
             deleteAll: true,
             nodes: importedMapNode,
@@ -43,7 +44,7 @@ export function postNodesAxios(
     } else {
       axios
         .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/nodes",
+          link + "/api/map/nodes",
           {
             deleteAll: false,
             nodes: importedMapNode,
@@ -67,9 +68,7 @@ export function postNodesAxios(
 }
 
 export function getNodesAxios() {
-  return axios.get(
-    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/nodes",
-  );
+  return axios.get(link + "/api/map/nodes");
 }
 
 export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
@@ -77,7 +76,7 @@ export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
     if (deleteAll == "true") {
       axios
         .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/edges",
+          link + "/api/map/edges",
           {
             deleteAll: true,
             edges: importedMapEdge,
@@ -99,7 +98,7 @@ export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
     } else {
       axios
         .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/edges",
+          link + "/api/map/edges",
           {
             deleteAll: false,
             edges: importedMapEdge,
@@ -123,7 +122,5 @@ export function postEdgesAxios(deleteAll: string, importedMapEdge: Edge[]) {
 }
 
 export function getEdgesAxios() {
-  return axios.get(
-    "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/map/edges",
-  );
+  return axios.get(link + "/api/map/edges");
 }

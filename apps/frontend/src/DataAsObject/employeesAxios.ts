@@ -1,40 +1,31 @@
 import axios from "axios";
 import { currentToken } from "../stores/LoginStore.ts";
 import { Employee } from "common/src/Employee.ts";
+import { link } from "./links.ts";
 
 export function getEmployeesAxios(getAll: string, jobs: string) {
   if (getAll == "true") {
-    return axios.get(
-      "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees?getAll=true",
-      {
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
+    return axios.get(link + "/api/employees?getAll=true", {
+      headers: {
+        Authorization: `Bearer ${currentToken}`,
       },
-    );
+    });
   } else {
-    return axios.get(
-      "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees?jobTypes=" +
-        jobs,
-      {
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
+    return axios.get(link + "/api/employees?jobTypes=" + jobs, {
+      headers: {
+        Authorization: `Bearer ${currentToken}`,
       },
-    );
+    });
   }
 }
 
 export function deleteEmployeeAxios(employeeID: string) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(
-        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-        {
-          data: { employeeID: employeeID },
-          headers: { Authorization: `Bearer ${currentToken}` },
-        },
-      )
+      .delete(link + "/api/employees", {
+        data: { employeeID: employeeID },
+        headers: { Authorization: `Bearer ${currentToken}` },
+      })
       .then(() => {
         resolve("Deleted Employee");
         return;
@@ -49,13 +40,9 @@ export function deleteEmployeeAxios(employeeID: string) {
 export function editEmployeeAxios(data: Employee) {
   return new Promise((resolve, reject) => {
     axios
-      .patch(
-        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-        data,
-        {
-          headers: { Authorization: `Bearer ${currentToken}` },
-        },
-      )
+      .patch(link + "/api/employees", data, {
+        headers: { Authorization: `Bearer ${currentToken}` },
+      })
       .then(() => {
         resolve("Added Employee");
         return;
@@ -71,7 +58,7 @@ export function addEmployeeAxios(data: Employee[]) {
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
+        link + "/api/employees",
         { employees: data },
         {
           headers: { Authorization: `Bearer ${currentToken}` },
@@ -95,13 +82,10 @@ export function addMultipleEmployeesAxios(
   return new Promise((resolve, reject) => {
     if (deleteAll == "true") {
       axios
-        .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-          {
-            deleteAll: true,
-            employees: importedMapEmployees,
-          },
-        )
+        .post(link + "/api/employees", {
+          deleteAll: true,
+          employees: importedMapEmployees,
+        })
         .then(() => {
           resolve("Added Employees");
           return;
@@ -112,13 +96,10 @@ export function addMultipleEmployeesAxios(
         });
     } else {
       axios
-        .post(
-          "https://ec2-18-221-74-82.us-east-2.compute.amazonaws.com/api/employees",
-          {
-            deleteAll: false,
-            employees: importedMapEmployees,
-          },
-        )
+        .post(link + "/api/employees", {
+          deleteAll: false,
+          employees: importedMapEmployees,
+        })
         .then(() => {
           resolve("Added Employees");
           return;
