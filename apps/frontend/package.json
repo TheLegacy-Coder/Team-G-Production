@@ -23,6 +23,9 @@
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "common": "workspace:*",
+    "file-saver": "^2.0.5",
+    "happy-dom": "^13.6.2",
+    "jszip": "^3.10.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "prop-types": "^15.8.1",
@@ -42,6 +45,7 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.6",
+    "@types/file-saver": "^2",
     "@types/node": "^20.2.5",
     "@types/react": "^18.0.37",
     "@types/react-bootstrap": "^0.32.32",

@@ -15,6 +15,7 @@ import { Profile } from "./Profile.tsx";
 import { Charts } from "./Charts.tsx";
 import { mouse } from "../map/Mouse.ts";
 import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
+import { ImportExport } from "../routes/ImportExport.tsx";
 
 export function ContextMenu() {
   //What not having mobX has reduced me to
@@ -68,7 +69,6 @@ export function ContextMenu() {
         >
           {contextMenuState.showing ? "→" : "←"}
         </div>
-
         <ContextMenuRouterButton
           content={<About />}
           lable={"About"}
@@ -140,6 +140,13 @@ export function ContextMenu() {
                   admin={true}
                   style={"context-menu-tab-admin"}
                 />
+                <ContextMenuRouterButton
+                  content={<ImportExport />}
+                  lable={"Import/Export"}
+                  protected={true}
+                  admin={false}
+                  style={"context-menu-tab-admin"}
+                />
               </>
             ) : (
               <></>
@@ -164,7 +171,7 @@ export function ContextMenu() {
               ? "context-menu-divider-content-reselect"
               : "context-menu-divider-content-reselect-alt"
         }
-        style={{ flex: "500px" }}
+        style={{ flex: "5px" }}
       >
         <div className={"context-menu-title-box"}>
           <h1 className={"context-menu-title"}>{contextMenuState.title}</h1>

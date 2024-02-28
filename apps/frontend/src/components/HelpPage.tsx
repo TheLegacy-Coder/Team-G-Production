@@ -8,7 +8,6 @@ export const HelpPage = () => {
   const [scrollHeight, setScrollHeight] = useState<string>("");
 
   useEffect(() => {
-    console.log(container.current ? container.current.clientHeight : 0);
     setScrollHeight(
       container.current
         ? container.current.clientHeight.toString()

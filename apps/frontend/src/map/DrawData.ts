@@ -22,6 +22,10 @@ class DrawData {
   public centerPos: { x: number; y: number } | undefined = { x: 0, y: 0 };
   public image = new Image();
 
+  public showNodes = true;
+  public showEdges = false;
+  public showHalls = false;
+
   public switchNodes: MapNode[] = [];
   public switchFloors: string[] = [];
 
@@ -83,14 +87,6 @@ class DrawData {
   }
   // updates coordinate points for map panning and zooming
   public updateCoords() {
-    const center = this.tfPoint(
-      (window.innerWidth - this.offset.x) / 2,
-      (window.innerHeight - this.offset.y) / 2,
-    );
-
-    if (center !== undefined) {
-      this.setCenterPos(center.x, center.y);
-    }
     const upLeft = this.tfPoint(0, 0);
     if (upLeft !== undefined) {
       this.setUpLeft(upLeft.x, upLeft.y);
@@ -99,6 +95,12 @@ class DrawData {
     const downRight = this.tfPoint(window.innerWidth, window.innerHeight);
     if (downRight !== undefined) {
       this.setDownRight(downRight.x, downRight.y);
+    }
+    const center = this.tfPoint(window.innerWidth / 2, window.innerHeight / 2);
+    //const center = new DOMPoint((downRight!.x - upLeft!.x)/2, (downRight!.y - upLeft!.y)/2);
+
+    if (center !== undefined) {
+      this.setCenterPos(center.x, center.y);
     }
   }
   public setOffset(top: number, left: number) {
@@ -113,6 +115,10 @@ class DrawData {
   }
   public clearFloors() {
     this.floors = [];
+    this.switchFloors = [];
+    this.switchNodes = [];
+    this.allSwitchNodes = [];
+    this.allSwitchFloors = [];
   }
   public resetPath() {
     this.path = [];

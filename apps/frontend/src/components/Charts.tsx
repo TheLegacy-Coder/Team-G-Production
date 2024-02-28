@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  BarChart,
+  BarSeries,
   PieChart,
   PieArcSeries,
   RadialGauge,
@@ -36,13 +38,11 @@ export const Charts = () => {
       setRequests(res.data);
     });
   }, []);
-  console.log(employees);
 
   employees?.forEach((employee: Employee) => {
     employeeRegistry.set(employee.employeeID, employee);
     statsMap.set(employee.employeeID, { completed: 0 });
   });
-  console.log(employeeRegistry);
 
   let serviceRequestType = [
     { key: "Flowers", data: 0 },
@@ -60,8 +60,6 @@ export const Charts = () => {
       { key: "Transport", data: requestTypes.transport.length },
     ];
   }
-
-  console.log(serviceRequestType);
 
   let assigned = 0;
   let inProgress = 0;
@@ -205,23 +203,26 @@ export const Charts = () => {
   return (
     <div className={"chart-container"}>
       <div className={"first-row"}>
-        <div className={"request-type-container"}>
-          <h4>Service Request Type</h4>
-          <PieChart
-            className={"request-type-container"}
-            data={serviceRequestType}
-            series={
-              <PieArcSeries
-                colorScheme={[
-                  "#065b1bFF",
-                  "#6F2048FF",
-                  "#20486FFF",
-                  "#D4A261FF",
-                  "#6F4886FF",
-                ]}
-              />
-            }
-          />
+        <div className={"first-row"}>
+          <div className={"request-type-container"}>
+            <h4>Service Request Type</h4>
+            <br />
+            <BarChart
+              className={"request-type-container"}
+              data={serviceRequestType}
+              series={
+                <BarSeries
+                  colorScheme={[
+                    "#065b1bFF",
+                    "#6F2048FF",
+                    "#20486FFF",
+                    "#D4A261FF",
+                    "#6F4886FF",
+                  ]}
+                />
+              }
+            />
+          </div>
         </div>
       </div>
       <div className={"second-row"}>

@@ -24,10 +24,7 @@ drawData.image.onload = () => {
 
 class Draw {
   private drawStep = 0;
-  //private showEdges = false;
-  public showNodes = true;
-  public showEdges = false;
-  public showHalls = false;
+
   public drawCanvas() {
     if (drawData.redraw) {
       // verifies canvas context is set up
@@ -43,7 +40,7 @@ class Draw {
         ctx!.drawImage(drawData.image, 0, 0);
 
         //if draw edges
-        if (draw.showEdges) {
+        if (drawData.showEdges) {
           mapNodes.forEach((node) => {
             if (node.floor === drawData.currentFloor) {
               ctx!.lineWidth = 3;
@@ -75,8 +72,8 @@ class Draw {
         mapNodes.forEach((node) => {
           if (
             node.floor === drawData.currentFloor &&
-            ((draw.showNodes && node.nodeType !== "HALL") ||
-              (draw.showHalls && node.nodeType === "HALL"))
+            ((drawData.showNodes && node.nodeType !== "HALL") ||
+              (drawData.showHalls && node.nodeType === "HALL"))
           ) {
             ctx!.beginPath();
             ctx!.arc(node.xcoord, node.ycoord, 10, 0, 2 * Math.PI, false);
@@ -100,12 +97,12 @@ class Draw {
         draw.drawFloorChange();
         if (
           hoverNode !== undefined &&
-          ((draw.showNodes && hoverNode.nodeType !== "HALL") ||
-            (draw.showHalls && hoverNode.nodeType === "HALL"))
+          ((drawData.showNodes && hoverNode.nodeType !== "HALL") ||
+            (drawData.showHalls && hoverNode.nodeType === "HALL"))
         )
           draw.drawNodeDetails(hoverNode);
 
-        let pathInView = true;
+        let pathInView = false;
         if (mouse.inView()) {
           pathInView = true;
         }

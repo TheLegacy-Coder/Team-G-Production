@@ -4,6 +4,10 @@ import {
   getStartNode,
   MapNode,
   BreadthFirstSearch,
+  setStartNode,
+  setEndNode,
+  AStarSearch,
+  DijkstraSearch,
 } from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
@@ -34,10 +38,17 @@ class MapAlgorithm {
   }
 
   public searchAlg() {
+    if (getStartNode() === getEndNode() && getStartNode() !== undefined) {
+      alert("Can't select same node!");
+      setStartNode(undefined);
+      setEndNode(undefined);
+      this.startNode = undefined;
+      this.endNode = undefined;
+    }
     // filters path not on floor
     drawData.unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
-      this.startNode,
-      this.endNode,
+      getStartNode(),
+      getEndNode(),
     );
 
     const switchedNodes: MapNode[] = [];
@@ -120,12 +131,14 @@ class MapAlgorithm {
           temp.push([x, y]);
           if (x < drawData.pathLowest.x) {
             drawData.setPathLowest(x, drawData.pathLowest.y);
-          } else if (x > drawData.pathHighest.x) {
+          }
+          if (x > drawData.pathHighest.x) {
             drawData.setPathHighest(x, drawData.pathHighest.y);
           }
           if (y < drawData.pathLowest.y) {
             drawData.setPathLowest(drawData.pathLowest.x, y);
-          } else if (y > drawData.pathHighest.y) {
+          }
+          if (y > drawData.pathHighest.y) {
             drawData.setPathHighest(drawData.pathHighest.x, y);
           }
         }
@@ -160,10 +173,10 @@ class MapAlgorithm {
         if (scaleID !== null) scaleID!.classList.remove("path-floor");
       }
       drawData.clearFloors();
-      drawData.path.forEach((node) => {
-        if (!drawData.floors.includes(node.floor))
-          drawData.floors.push(node.floor);
-      });
+      for (let i = 0; i < drawData.allSwitchFloors.length; i++) {
+        if (!drawData.floors.includes(drawData.allSwitchFloors[i]))
+          drawData.floors.push(drawData.allSwitchFloors[i]);
+      }
       this.setFloorButtons();
     }
 
@@ -179,3 +192,8 @@ class MapAlgorithm {
 }
 
 export const algorithm = new MapAlgorithm();
+
+const aStarSearch = new AStarSearch();
+const dijkstraSearch = new DijkstraSearch();
+
+algorithm.setSearchStrategy(aStarSearch || dijkstraSearch);

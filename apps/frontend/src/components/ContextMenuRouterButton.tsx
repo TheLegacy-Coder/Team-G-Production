@@ -5,6 +5,7 @@ import { Login } from "../routes/Login.tsx";
 import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 export interface ContextMenuRouterButtonProps {
   content: ReactNode;
+  icon?: ReactNode;
   lable: string;
   protected?: boolean;
   style: string;
@@ -43,6 +44,7 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
         }
         onClick={route}
       >
+        <div style={{ marginLeft: "auto" }}></div>
         {props.customText !== undefined ? props.customText : props.lable}
       </button>
     );
@@ -55,7 +57,18 @@ export function ContextMenuRouterButton(props: ContextMenuRouterButtonProps) {
         }
         onClick={route}
       >
-        {props.customText !== undefined ? props.customText : props.lable}
+        <div>
+          <div style={{ float: "left", paddingLeft: "10px" }}>{props.icon}</div>
+          <div
+            style={
+              props.icon !== undefined
+                ? { paddingRight: "50px", paddingTop: "5px" }
+                : {}
+            }
+          >
+            {props.customText !== undefined ? props.customText : props.lable}
+          </div>
+        </div>
       </div>
     );
   }

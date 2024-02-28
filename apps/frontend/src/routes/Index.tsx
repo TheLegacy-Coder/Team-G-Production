@@ -4,13 +4,30 @@ import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 import { SpeechEngine } from "../components/SpeechEngine.tsx";
+import { MapNav } from "./MapNav.tsx";
+import { drawData } from "../map/DrawData.ts";
+//import { drawData } from "../map/DrawData.ts";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <SpeechEngine />
       <ContextMenu />
-      <InteractableMap />
+
+      <div
+        id={"canvas-container"}
+        style={
+          {
+            width: window.innerWidth - drawData.offset.x,
+            height: window.innerHeight - drawData.offset.y,
+            overflow: "hidden",
+          } as React.CSSProperties
+        }
+      >
+        <MapNav />
+        <InteractableMap />
+      </div>
+
       <HomeAnnounce />
     </div>
   );

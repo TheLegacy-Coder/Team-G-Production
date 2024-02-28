@@ -102,87 +102,9 @@ export interface SearchStrategy {
   ) => MapNode[];
 }
 
-export class AStarSearch implements SearchStrategy {
-  pathfindingAlgorithm(start: MapNode | undefined, end: MapNode | undefined) {
-    if (start == undefined || end == undefined) return [];
-
-    const calculateHueristic = (node1: MapNode, node2: MapNode): number => {
-      return Math.sqrt(
-        Math.pow(node1.xcoord - node2.xcoord, 2) +
-          Math.pow(node1.ycoord - node2.ycoord, 2) +
-          100000000000 *
-            Math.pow(
-              floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
-              2,
-            ),
-      );
-    };
-
-    const seen: Map<MapNode, MapNode> = new Map([]);
-    const gScore: Map<MapNode, number> = new Map([]);
-    const fScore: Map<MapNode, number> = new Map([]);
-
-    gScore.set(start, 0);
-    fScore.set(start, calculateHueristic(start, end));
-
-    const frontier: MapNode[] = [start];
-    let done = false;
-
-    while (!done || frontier.length !== 0) {
-      // Sort frontier based on fScore
-      frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
-
-      const current = frontier.shift() as MapNode;
-
-      if (current === undefined) {
-        return [];
-      }
-      if (current === end) {
-        // Reconstruct path
-        const path: MapNode[] = [];
-        let currentPathNode = end;
-        while (currentPathNode !== start) {
-          path.unshift(currentPathNode);
-          currentPathNode = seen.get(currentPathNode) as MapNode;
-        }
-        path.unshift(start);
-        return path.reverse();
-      }
-
-      current.edges.forEach((neighbor) => {
-        const tentativeGScore =
-          (gScore.get(current) || 0) + calculateHueristic(current, neighbor);
-
-        if (
-          !gScore.has(neighbor) ||
-          tentativeGScore < (gScore.get(neighbor) || 0)
-        ) {
-          seen.set(neighbor, current);
-          gScore.set(neighbor, tentativeGScore);
-          fScore.set(
-            neighbor,
-            tentativeGScore + calculateHueristic(neighbor, end),
-          );
-
-          if (!frontier.includes(neighbor)) {
-            frontier.push(neighbor);
-          }
-        }
-
-        if (neighbor === end) {
-          done = true;
-        }
-      });
-    }
-
-    // If the loop completes without finding a path, return an empty array
-    return [];
-  }
-}
-
 export class BreadthFirstSearch implements SearchStrategy {
   pathfindingAlgorithm(start: MapNode | undefined, end: MapNode | undefined) {
-    if (start == undefined || end == undefined) return [];
+    if (start === undefined || end === undefined) return [];
     const seen: Map<MapNode, MapNode> = new Map([]);
     seen.set(start, start);
     const frontier: MapNode[] = [start];
@@ -242,5 +164,126 @@ export class DepthFirstSearch implements SearchStrategy {
     }
     path.push(start);
     return path;
+  }
+}
+
+abstract class SearchTemplate implements SearchStrategy {
+  abstract calculateHeuristic(
+    node1: MapNode | undefined,
+    node2: MapNode | undefined,
+  ): number;
+
+  pathfindingAlgorithm(start: MapNode | undefined, end: MapNode | undefined) {
+    if (start == undefined || end == undefined) return [];
+
+    const seen: Map<MapNode, MapNode> = new Map([]);
+    const gScore: Map<MapNode, number> = new Map([]);
+    const fScore: Map<MapNode, number> = new Map([]);
+
+    gScore.set(start, 0);
+    fScore.set(start, this.calculateHeuristic(start, end));
+
+    const frontier: MapNode[] = [start];
+    let done = false;
+
+    while (!done || frontier.length !== 0) {
+      // Sort frontier based on fScore
+      frontier.sort((a, b) => (fScore.get(a) || 0) - (fScore.get(b) || 0));
+
+      const current = frontier.shift() as MapNode;
+
+      if (current === undefined) {
+        return [];
+      }
+      if (current === end) {
+        return this.getPath(start, end, seen);
+      }
+
+      current.edges.forEach((neighbor) => {
+        const tentativeGScore =
+          (gScore.get(current) || 0) +
+          this.calculateHeuristic(current, neighbor);
+
+        if (
+          !gScore.has(neighbor) ||
+          tentativeGScore < (gScore.get(neighbor) || 0)
+        ) {
+          seen.set(neighbor, current);
+          gScore.set(neighbor, tentativeGScore);
+          fScore.set(
+            neighbor,
+            tentativeGScore + this.calculateHeuristic(neighbor, end),
+          );
+
+          if (!frontier.includes(neighbor)) {
+            frontier.push(neighbor);
+          }
+        }
+
+        if (neighbor === end) {
+          done = true;
+        }
+      });
+    }
+
+    // If the loop completes without finding a path, return an empty array
+    return [];
+  }
+
+  getPath(
+    start: MapNode,
+    end: MapNode,
+    seen: Map<MapNode, MapNode>,
+  ): MapNode[] {
+    const path: MapNode[] = [];
+    let currentPathNode = end;
+    while (currentPathNode !== start) {
+      path.unshift(currentPathNode);
+      currentPathNode = seen.get(currentPathNode) as MapNode;
+    }
+    path.unshift(start);
+    return path.reverse();
+  }
+}
+
+export class AStarSearch extends SearchTemplate {
+  calculateHeuristic(node1: MapNode, node2: MapNode): number {
+    // Calculate vertical distance/heuristic
+    const floorDiff = Math.abs(
+      floors.indexOf(node1.floor) - floors.indexOf(node2.floor),
+    );
+    // Default accounts for floors linearly
+    let verticalHeuristic = 1000 * floorDiff;
+    if (node1.nodeType === "STAI" && node2.nodeType === "STAI") {
+      // If both are stairs
+      verticalHeuristic = 1000000000 * floorDiff;
+    } else if (node1.nodeType === "ELEV" && node2.nodeType === "ELEV") {
+      // If both are elevators
+      verticalHeuristic = 100000000 * floorDiff;
+    }
+
+    // console.log(node1.shortName, node2.shortName);
+    // console.log("vert", verticalHeuristic);
+    // console.log("x", Math.pow(node1.xcoord - node2.xcoord, 2));
+    // console.log("y", Math.pow(node1.ycoord - node2.ycoord, 2));
+    // console.log("xy", Math.pow(node1.xcoord - node2.xcoord, 2) +
+    //     Math.pow(node1.ycoord - node2.ycoord, 2));
+    // console.log("total", Math.sqrt(
+    //     Math.pow(node1.xcoord - node2.xcoord, 2) +
+    //     Math.pow(node1.ycoord - node2.ycoord, 2) +
+    //     verticalHeuristic,
+    // ));
+
+    return Math.sqrt(
+      Math.pow(node1.xcoord - node2.xcoord, 2) +
+        Math.pow(node1.ycoord - node2.ycoord, 2) +
+        verticalHeuristic,
+    );
+  }
+}
+
+export class DijkstraSearch extends SearchTemplate {
+  calculateHeuristic(): number {
+    return 0;
   }
 }

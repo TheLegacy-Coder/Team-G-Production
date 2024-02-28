@@ -1,6 +1,8 @@
 .map-top-left-buttons {
   position: fixed;
-  margin: 8px;
+  /*margin: 8px;*/
+  margin-top: 8px;
+  margin-left: calc(8px + var(--left-adjust));
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -10,7 +12,10 @@
 .map-top-left-search-button {
   position: fixed;
   margin-top: 8px;
-  margin-left: 196px;
+  margin-left: calc(
+    16px + min(calc(var(--init-width) * 3), calc(var(--init-height) * 3)) +
+      var(--left-adjust)
+  );
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -26,23 +31,22 @@
   gap: 8px;
 }
 
-.zoom-buttons {
+.group-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.zoom-button {
-  width: 60px;
-  height: 60px;
-  font-size: 30px;
+.group-button {
+  width: min(var(--init-width), var(--init-height));
+  height: min(var(--init-width), var(--init-height));
+  font-size: calc(min(var(--init-width), var(--init-height)) / 1.7);
   color: white;
   background-color: #00284f;
   border: 2px solid black;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
 }
 
 .selected-floor-button {
@@ -51,11 +55,11 @@
   border-width: 4px;
 }
 
-.zoom-button:hover {
+.group-button:hover {
   background-color: #4c6883;
 }
 
-.zoom-button:active {
+.group-button:active {
   background-color: #99a9b8;
 }
 
@@ -64,12 +68,12 @@
 }
 
 .path-floor {
-  background-color: lightblue;
+  background-color: #6291c6;
 }
 
 .toggle-button-container {
-  width: 180px;
-  font-size: 30px;
+  width: min(calc(var(--init-width) * 3), calc(var(--init-height) * 3));
+  font-size: calc(min(var(--init-width), var(--init-height)) / 2);
   background-color: #00284f;
   cursor: pointer;
   color: white;
@@ -79,7 +83,7 @@
 
 /* Overall Toggle Button*/
 .toggle-button {
-  padding: 8px 16px;
+  padding: 8px 8px;
   cursor: pointer;
   background-color: #00284f;
   color: white;
