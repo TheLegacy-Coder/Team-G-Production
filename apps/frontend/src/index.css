@@ -12,6 +12,10 @@
   --init-width: 30px;
   --init-height: 30px;
   --left-adjust: 0px;
+  --small-width: min(850px, 90vw);
+  --long-width: min(1500px, 90vw);
+  --context-width: calc(min(var(--init-width), var(--init-height)) * 2.5);
+  --text-size: calc(min(var(--init-width), var(--init-height)) / 2.7);
 }
 
 @media (min-width: 500px) {

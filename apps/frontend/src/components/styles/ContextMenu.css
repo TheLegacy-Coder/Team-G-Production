@@ -1,10 +1,3 @@
-:root {
-  --small-width: min(850px, 90vw);
-  --long-width: min(1500px, 90vw);
-  --context-width: calc(min(var(--init-width), var(--init-height)) * 2.5);
-  --text-size: calc(min(var(--init-width), var(--init-height)) / 2.7);
-}
-
 .context-menu-out-to-in {
   position: fixed;
   top: 10%;

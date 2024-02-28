@@ -19,7 +19,7 @@ export const ServiceRequests = () => {
   mouse.clickUp(0, 0);
   // Like before, ServiceRequests handling logic
   return (
-    <div className={"asdf-service-request-container"}>
+    <div className={"service-request-container"}>
       <ContextMenuRouterButton
         content={<ServiceRequestForm requestType={RequestType.Flowers} />}
         icon={<Flower1 color="white" size={ICON_SIZE} />}
