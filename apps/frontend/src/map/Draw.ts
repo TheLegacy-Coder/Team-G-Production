@@ -30,6 +30,7 @@ class Draw {
   public showHalls = false;
   public drawCanvas() {
     if (drawData.redraw) {
+      console.log("drawing");
       // verifies canvas context is set up
       //ctx = canvasCtxRef.current;
       if (ctx !== null) {
