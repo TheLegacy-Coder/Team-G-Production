@@ -132,9 +132,18 @@ class DrawData {
   }
   public resetMap(newFloor: boolean): boolean {
     let hasPath = false;
-    if (this.path.length > 0) {
+    /*if (this.path.length > 0) {
       hasPath = true;
-    }
+    }*/
+    /*if (this.switchFloors.includes(this.currentFloor)) {
+          hasPath = true;
+      }*/
+    this.unfilteredPath.forEach((node) => {
+      if (node.floor === this.currentFloor) {
+        hasPath = true;
+      }
+    });
+
     if (newFloor) {
       this.resetPath();
     }

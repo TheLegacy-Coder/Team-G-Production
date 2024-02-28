@@ -157,8 +157,8 @@ class Mouse {
       if (drawData.currentFloor === floor) {
         newFloor = false;
       }
-      const hasPath = drawData.resetMap(newFloor);
       drawData.setCurrentFloor(floor);
+      const hasPath = drawData.resetMap(newFloor);
       drawData.setImage(imageSrc);
       mouse.homePosition(floor);
       ctx!.restore();
