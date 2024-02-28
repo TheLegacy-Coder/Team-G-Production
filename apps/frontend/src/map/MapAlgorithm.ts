@@ -4,6 +4,10 @@ import {
   getStartNode,
   MapNode,
   BreadthFirstSearch,
+  setStartNode,
+  setEndNode,
+  AStarSearch,
+  DijkstraSearch,
 } from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
@@ -34,10 +38,17 @@ class MapAlgorithm {
   }
 
   public searchAlg() {
+    if (getStartNode() === getEndNode() && getStartNode() !== undefined) {
+      alert("Can't select same node!");
+      setStartNode(undefined);
+      setEndNode(undefined);
+      this.startNode = undefined;
+      this.endNode = undefined;
+    }
     // filters path not on floor
     drawData.unfilteredPath = this.searchStrategy.pathfindingAlgorithm(
-      this.startNode,
-      this.endNode,
+      getStartNode(),
+      getEndNode(),
     );
 
     const switchedNodes: MapNode[] = [];
@@ -179,3 +190,8 @@ class MapAlgorithm {
 }
 
 export const algorithm = new MapAlgorithm();
+
+const aStarSearch = new AStarSearch();
+const dijkstraSearch = new DijkstraSearch();
+
+algorithm.setSearchStrategy(aStarSearch || dijkstraSearch);

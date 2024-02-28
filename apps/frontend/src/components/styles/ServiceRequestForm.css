@@ -63,6 +63,7 @@
 .service-request-form-credit {
   color: black;
   font-size: 9px;
+  text-align: center;
 }
 
 .service-request-form-cancel {

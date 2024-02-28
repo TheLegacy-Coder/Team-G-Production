@@ -1,8 +1,9 @@
 .chart-container {
+  overflow-y: scroll;
   display: flex;
   width: 100%;
-  height: 100%;
-  background: #e9d3b7;
+  height: calc(100% - 90px);
+  background: #b8c4d1;
   color: black;
   flex-direction: column;
 }
@@ -11,7 +12,8 @@
   justify-content: center;
   display: flex;
   flex-direction: row;
-  padding: 60px;
+  padding-top: 20px;
+  padding-bottom: 40px;
 }
 
 .second-row {
@@ -22,6 +24,13 @@
 }
 
 .third-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+
+.fourth-row {
   justify-content: center;
   display: flex;
   flex-direction: row;
@@ -48,6 +57,14 @@
   height: 200px;
   justify-content: center;
   align-items: center;
+}
+
+.floor-requests-container {
+  width: 100%;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
 }
 
 text {

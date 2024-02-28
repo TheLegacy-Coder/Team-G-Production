@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { getEndNode, getStartNode, MapNode } from "../map/MapNode.ts";
 import "./styles/TextDirections.css";
 import { drawData } from "../map/DrawData.ts";
+import {
+  ArrowUpCircleFill,
+  GeoAlt,
+  GeoAltFill,
+  SignTurnLeftFill,
+  SignTurnRightFill,
+  ArrowDownUp,
+  PersonWalking,
+} from "react-bootstrap-icons";
 
 const TextDirections: React.FC = () => {
+  const [selectedFloor, setSelectedFloor] = useState<string>("All");
+
   let path: MapNode[] = [];
 
   if (getStartNode() && getEndNode()) {
@@ -30,26 +41,53 @@ const TextDirections: React.FC = () => {
     if (angleDeg < -180) angleDeg += 360;
     if (angleDeg > 180) angleDeg -= 360;
 
-    if (drawData.getSwitchNodes().includes(currentNode)) {
-      const switchFloor =
-        drawData.getSwitchFloors()[
-          drawData.getSwitchNodes().indexOf(currentNode)
-        ];
-      return `Go to Floor ${switchFloor}`;
-    } else if (angleDeg > 20) {
-      return "Turn right";
+    if (angleDeg > 20) {
+      return (
+        <>
+          <SignTurnRightFill size={35} />
+          <p>Turn right at {currentNode.shortName}</p>
+        </>
+      );
     } else if (angleDeg < -20) {
-      return "Turn left";
+      return (
+        <>
+          <SignTurnLeftFill size={35} />
+          <p>Turn left at {currentNode.shortName}</p>
+        </>
+      );
     } else {
-      return "Continue straight";
+      return (
+        <>
+          <ArrowUpCircleFill size={35} />
+          Continue straight
+        </>
+      );
     }
   };
 
-  const directions = path.map((mapNode: MapNode, index: number) => {
+  const directionsByFloor: { [key: string]: JSX.Element[] } = {};
+  const allDirections: JSX.Element[] = [];
+  let previousFloor: string | null = null;
+  path.forEach((mapNode, index) => {
+    if (!directionsByFloor[mapNode.floor]) {
+      directionsByFloor[mapNode.floor] = [];
+    }
+
+    let contents;
     if (index === 0) {
-      return `Start at ${mapNode.longName}`;
+      contents = (
+        <>
+          <GeoAlt size={35} />
+          <p key={index}>Start at {mapNode.longName}</p>
+        </>
+      );
     } else if (index === path.length - 1) {
-      return `End at ${mapNode.longName}`;
+      contents = (
+        <>
+          <GeoAltFill size={35} />
+          <p key={index}>End at {mapNode.longName}</p>
+        </>
+      );
     } else {
       const prevNode = path[index - 1];
       const nextNode = path[index + 1];
@@ -71,29 +109,83 @@ const TextDirections: React.FC = () => {
         const switchFloor =
           drawData.allSwitchFloors[drawData.allSwitchNodes.indexOf(mapNode)];
         if (switchFloor === mapNode.floor) {
-          return `Exit ${mapNode.longName} onto floor ${switchFloor}`;
+          contents = (
+            <>
+              <PersonWalking size={35} />
+              <p key={index}>
+                Exit {mapNode.longName} onto floor {switchFloor}
+              </p>
+            </>
+          );
         } else {
-          return `Go to Floor ${switchFloor} from ${mapNode.longName}`;
+          contents = (
+            <>
+              <ArrowDownUp size={35} />
+              <p key={index}>
+                Go to Floor {switchFloor} from {mapNode.longName}
+              </p>
+            </>
+          );
         }
       } else if (mapNode.nodeType === "HALL" && angleDeg !== 0) {
-        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
-      } else if (mapNode.nodeType !== "HALL") {
-        return `${getTurnDirection(prevNode, mapNode, nextNode)} at ${mapNode.shortName}`;
-      } else {
-        return "";
+        contents = getTurnDirection(prevNode, mapNode, nextNode);
       }
+    }
+
+    if (contents) {
+      if (mapNode.floor !== previousFloor) {
+        directionsByFloor[mapNode.floor].push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
+        allDirections.push(
+          <div key={`${mapNode.floor}-${index}`} className="directionDiv">
+            <h4>Floor {mapNode.floor}</h4>
+          </div>,
+        );
+      }
+      directionsByFloor[mapNode.floor].push(
+        <div key={index} className="directionDiv">
+          {contents}
+        </div>,
+      );
+      allDirections.push(
+        <div key={index} className="directionDiv">
+          {contents}
+        </div>,
+      );
+      previousFloor = mapNode.floor;
     }
   });
 
+  const floors = ["All", "L2", "L1", "1", "2", "3"];
+
   return (
     <div className={"container-div"}>
+      <div className={"floor-buttons"}>
+        {floors.map((floor) => (
+          <button
+            key={floor}
+            className={selectedFloor === floor ? "active" : ""}
+            onClick={() => setSelectedFloor(floor)}
+          >
+            {floor}
+          </button>
+        ))}
+      </div>
+      {(!getStartNode() || !getEndNode()) && (
+        <div>Please select both a starting and an ending node</div>
+      )}
       <div
         className={"asdf2-text-directions-container"}
         style={{ maxHeight: "450px" }}
       >
-        {directions.map((direction, index) => (
-          <p key={index}>{direction} </p>
-        ))}
+        {selectedFloor === "All" ? (
+          allDirections
+        ) : (
+          <>{directionsByFloor[selectedFloor]}</>
+        )}
       </div>
     </div>
   );
