@@ -14,8 +14,6 @@ import {
   mapNodes,
 } from "../map/MapNode.ts";
 import React from "react";
-import * as JSZip from "jszip";
-import { saveAs } from "file-saver";
 import {
   postEdgesAxios,
   postNodesAxios,
@@ -44,7 +42,6 @@ export const ImportExport = () => {
     let rows: string[] = [];
     let csvArray;
 
-    const zip = new JSZip();
     if (
       (document.getElementById("EmployeesCheck") as HTMLInputElement).checked
     ) {
@@ -53,7 +50,12 @@ export const ImportExport = () => {
         rows.push(Object.values(row).slice(0, 6).join(","));
       });
       csvArray = rows.join("\r\n");
-      zip.file("employees.csv", csvArray);
+      const a = document.createElement("a");
+      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+      a.target = "_blank";
+      a.download = "employees.csv";
+      document.body.appendChild(a);
+      a.click();
     }
 
     if ((document.getElementById("NodesCheck") as HTMLInputElement).checked) {
@@ -67,7 +69,12 @@ export const ImportExport = () => {
         }
       });
       csvArray = rows.join("\r\n");
-      zip.file("nodes.csv", csvArray);
+      const a = document.createElement("a");
+      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+      a.target = "_blank";
+      a.download = "nodes.csv";
+      document.body.appendChild(a);
+      a.click();
     }
 
     if ((document.getElementById("EdgesCheck") as HTMLInputElement).checked) {
@@ -77,12 +84,13 @@ export const ImportExport = () => {
         rows.push(Object.values(row).slice(0, 3).join(","));
       });
       csvArray = rows.join("\r\n");
-      zip.file("edges.csv", csvArray);
+      const a = document.createElement("a");
+      a.href = "data:attachment/csv," + encodeURIComponent(csvArray);
+      a.target = "_blank";
+      a.download = "edges.csv";
+      document.body.appendChild(a);
+      a.click();
     }
-
-    zip.generateAsync({ type: "blob" }).then(function (content) {
-      saveAs(content, "data.zip");
-    });
   };
 
   const handleImport = (e: React.FormEvent<HTMLFormElement>) => {
