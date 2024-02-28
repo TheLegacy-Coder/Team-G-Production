@@ -94,6 +94,11 @@ export const SpeechEngine = () => {
             setInit(true);
             speak("");
           }}
+          onTouchStart={() => {
+            console.log("gotcha");
+            setInit(true);
+            speak("");
+          }}
         />
       ) : (
         <></>
