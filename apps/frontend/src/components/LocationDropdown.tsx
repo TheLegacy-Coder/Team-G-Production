@@ -7,8 +7,11 @@ import {
   getStartNode,
   MapNode,
   mapNodes,
+  nodeStore,
 } from "../map/MapNode.ts"; // Importing MapNode type
 import TextDirections from "./TextDirections.tsx";
+import QRCode from "react-qr-code";
+import { IP } from "../config.ts";
 
 const LocationDropdown: React.FC = () => {
   const [startLocations, setStartLocations] = useState<MapNode[]>([]);
@@ -124,6 +127,13 @@ const LocationDropdown: React.FC = () => {
           ))}
         </select>
       </div>
+      <br />
+      <QRCode
+        size={256}
+        style={{ height: "auto", maxWidth: "50%", width: "50%" }}
+        value={`${IP}/mobiledirections?alg=${nodeStore.currentAlg}&start=${getStartNode()?.nodeID}&end=${getEndNode()?.nodeID}`}
+        viewBox={`0 0 256 256`}
+      />
       <br />
       <b>Text Directions:</b>
       <TextDirections />

@@ -19,6 +19,7 @@ const TextDirections: React.FC = () => {
 
   if (getStartNode() && getEndNode()) {
     path = drawData.unfilteredPath.slice().reverse();
+    console.log(drawData.unfilteredPath);
   }
 
   const getTurnDirection = (

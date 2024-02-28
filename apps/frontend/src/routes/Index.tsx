@@ -3,19 +3,23 @@ import React from "react";
 import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
-import { MapNav } from "./MapNav.tsx";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 export const Index = () => {
   return (
-    <div style={{ position: "relative", height: "100%" }}>
-      <ContextMenu />
-      <div id={"canvas-container"}>
-        <MapNav />
+    <Auth0Provider
+      clientId={"6pLipx9nvYgidSSoiuodUl23OMScUmgU"}
+      domain={"dev-1uv1d12i66i3umpd.us.auth0.com"}
+      authorizationParams={{
+        redirectUri: window.location.origin,
+      }}
+    >
+      <div style={{ position: "relative", height: "100%" }}>
+        <ContextMenu />
         <InteractableMap />
+        <HomeAnnounce />
       </div>
-
-      <HomeAnnounce />
-    </div>
+    </Auth0Provider>
   );
 };
 

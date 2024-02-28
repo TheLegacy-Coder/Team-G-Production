@@ -80,3 +80,6 @@ export const InteractableMap = () => {
     </div>
   );
 };
+/* onMouseMove={mouse.mouseMove}
+        onMouseUp={mouse.mouseUp}
+        onWheel={mouse.mouseScroll}*/

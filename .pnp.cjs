@@ -5147,6 +5147,7 @@ const RAW_RUNTIME_STATE =
           ["react-bootstrap", "virtual:f7b030241781449f9f163484f540f772ec3707fc5214186cd12bce9e472ad0dbf6db26b799fb1d7d9f7a9e4faeedac41da01e533ee775acb5c8a31c546a0661d#npm:2.10.0"],\
           ["react-bootstrap-icons", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:1.11.3"],\
           ["react-dom", "virtual:f7b030241781449f9f163484f540f772ec3707fc5214186cd12bce9e472ad0dbf6db26b799fb1d7d9f7a9e4faeedac41da01e533ee775acb5c8a31c546a0661d#npm:18.2.0"],\
+          ["react-qr-code", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:2.0.12"],\
           ["react-router-bootstrap", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:0.26.2"],\
           ["react-router-dom", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:6.21.3"],\
           ["react-zoom-pan-pinch", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:3.3.0"],\
@@ -5154,6 +5155,7 @@ const RAW_RUNTIME_STATE =
           ["sass", "npm:1.70.0"],\
           ["serve", "npm:14.2.1"],\
           ["sort-by", "npm:1.2.0"],\
+          ["swiper", "npm:11.0.7"],\
           ["tsconfig-custom", "workspace:configs/tsconfig-custom"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["vite", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:4.5.1"],\
@@ -7820,6 +7822,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["qr.js", [\
+      ["npm:0.0.0", {\
+        "packageLocation": "./.yarn/cache/qr.js-npm-0.0.0-eea89f459b-a05943d13c.zip/node_modules/qr.js/",\
+        "packageDependencies": [\
+          ["qr.js", "npm:0.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["qs", [\
       ["npm:6.11.2", {\
         "packageLocation": "./.yarn/cache/qs-npm-6.11.2-b118bc1c6f-f2321d0796.zip/node_modules/qs/",\
@@ -8183,6 +8194,34 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/react-lifecycles-compat-npm-3.0.4-d5e285a39e-c66b9c98c1.zip/node_modules/react-lifecycles-compat/",\
         "packageDependencies": [\
           ["react-lifecycles-compat", "npm:3.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["react-qr-code", [\
+      ["npm:2.0.12", {\
+        "packageLocation": "./.yarn/cache/react-qr-code-npm-2.0.12-7a94d03748-b7bad40d7d.zip/node_modules/react-qr-code/",\
+        "packageDependencies": [\
+          ["react-qr-code", "npm:2.0.12"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:2.0.12", {\
+        "packageLocation": "./.yarn/__virtual__/react-qr-code-virtual-410d866e42/0/cache/react-qr-code-npm-2.0.12-7a94d03748-b7bad40d7d.zip/node_modules/react-qr-code/",\
+        "packageDependencies": [\
+          ["react-qr-code", "virtual:d3996bc66f5a97675d735c6457b44af0f25df32a5e5981f61ff7f22e93004839ccc5d56298eff651f971a908820429de35800a3f2669be95e1c0f6bb82e8a700#npm:2.0.12"],\
+          ["@types/react", "npm:18.2.48"],\
+          ["@types/react-native-svg", null],\
+          ["prop-types", "npm:15.8.1"],\
+          ["qr.js", "npm:0.0.0"],\
+          ["react", "npm:18.2.0"],\
+          ["react-native-svg", null]\
+        ],\
+        "packagePeers": [\
+          "@types/react-native-svg",\
+          "@types/react",\
+          "react-native-svg",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9390,6 +9429,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/supports-preserve-symlinks-flag-npm-1.0.0-f17c4d0028-a9dc19ae22.zip/node_modules/supports-preserve-symlinks-flag/",\
         "packageDependencies": [\
           ["supports-preserve-symlinks-flag", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["swiper", [\
+      ["npm:11.0.7", {\
+        "packageLocation": "./.yarn/cache/swiper-npm-11.0.7-d14c0a02a9-438e210786.zip/node_modules/swiper/",\
+        "packageDependencies": [\
+          ["swiper", "npm:11.0.7"]\
         ],\
         "linkType": "HARD"\
       }]\
