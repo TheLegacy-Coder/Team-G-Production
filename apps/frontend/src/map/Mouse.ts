@@ -162,6 +162,7 @@ class Mouse {
       drawData.setImage(imageSrc);
       mouse.homePosition(floor);
       ctx!.restore();
+      drawData.updateCoords();
       drawData.setScalar(tempScalar);
       if (!hasPath) {
         drawData.resetMap(newFloor);
@@ -171,7 +172,6 @@ class Mouse {
       scaleID!.textContent = drawData.scalar.toFixed(2).toString();
       drawData.resetPath();
       mouse.newMap = true;
-
       return true;
     }
     return false;
@@ -433,6 +433,7 @@ class Mouse {
   ) {
     if (evt.touches.length === 1) {
       const touch = { x: evt.touches[0].pageX, y: evt.touches[0].pageY };
+      console.log("Canvas touch move");
       mouse.clickMove(touch.x, touch.y);
     }
   }
