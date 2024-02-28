@@ -4,6 +4,7 @@ import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { MapNav } from "./MapNav.tsx";
 
 export const Index = () => {
   return (
@@ -17,6 +18,7 @@ export const Index = () => {
       <div style={{ position: "relative", height: "100%" }}>
         <ContextMenu />
         <InteractableMap />
+        <MapNav />
         <HomeAnnounce />
       </div>
     </Auth0Provider>
