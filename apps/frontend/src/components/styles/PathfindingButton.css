@@ -1,7 +1,7 @@
 .pathfindingButton {
-  width: 120px;
-  height: 60px;
-  font-size: 25px;
+  width: min(var(--init-width) * 3, var(--init-height) * 3);
+  height: min(var(--init-width), var(--init-height));
+  font-size: calc(min(var(--init-width), var(--init-height)) / 1.7);
   border-radius: 16px;
   color: white;
   background-color: #00284f;

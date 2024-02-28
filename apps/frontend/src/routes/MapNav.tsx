@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import "./styles/MapNav.css";
+import React, { useState, useCallback, useEffect } from "react";
+import "../index.css";
 import {
   EyeFill,
   EyeSlashFill,
@@ -32,6 +33,8 @@ export const MapNav = () => {
     edges: draw.showEdges,
     halls: draw.showHalls,
   });
+  const [selectWidth, setSelectWidth] = useState<string>("0px");
+  const [selectHeight, setSelectHeight] = useState<string>("0px");
 
   const ICON_SIZE = 35;
 
@@ -75,17 +78,60 @@ export const MapNav = () => {
     title: string;
     value: boolean;
     onClick: () => void;
+    onChange: () => void;
   }
 
-  function ToggleButton({ title, value, onClick }: ToggleButtonProps) {
+  //let selectWidth = "";
+  //let selectHeight = "";
+
+  const poll = useCallback(() => {
+    const styleWidth = window.getComputedStyle(document.documentElement);
+    const styleHeight = window.getComputedStyle(document.documentElement);
+    const tempWidth = styleWidth.getPropertyValue("--init-width");
+    const tempHeight = styleHeight.getPropertyValue("--init-height");
+    if (tempWidth !== selectWidth || tempHeight !== selectHeight) {
+      setSelectWidth(tempWidth);
+      setSelectHeight(tempHeight);
+    }
+  }, [selectWidth, selectHeight]);
+
+  useEffect(() => {
+    const intervalID = setInterval(poll, 10);
+    return () => clearInterval(intervalID);
+  }, [poll]);
+
+  function getSize() {
+    let width = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--init-width");
+    let height = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--init-height");
+    width = width.substring(0, width.length - 2);
+    height = height.substring(0, height.length - 2);
+    return Math.min(Number(width), Number(height)) / 1.7;
+  }
+
+  function ToggleButton({
+    title,
+    value,
+    onClick,
+    onChange,
+  }: ToggleButtonProps) {
     return (
-      <button className={"toggle-button"} onClick={onClick}>
+      <button
+        className={"toggle-button"}
+        onClick={onClick}
+        onChange={onChange}
+        onResize={changed}
+        onResizeCapture={changed}
+      >
         <div>{title}</div>
         <div style={{ marginLeft: "auto" }}>
           {value ? (
-            <EyeFill color="white" size={ICON_SIZE} />
+            <EyeFill color="white" size={getSize()} />
           ) : (
-            <EyeSlashFill color="white" size={ICON_SIZE} />
+            <EyeSlashFill color="white" size={getSize()} />
           )}
         </div>
       </button>
@@ -110,9 +156,17 @@ export const MapNav = () => {
     });
   }
 
+  function changed() {
+    console.log("Changed");
+  }
+
   return (
-    <div>
-      <div className={"map-top-left-buttons"} onMouseUp={mouse.divMouseUp}>
+    <div
+      onMouseMove={mouse.mouseMove}
+      onMouseUp={mouse.divMouseUp}
+      onTouchStart={mouse.divTouchStart}
+    >
+      <div className={"map-top-left-buttons"}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
           <div className={"group-buttons"}>
             <button
@@ -160,30 +214,30 @@ export const MapNav = () => {
             title={"Nodes"}
             value={visibilities.nodes}
             onClick={() => toggleButtons("nodes")}
+            onChange={changed}
           />
           <ToggleButton
             title={"Edges"}
             value={visibilities.edges}
             onClick={() => toggleButtons("edges")}
+            onChange={changed}
           />
           <ToggleButton
             title={"Halls"}
             value={visibilities.halls}
             onClick={() => toggleButtons("halls")}
+            onChange={changed}
           />
         </div>
       </div>
-      <div
-        className={"map-top-left-search-button"}
-        onMouseUp={mouse.divMouseUp}
-      >
+      <div className={"map-top-left-search-button"}>
         <PathfindingButton
           algorithm={currentAlg}
           handleChange={changeAlgorithm}
         />
       </div>
 
-      <div className={"map-bottom-left-buttons"} onMouseUp={mouse.divMouseUp}>
+      <div className={"map-bottom-left-buttons"}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <button
             id={"F3"}

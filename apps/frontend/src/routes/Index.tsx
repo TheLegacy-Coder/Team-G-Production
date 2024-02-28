@@ -4,12 +4,24 @@ import { ContextMenu } from "../components/ContextMenu.tsx";
 import { InteractableMap } from "./InteractableMap.tsx";
 import { HomeAnnounce } from "../components/HomeAnnounce.tsx";
 import { MapNav } from "./MapNav.tsx";
+import { drawData } from "../map/DrawData.ts";
+//import { drawData } from "../map/DrawData.ts";
 
 export const Index = () => {
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <ContextMenu />
-      <div id={"canvas-container"}>
+
+      <div
+        id={"canvas-container"}
+        style={
+          {
+            width: window.innerWidth - drawData.offset.x,
+            height: window.innerHeight - drawData.offset.y,
+            overflow: "hidden",
+          } as React.CSSProperties
+        }
+      >
         <MapNav />
         <InteractableMap />
       </div>
