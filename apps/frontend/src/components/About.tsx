@@ -41,7 +41,7 @@ export const About = () => {
             mouthClosedImage={"tyler/close.jpg"}
             mouthOpenImage={"tyler/open.jpg"}
             getText={() => {
-              return "Docker broke my laptop again.";
+              return "A duck walked up to a lemonade stand And he said to the man, running the stand Hey! (Bum bum bum) Got any grapes?";
             }}
           />
 
@@ -111,7 +111,7 @@ export const About = () => {
             mouthClosedImage={"noah/close.jpg"}
             mouthOpenImage={"noah/open.jpg"}
             getText={() => {
-              return "I don't have one yet ask me later.";
+              return "Throughout heaven and earth, I alone am the destroyer of the main branch";
             }}
           />
 
