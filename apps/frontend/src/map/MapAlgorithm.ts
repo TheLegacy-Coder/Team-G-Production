@@ -3,11 +3,9 @@ import {
   getEndNode,
   getStartNode,
   MapNode,
-  BreadthFirstSearch,
+  AStarSearch,
   setStartNode,
   setEndNode,
-  AStarSearch,
-  DijkstraSearch,
 } from "./MapNode.ts";
 
 import { drawData } from "./DrawData.ts";
@@ -20,7 +18,7 @@ class MapAlgorithm {
   private spacing = 50;
   private totalDistance = 0;
   private steps: number[] = [];
-  private searchStrategy: SearchStrategy = new BreadthFirstSearch();
+  private searchStrategy: SearchStrategy = new AStarSearch();
 
   public setSearchStrategy(searchStrategy: SearchStrategy) {
     this.searchStrategy = searchStrategy;
@@ -192,8 +190,3 @@ class MapAlgorithm {
 }
 
 export const algorithm = new MapAlgorithm();
-
-const aStarSearch = new AStarSearch();
-const dijkstraSearch = new DijkstraSearch();
-
-algorithm.setSearchStrategy(aStarSearch || dijkstraSearch);

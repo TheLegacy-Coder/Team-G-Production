@@ -26,7 +26,7 @@ interface Visibility {
 }
 
 export const MapNav = () => {
-  const [currentAlg, setCurrentAlg] = useState<string>("BFS");
+  const [currentAlg, setCurrentAlg] = useState<string>("A*");
   const [visibilities, setVisibilities] = useState<Visibility>({
     nodes: drawData.showNodes,
     edges: drawData.showEdges,
