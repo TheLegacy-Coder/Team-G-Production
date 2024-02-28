@@ -138,7 +138,14 @@ export async function speak(message: string) {
     const synth = window.speechSynthesis;
     const utterThis = new SpeechSynthesisUtterance(message);
     console.log(utterThis);
+    setTimeout(() => {
+      if (!synth.speaking) resolve(undefined);
+    }, 200);
     synth.speak(utterThis);
+    console.log(synth.speaking);
+    if (!synth.speaking) {
+      utterThis.onend = resolve;
+    }
     utterThis.onend = resolve;
   });
 }
