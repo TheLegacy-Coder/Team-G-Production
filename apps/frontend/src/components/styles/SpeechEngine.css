@@ -1,0 +1,145 @@
+.speech-engine-out {
+  position: fixed;
+  top: calc(50vh - 150px);
+  left: -410px;
+  width: 400px;
+  height: 300px;
+  animation: slide-out-speech 1s;
+  z-index: 101;
+  background: #00284f;
+  color: white;
+  border-style: solid;
+  border-radius: 16px;
+  border-width: 4px;
+  border-color: black;
+  box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
+}
+
+.speech-engine-start {
+  position: fixed;
+  top: calc(50vh - 150px);
+  left: -410px;
+  width: 400px;
+  height: 300px;
+  z-index: 101;
+  background: #00284f;
+  color: white;
+  border-style: solid;
+  border-radius: 16px;
+  border-width: 4px;
+  border-color: black;
+  box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
+}
+
+@keyframes slide-in-speech {
+  0% {
+    left: -410px;
+  }
+  100% {
+    left: 50px;
+  }
+}
+
+.speech-engine-in {
+  position: fixed;
+  top: calc(50vh - 150px);
+  left: 50px;
+  width: 400px;
+  height: 300px;
+  animation: slide-in-speech 0.1s;
+  z-index: 101;
+  background: #00284f;
+  color: white;
+  border-style: solid;
+  border-radius: 16px;
+  border-width: 4px;
+  border-color: black;
+  box-shadow: 5px 5px 2px 1px rgb(0 0 0 / 20%);
+}
+
+@keyframes slide-out-speech {
+  0% {
+    left: 50px;
+  }
+  100% {
+    left: -410px;
+  }
+}
+
+.speech-content {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.lds-grid {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 30px;
+}
+.lds-grid div {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: 8px;
+  left: 8px;
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: 8px;
+  left: 32px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: 8px;
+  left: 56px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: 32px;
+  left: 8px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: 32px;
+  left: 32px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: 32px;
+  left: 56px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: 56px;
+  left: 8px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: 56px;
+  left: 32px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: 56px;
+  left: 56px;
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

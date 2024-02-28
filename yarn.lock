@@ -1101,6 +1101,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dom-speech-recognition@npm:*":
+  version: 0.0.4
+  resolution: "@types/dom-speech-recognition@npm:0.0.4"
+  checksum: d19266dc3a58610c517885eef46e54011ee6e59aa9a9fc703fc094731b0c34dd7c547d76cc0a48a1eb43a289b5bf787f6275c30a04a98e13942d3c2629f67ca3
+  languageName: node
+  linkType: hard
+
 "@types/emscripten@npm:^1.39.6":
   version: 1.39.10
   resolution: "@types/emscripten@npm:1.39.10"
@@ -1321,6 +1328,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-speech-recognition@npm:^3":
+  version: 3.9.5
+  resolution: "@types/react-speech-recognition@npm:3.9.5"
+  dependencies:
+    "@types/dom-speech-recognition": "npm:*"
+  checksum: b1bc853e8bece3c8f553a16e82dcc61e7297f5dbf77f087894e0232fa3e712ca7580f5e86b3caa7ac0945dfc48071c475ac4333dbfbf12e7eedd84f4e1d53627
+  languageName: node
+  linkType: hard
+
 "@types/react-transition-group@npm:^4.4.6":
   version: 4.4.10
   resolution: "@types/react-transition-group@npm:4.4.10"
@@ -1338,6 +1354,13 @@ __metadata:
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 2e56ea6bd821ae96bd943f727a59d85384eaf5f8a3e6fce4fa1d34453e32d8eedda742432b3857fa0de7a4214bf84ce4239757eb52918e76452c00384731e585
+  languageName: node
+  linkType: hard
+
+"@types/regenerator-runtime@npm:^0":
+  version: 0.13.5
+  resolution: "@types/regenerator-runtime@npm:0.13.5"
+  checksum: fe49a233185c1bb765dbc61ecfc6411890ba277855a6e0c4bfd4c48dab0141b81b0d5b9bb19fc06a64406990422078361684570ec43ee36a86fe05586ac6e4ee
   languageName: node
   linkType: hard
 
@@ -4226,6 +4249,8 @@ __metadata:
     "@types/react-dom": "npm:^18.0.11"
     "@types/react-router-bootstrap": "npm:^0.26.0"
     "@types/react-router-dom": "npm:^5.3.3"
+    "@types/react-speech-recognition": "npm:^3"
+    "@types/regenerator-runtime": "npm:^0"
     "@vitejs/plugin-react-swc": "npm:^3.0.0"
     auth0-lock: "npm:^12.4.0"
     axios: "npm:^1.4.0"
@@ -4250,8 +4275,11 @@ __metadata:
     react-dom: "npm:^18.2.0"
     react-router-bootstrap: "npm:^0.26.2"
     react-router-dom: "npm:^6.11.2"
+    react-speech-kit: "npm:^3.0.1"
+    react-speech-recognition: "npm:^3.10.0"
     react-zoom-pan-pinch: "npm:^3.1.0"
     reaviz: "npm:^15.7.1"
+    regenerator-runtime: "npm:^0.14.1"
     sass: "npm:^1.62.1"
     serve: "npm:^14.2.0"
     sort-by: "npm:^1.2.0"
@@ -6923,6 +6951,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-speech-kit@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "react-speech-kit@npm:3.0.1"
+  peerDependencies:
+    prop-types: ^15.7.2
+    react: ^16.8.0
+  checksum: 073e308ad879fcf01d07a94ae1eafce1cae48b705ee12420b6a26f5c9b5d204c0cac82328c0108aeae31519eb316261b6f95aba399bb96a058d75e78d085a6a8
+  languageName: node
+  linkType: hard
+
+"react-speech-recognition@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "react-speech-recognition@npm:3.10.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 3c97a17c1708176a68e9a7ae0caa0bda76d1f8a700c5e66b6775b387257b8bbccba32078076a7324f48f2e3941644701d2e9e3aec8aea5d9a11315ce9265c3d4
+  languageName: node
+  linkType: hard
+
 "react-textarea-autosize@npm:^8.5.3":
   version: 8.5.3
   resolution: "react-textarea-autosize@npm:8.5.3"
@@ -7056,7 +7103,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.14.0":
+"regenerator-runtime@npm:^0.14.0, regenerator-runtime@npm:^0.14.1":
   version: 0.14.1
   resolution: "regenerator-runtime@npm:0.14.1"
   checksum: 5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471

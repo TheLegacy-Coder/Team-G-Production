@@ -24,7 +24,7 @@
 }
 
 .about-page-container div {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .about-page-container div:last-child {
@@ -33,6 +33,14 @@
 
 a {
   color: midnightblue;
+}
+
+.head-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
 }
 
 .credits-button {
