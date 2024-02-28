@@ -6,6 +6,9 @@ class SpeechEngineBackend {
   public currentCommand: string[] = [];
   private watchdog: NodeJS.Timeout | undefined;
   public speechClass = "speech-engine-start";
+  public response = "";
+  public aiSpeak = false;
+  public triggerHead?: () => void;
   public end: (resolved: boolean) => void = (resolved: boolean) => {
     console.log(resolved);
   };
@@ -127,6 +130,17 @@ class SpeechEngineBackend {
     });
     if (!dupe) this.commands.push(command);
   }
+}
+
+export async function speak(message: string) {
+  console.log("start speak");
+  return new Promise((resolve) => {
+    const synth = window.speechSynthesis;
+    const utterThis = new SpeechSynthesisUtterance(message);
+    console.log(utterThis);
+    synth.speak(utterThis);
+    utterThis.onend = resolve;
+  });
 }
 
 export const speechEngineBackend = new SpeechEngineBackend();

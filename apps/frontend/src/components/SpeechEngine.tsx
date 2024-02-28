@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import "regenerator-runtime/runtime";
+
 import { useSpeechRecognition } from "react-speech-recognition";
-import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
+import { speak, speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 import "./styles/SpeechEngine.css";
+import { TalkingHead } from "./TalkingHead.tsx";
 
 export const SpeechEngine = () => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -10,12 +12,20 @@ export const SpeechEngine = () => {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition({ commands });
 
+  const [init, setInit] = useState(false);
+
   const endOfSpeech = useCallback(
     (resolved: boolean) => {
       resetTranscript();
       speechEngineBackend.currentCommand = [];
-      speechEngineBackend.speechClass = "speech-engine-out";
-      forceUpdate();
+      if (resolved) {
+        speechEngineBackend.response = "Very well.";
+      } else {
+        speechEngineBackend.response = "I'm sorry, I dont understand.";
+      }
+      speechEngineBackend.aiSpeak = true;
+
+      document.getElementById("ai-head")?.click();
       console.log(resolved);
     },
     [resetTranscript],
@@ -43,7 +53,7 @@ export const SpeechEngine = () => {
   });
 
   if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
+    return <></>;
   }
 
   if (active) {
@@ -53,23 +63,41 @@ export const SpeechEngine = () => {
   return (
     <div className={speechEngineBackend.speechClass}>
       <div className={"speech-content"}>
-        {/*
-                credit for animation: https://loading.io/css/
-                */}
-        <div className="lds-grid">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <TalkingHead
+          name={""}
+          voice={"Google UK English Male"}
+          mouthClosedImage={"tommy/close.jpg"}
+          mouthOpenImage={"tommy/open.jpg"}
+          id={"ai-head"}
+          getText={() => {
+            return speechEngineBackend.response;
+          }}
+          onDone={() => {
+            speechEngineBackend.speechClass = "speech-engine-out";
+            forceUpdate();
+          }}
+        />
 
         <h5 className={"speech-text"}>{text}</h5>
       </div>
+      {!init ? (
+        <div
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+            left: "0",
+            top: "0",
+          }}
+          onClick={() => {
+            console.log("gotcha");
+            setInit(true);
+            speak("test");
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

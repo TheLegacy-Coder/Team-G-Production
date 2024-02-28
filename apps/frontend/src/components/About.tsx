@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles/About.css";
+import { TalkingHead } from "./TalkingHead.tsx";
 
 export const About = () => {
   const container = useRef<HTMLDivElement>(null);
@@ -23,6 +24,78 @@ export const About = () => {
         ref={scroll}
         style={{ height: scrollHeight }}
       >
+        <div className={"head-container"}>
+          <TalkingHead
+            name={"Dimitri Saliba"}
+            voice={"Google 日本人"}
+            mouthClosedImage={"dimitri/close.jpg"}
+            mouthOpenImage={"dimitri/open.jpg"}
+            getText={() => {
+              return "Silly goofy little test";
+            }}
+          />
+
+          <TalkingHead
+            name={"Klaudio Fusha"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"klaudio/close.jpg"}
+            mouthOpenImage={"klaudio/open.jpg"}
+            getText={() => {
+              return "I'm a dreamer. I have to dream and reach for the stars, and if I miss a star then I grab a handful of clouds.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Camren Chraplak"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"cam/close.jpg"}
+            mouthOpenImage={"cam/open.jpg"}
+            getText={() => {
+              return "Silly goofy little test";
+            }}
+          />
+
+          <TalkingHead
+            name={"Zach Medailleu"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"zach/close.jpg"}
+            mouthOpenImage={"zach/open.jpg"}
+            getText={() => {
+              return "Insert cash or select payment type.";
+            }}
+          />
+
+          <TalkingHead
+            name={"Gabriel Shiu"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"gabe/close.jpg"}
+            mouthOpenImage={"gabe/open.jpg"}
+            getText={() => {
+              return "Silly goofy little test";
+            }}
+          />
+
+          <TalkingHead
+            name={"Silas Joy"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"silas/close.jpg"}
+            mouthOpenImage={"silas/open.jpg"}
+            getText={() => {
+              return "Silly goofy little test";
+            }}
+          />
+
+          <TalkingHead
+            name={"Thomas Branchaud"}
+            voice={"Google UK English Male"}
+            mouthClosedImage={"tommy/close.jpg"}
+            mouthOpenImage={"tommy/open.jpg"}
+            getText={() => {
+              return "Silly goofy little test";
+            }}
+          />
+        </div>
+
         <div>WPI Computer Science Department</div>
         <div>CS3733-C24 Software Engineering, Prof. Wilson Wong</div>
         <div>Team Coach: Mike Wilkinson</div>
