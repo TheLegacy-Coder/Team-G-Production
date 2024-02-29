@@ -10,7 +10,8 @@ class SpeechEngineBackend {
   public aiSpeak = false;
   public triggerHead?: () => void;
   public end: (resolved: boolean) => void = (resolved: boolean) => {
-    console.log(resolved);
+    //console.log(resolved);
+    resolved;
   };
   constructor() {
     SpeechRecognition.startListening({ continuous: true });
@@ -20,7 +21,8 @@ class SpeechEngineBackend {
     {
       command: `${this.GREETING} debug speech *`,
       callback: (speech: string) => {
-        console.log(speech);
+        //console.log(speech);
+        speech;
       },
     },
   ];
@@ -71,7 +73,7 @@ class SpeechEngineBackend {
           if (command.command.toLowerCase() === phrase.toLowerCase()) {
             match = true;
             command.callback("");
-            console.log("augmented hit");
+            //console.log("augmented hit");
             this.end(true);
             this.currentCommand = [];
           }
@@ -84,7 +86,7 @@ class SpeechEngineBackend {
     } else {
       this.currentCommand = [];
     }
-    console.log(this.currentCommand);
+    //console.log(this.currentCommand);
   }
 
   public RegisterCommands(command: {
@@ -119,11 +121,11 @@ class SpeechEngineBackend {
     };
     // command.isFuzzyMatch =  true;
     //     command.fuzzyMatchingThreshold = 0.0001;
-    console.log(command.command);
+    //console.log(command.command);
     let dupe = false;
     this.commands.forEach((cmd) => {
       if (cmd.command === command.command) {
-        console.log("rejecting duplicate");
+        //console.log("rejecting duplicate");
         dupe = true;
         return;
       }
@@ -133,16 +135,16 @@ class SpeechEngineBackend {
 }
 
 export async function speak(message: string) {
-  console.log("start speak");
+  //console.log("start speak");
   return new Promise((resolve) => {
     const synth = window.speechSynthesis;
     const utterThis = new SpeechSynthesisUtterance(message);
-    console.log(utterThis);
+    //console.log(utterThis);
     setTimeout(() => {
       if (!synth.speaking) resolve(undefined);
     }, 200);
     synth.speak(utterThis);
-    console.log(synth.speaking);
+    //console.log(synth.speaking);
     if (!synth.speaking) {
       utterThis.onend = resolve;
     }
