@@ -3,48 +3,10 @@ import { mouse } from "../map/Mouse";
 import { algorithm } from "../map/MapAlgorithm.ts";
 import { ctx, drawData, initCTX } from "../map/DrawData.ts";
 import { draw } from "../map/Draw";
-import { speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
 export const InteractableMap = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   initCTX(canvasCtxRef.current);
-
-  useEffect(() => {
-    speechEngineBackend.RegisterCommands({
-      commands: [`go to floor 3`, `go to floor three`],
-      callback: () => {
-        document.getElementById("F3")?.click();
-      },
-    });
-
-    speechEngineBackend.RegisterCommand({
-      command: `go to floor 2`,
-      callback: () => {
-        document.getElementById("F2")?.click();
-      },
-    });
-
-    speechEngineBackend.RegisterCommands({
-      commands: [`go to floor 1`, `go to floor one`],
-      callback: () => {
-        document.getElementById("F1")?.click();
-      },
-    });
-
-    speechEngineBackend.RegisterCommand({
-      command: `go to floor L1`,
-      callback: () => {
-        document.getElementById("L1")?.click();
-      },
-    });
-
-    speechEngineBackend.RegisterCommand({
-      command: `go to floor L2`,
-      callback: () => {
-        document.getElementById("L2")?.click();
-      },
-    });
-  });
 
   window.onresize = () => {
     const canvasContainer = document.getElementById("canvas-container")!.style;
