@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime";
 
 import { useSpeechRecognition } from "react-speech-recognition";
 import { speak, speechEngineBackend } from "../stores/SpeechEngineBackend.ts";
+import { mouse } from "../map/Mouse";
 import "./styles/SpeechEngine.css";
 import { TalkingHead } from "./TalkingHead.tsx";
 
@@ -94,10 +95,11 @@ export const SpeechEngine = () => {
             setInit(true);
             speak("");
           }}
-          onTouchStart={() => {
+          onTouchStart={(evt) => {
             console.log("gotcha");
             setInit(true);
             speak("");
+            mouse.divTouchStart(evt);
           }}
         />
       ) : (

@@ -161,9 +161,9 @@ export const MapNav = () => {
 
   return (
     <div
+      /*onTouchStart={mouse.divTouchStart}*/
       onMouseMove={mouse.mouseMove}
       onMouseUp={mouse.divMouseUp}
-      onTouchStart={mouse.divTouchStart}
     >
       <div className={"map-top-left-buttons"}>
         <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
