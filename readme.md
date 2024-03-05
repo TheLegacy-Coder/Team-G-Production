@@ -1,3 +1,25 @@
+# Brigham & Women's Hospital Kiosk App
+
+## https://youtu.be/ZUq4IvrbPyo
+
+[![WPI Software Engineering Application Demo](readme_media/thumb.png)](https://youtu.be/ZUq4IvrbPyo "WPI Software Engineering Application Demo")
+
+We thank Professor Wong and our team coach, Mike Wilkinson, for their guidance and support throughout the project!
+
+|  **Team Member**  |                   **Role**                   |
+|:-----------------:|:--------------------------------------------:|
+|  Thomas Branchaud |                 Scrum Master                 |
+|  Camren Chraplak  |                 Product Owner                |
+|   Klaudio Fusha   |       Assistant Lead Software Engineer       |
+|    Tyler Giroux   |                Project Manager               |
+|     Silas Joy     | Full-Time Software Engineer (Front/Back-End) |
+| Zachary Medailleu |    Full-Time Software Engineer (Front-End)   |
+|    Noah Newton    |    Full-Time Software Engineer (Back-End)    |
+|   Dimitri Saliba  |                Lead Developer                |
+|    Gabriel Shiu   |       Assistant Lead Software Engineer       |
+|    Istan Slamet   |             Documentation Analyst            |
+|    Jason Zhang    |    Full-Time Software Engineer (Front-End)   |
+
 # Softeng Starter Code Repo
 This document contains an outline of 
 the entire repo, the tooling in the 
